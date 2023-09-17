@@ -19,23 +19,27 @@ void run()
 	DDRD = 0xff;	// Set Port D for LED output
 	PORTD = 0x00;	// Clear Portd pins
 
-	ADCSRA = (1 << ADEN) | (1 << ADPS1) | (1 << ADPS0) | (1 << ADFR);
-	ADMUX = (1 << REFS1) | (1 << REFS0) | (0 << MUX0) | (0 << MUX1) | (0 << MUX2) | (0 << MUX3);
+	//ADMUX = (1 << REFS1) | (1 << REFS0) | (0 << MUX0) | (0 << MUX1) | (0 << MUX2) | (0 << MUX3);
+	
+	ADMUX = 0;
+	ADMUX |= (1 << MUX0);
+	ADMUX |= (1 << MUX2);
 
-	ADMUX = 0x05;	//Binary equivalent of 0101
+	ADCSRA = 0;
+	ADCSRA |= (1 << ADEN);
+	ADCSRA |= (1 << ADPS0);
+	ADCSRA |= (1 << ADPS1);
+	ADCSRA |= (1 << ADFR);
+	ADCSRA |= (1 << ADSC);
 
-	ADCSRA |= (1 << ADSC); // Start conversion
 
-
-	double firstADC;
-	while ((firstADC = getADC()) != 0);
-
+	double firstADC = getADC();
 
 	while (1)	//Forever since it is in  single conversion mode
 	{
 		double currADC = getADC();	// Variable to hold ADC  result
 
-		if (currADC > 512)
+		if (currADC > firstADC)
 		{
 
 			TURN_ON_PORT(PORTD, 0);
