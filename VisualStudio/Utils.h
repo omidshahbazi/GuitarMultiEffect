@@ -2,13 +2,15 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define uint unsigned int
+#define uint8 unsigned char
+#define uint32 unsigned int
 #define bool char
 #define true 1
 #define false 0
 
 #define EnableBit(Mask, BitIndex) (Mask |= (1 << BitIndex))
 #define DisableBit(Mask, BitIndex) (Mask &= ~(1 << BitIndex))
+#define ToggleBit(Mask, BitIndex) (Mask ^= (1 << BitIndex))
 #define IsBitEnabled(Mask, BitIndex) ((Mask & (1 << BitIndex)) != 0)
 
 #define SetPortBMode(Writable) (DDRB = (Writable ? 0xFF : 0))
@@ -43,7 +45,7 @@
 #define ResetPortCPin(PinIndex) DisableBit(PORTC, PinIndex)
 #define ResetPortDPin(PinIndex) DisableBit(PORTD, PinIndex)
 
-void BindMUXToADCPin(uint PinIndex)
+void BindMUXToADCPin(uint32 PinIndex)
 {
 	switch (PinIndex)
 	{
@@ -151,8 +153,8 @@ void DisableADCFreeRun(void)
 	DisableBit(ADCSRA, ADFR);
 }
 
-//Must be a power two, the larger value, the slower ADC clock
-void SetADCDivisionFactor(uint Value)
+//2, 4, 8, 16, 32, 64, 128, the larger value, the slower ADC clock
+void SetADCDivisionFactor(uint8 Value)
 {
 	switch (Value)
 	{
@@ -207,21 +209,70 @@ void SetADCDivisionFactor(uint Value)
 	}
 }
 
-uint ReadADCValue()
+uint32 ReadADCValue(void)
 {
 	while (!IsBitEnabled(ADCSRA, ADIF));
 
 	return ADC;
 }
 
-uint StartAndReadADCValue()
+uint32 StartAndReadADCValue(void)
 {
 	StartADC();
 
 	return ReadADCValue();
 }
 
-void Sleep(uint Milliseconds)
+//4, 16, 64, 128
+void EnableMasterSPI(uint8 Clock)
+{
+	EnableBit(SPCR, SPE);
+	EnableBit(SPCR, MSTR);
+
+	switch (Clock)
+	{
+	case 2:
+	{
+		DisableBit(SPCR, SPR0);
+		DisableBit(SPCR, SPR1);
+	} break;
+
+	case 16:
+	{
+		EnableBit(SPCR, SPR0);
+		DisableBit(SPCR, SPR1);
+	} break;
+
+	case 64:
+	{
+		DisableBit(SPCR, SPR0);
+		EnableBit(SPCR, SPR1);
+	} break;
+
+	case 128:
+	{
+		EnableBit(SPCR, SPR0);
+		EnableBit(SPCR, SPR1);
+	} break;
+	}
+}
+
+void DisableSPI()
+{
+	DisableBit(SPCR, SPE);
+	DisableBit(SPCR, MSTR);
+	DisableBit(SPCR, SPR0);
+	DisableBit(SPCR, SPR1);
+}
+
+void TransmitSPI(uint8 Value)
+{
+	SPDR = Value;
+
+	while (!IsBitEnabled(SPSR, SPIF));
+}
+
+void Sleep(uint32 Milliseconds)
 {
 	_delay_ms(Milliseconds);
 }

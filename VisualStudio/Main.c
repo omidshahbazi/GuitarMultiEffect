@@ -1,6 +1,4 @@
 #include "Utils.h"
-#include <inttypes.h>
-#include <avr/interrupt.h>
 
 //void run()
 //{
@@ -42,9 +40,10 @@
 //	}
 //}
 
-void run1()
+int main()
 {
 	SetPortDMode(true);
+	SetPortBMode(true);
 
 	BindMUXToADCPin(0);
 
@@ -54,47 +53,14 @@ void run1()
 	EnableADCFreeRun();
 	StartADC();
 
-	uint firstADC = ReadADCValue();
+	EnableMasterSPI(16);
 
 	while (1)
 	{
-		uint currADC = ReadADCValue();
+		uint32 currADC = ReadADCValue();
 
-		if (currADC > firstADC)
-		{
-			SetPortDPin(0);
-		}
-		else
-		{
-			ResetPortDPin(0);
-		}
+		TransmitSPI(currADC >> 2);
 	}
-}
-
-int main()
-{
-	run1();
-
-
-	//DDRC = 0b00000000;
-	//DDRB = 0b11111111;
-
-	//while (1)
-	//{
-	//   int input = PINC & 0b00000001;  
-	//   PORTB = (input != 0);
-	//   PORTB = input;
-	//}
-
-	//DDRC = 0xFF;
-	//DDRB = 0xFF;
-	//int index = 0; 
-	//while (1)
-	//{
-	//   index = (++index % 8);
-	//   PORTB = 1 << index; 
-	//Sleep(1500);
-	//}
 
 	return 0;
 }
