@@ -56,11 +56,11 @@ void run1()
 	EnableADCFreeRun();
 	StartADC();
 
-	double firstADC = ReadADCValue();
+	uint firstADC = ReadADCValue();
 
 	while (1)
 	{
-		double currADC = ReadADCValue();
+		uint currADC = ReadADCValue();
 
 		if (currADC > firstADC)
 		{

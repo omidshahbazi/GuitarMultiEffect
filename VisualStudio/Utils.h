@@ -1,6 +1,7 @@
 #pragma once
 #include <avr/io.h>
 
+#define uint unsigned int
 #define bool char
 #define true 1
 #define false 0
@@ -23,7 +24,7 @@
 #define SetPortDPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex))
 #define SetPortCPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex))
 
-void BindMUXToADCPin(unsigned int PinIndex)
+void BindMUXToADCPin(uint PinIndex)
 {
 	switch (PinIndex)
 	{
@@ -132,7 +133,7 @@ void DisableADCFreeRun(void)
 }
 
 //Must be a power two
-void SetADCDivisionFactor(unsigned int Value)
+void SetADCDivisionFactor(uint Value)
 {
 	switch (Value)
 	{
@@ -187,14 +188,14 @@ void SetADCDivisionFactor(unsigned int Value)
 	}
 }
 
-unsigned int ReadADCValue()
+uint ReadADCValue()
 {
 	while (!IsBitEnabled(ADCSRA, ADIF));
 
 	return ADC;
 }
 
-unsigned int StartAndReadADCValue()
+uint StartAndReadADCValue()
 {
 	StartADC();
 
