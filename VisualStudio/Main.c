@@ -1,8 +1,6 @@
 #include "Utils.h"
 #include <inttypes.h>
 #include <avr/interrupt.h>
-#include <avr/sleep.h>
-#include <util/delay.h>
 
 //void run()
 //{
@@ -64,11 +62,11 @@ void run1()
 
 		if (currADC > firstADC)
 		{
-			TurnOnPin(PORTD, 0);
+			SetPortDPin(0);
 		}
 		else
 		{
-			TurnOffPin(PORTD, 0);
+			ResetPortDPin(0);
 		}
 	}
 }
@@ -95,7 +93,7 @@ int main()
 	//{
 	//   index = (++index % 8);
 	//   PORTB = 1 << index; 
-	//_delay_ms(1500);
+	//Sleep(1500);
 	//}
 
 	return 0;

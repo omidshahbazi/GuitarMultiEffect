@@ -1,28 +1,47 @@
 #pragma once
 #include <avr/io.h>
+#include <util/delay.h>
 
 #define uint unsigned int
 #define bool char
 #define true 1
 #define false 0
 
-#define EnableBit(Register, BitIndex) (Register |= (1 << BitIndex))
-#define DisableBit(Register, BitIndex) (Register &= ~(1 << BitIndex))
-#define IsBitEnabled(Register, BitIndex) ((Register & (1 << BitIndex)) != 0)
-
-#define TurnOnPort(Port) (Port = 0xFF)
-#define TurnOffPort(Port) (Port = 0x00)
-
-#define TurnOnPin(Port, PinIndex) EnableBit(Port, PinIndex)
-#define TurnOffPin(Port, PinIndex) DisableBit(Port, PinIndex)
+#define EnableBit(Mask, BitIndex) (Mask |= (1 << BitIndex))
+#define DisableBit(Mask, BitIndex) (Mask &= ~(1 << BitIndex))
+#define IsBitEnabled(Mask, BitIndex) ((Mask & (1 << BitIndex)) != 0)
 
 #define SetPortBMode(Writable) (DDRB = (Writable ? 0xFF : 0))
-#define SetPortDMode(Writable) (DDRD = (Writable ? 0xFF : 0))
 #define SetPortCMode(Writable) (DDRC = (Writable ? 0xFF : 0))
+#define SetPortDMode(Writable) (DDRD = (Writable ? 0xFF : 0))
 
 #define SetPortBPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex))
-#define SetPortDPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex))
-#define SetPortCPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex))
+#define SetPortCPinMode(PinIndex, Writable) (DDRC = (Writable ? DDRC | (1 << PinIndex) : DDRC & ~(1 << PinIndex))
+#define SetPortDPinMode(PinIndex, Writable) (DDRD = (Writable ? DDRD | (1 << PinIndex) : DDRD & ~(1 << PinIndex))
+
+#define ReadFromPortB() (PINB & 0b11111111)
+#define ReadFromPortC() (PINC & 0b11111111)
+#define ReadFromPortD() (PIND & 0b11111111)
+
+#define ReadFromPortBPin(PinIndex) (PINB & (1 << PinIndex))
+#define ReadFromPortCPin(PinIndex) (PINC & (1 << PinIndex))
+#define ReadFromPortDPin(PinIndex) (PIND & (1 << PinIndex))
+
+#define SetPortB() (PORTB = 0xFF)
+#define SetPortC() (PORTC = 0xFF)
+#define SetPortD() (PORTD = 0xFF)
+
+#define SetPortBPin(PinIndex) EnableBit(PORTB, PinIndex)
+#define SetPortCPin(PinIndex) EnableBit(PORTC, PinIndex)
+#define SetPortDPin(PinIndex) EnableBit(PORTD, PinIndex)
+
+#define ResetPortB() (PORTB = 0x00)
+#define ResetPortC() (PORTC = 0x00)
+#define ResetPortD() (PORTD = 0x00)
+
+#define ResetPortBPin(PinIndex) DisableBit(PORTB, PinIndex)
+#define ResetPortCPin(PinIndex) DisableBit(PORTC, PinIndex)
+#define ResetPortDPin(PinIndex) DisableBit(PORTD, PinIndex)
 
 void BindMUXToADCPin(uint PinIndex)
 {
@@ -132,7 +151,7 @@ void DisableADCFreeRun(void)
 	DisableBit(ADCSRA, ADFR);
 }
 
-//Must be a power two
+//Must be a power two, the larger value, the slower ADC clock
 void SetADCDivisionFactor(uint Value)
 {
 	switch (Value)
@@ -200,4 +219,9 @@ uint StartAndReadADCValue()
 	StartADC();
 
 	return ReadADCValue();
+}
+
+void Sleep(uint Milliseconds)
+{
+	_delay_ms(Milliseconds);
 }
