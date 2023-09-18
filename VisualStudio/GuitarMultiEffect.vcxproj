@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeIncludeSearchPath>C:\WinAVR-20100110\avr\include</NMakeIncludeSearchPath>
-    <NMakePreprocessorDefinitions>__AVR_ATmega8__</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>C:\WinAVR-20100110\avr\include;$(ProjectDir)</NMakeIncludeSearchPath>
+    <NMakePreprocessorDefinitions>__DOXYGEN__;STM32F401xx;__STATIC_INLINE=inline</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,6 +134,13 @@
     <ClCompile Include="Main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="core_cm4.h" />
+    <ClInclude Include="core_cmFunc.h" />
+    <ClInclude Include="core_cmInstr.h" />
+    <ClInclude Include="core_cmSimd.h" />
+    <ClInclude Include="stm32f4xx.h" />
+    <ClInclude Include="stm32f4xx_it.h" />
+    <ClInclude Include="system_stm32f4xx.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
