@@ -2,24 +2,25 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define uint8 unsigned char
-#define uint32 unsigned int
-#define bool char
+#define uint8 uint8_t
+#define uint16 uint16_t
+#define uint32 uint32_t
+#define bool uint8_t
 #define true 1
 #define false 0
 
 #define EnableBit(Mask, BitIndex) (Mask |= (1 << BitIndex))
 #define DisableBit(Mask, BitIndex) (Mask &= ~(1 << BitIndex))
 #define ToggleBit(Mask, BitIndex) (Mask ^= (1 << BitIndex))
-#define IsBitEnabled(Mask, BitIndex) ((Mask & (1 << BitIndex)) != 0)
+#define IsBitEnabled(Mask, BitIndex) (Mask & (1 << BitIndex))
 
 #define SetPortBMode(Writable) (DDRB = (Writable ? 0xFF : 0))
 #define SetPortCMode(Writable) (DDRC = (Writable ? 0xFF : 0))
 #define SetPortDMode(Writable) (DDRD = (Writable ? 0xFF : 0))
 
-#define SetPortBPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex))
-#define SetPortCPinMode(PinIndex, Writable) (DDRC = (Writable ? DDRC | (1 << PinIndex) : DDRC & ~(1 << PinIndex))
-#define SetPortDPinMode(PinIndex, Writable) (DDRD = (Writable ? DDRD | (1 << PinIndex) : DDRD & ~(1 << PinIndex))
+#define SetPortBPinMode(PinIndex, Writable) (DDRB = (Writable ? DDRB | (1 << PinIndex) : DDRB & ~(1 << PinIndex)))
+#define SetPortCPinMode(PinIndex, Writable) (DDRC = (Writable ? DDRC | (1 << PinIndex) : DDRC & ~(1 << PinIndex)))
+#define SetPortDPinMode(PinIndex, Writable) (DDRD = (Writable ? DDRD | (1 << PinIndex) : DDRD & ~(1 << PinIndex)))
 
 #define ReadFromPortB() (PINB & 0b11111111)
 #define ReadFromPortC() (PINC & 0b11111111)
@@ -226,9 +227,6 @@ uint32 StartAndReadADCValue(void)
 //4, 16, 64, 128
 void EnableMasterSPI(uint8 Clock)
 {
-	EnableBit(SPCR, SPE);
-	EnableBit(SPCR, MSTR);
-
 	switch (Clock)
 	{
 	case 2:
@@ -255,6 +253,9 @@ void EnableMasterSPI(uint8 Clock)
 		EnableBit(SPCR, SPR1);
 	} break;
 	}
+
+	EnableBit(SPCR, SPE);
+	EnableBit(SPCR, MSTR);
 }
 
 void DisableSPI()
@@ -265,9 +266,13 @@ void DisableSPI()
 	DisableBit(SPCR, SPR1);
 }
 
-void TransmitSPI(uint8 Value)
+void TransmitSPI(uint16 Value)
 {
-	SPDR = Value;
+	SPDR = (uint8)(Value >> 8);
+
+	while (!IsBitEnabled(SPSR, SPIF));
+
+	SPDR = (uint8)Value;
 
 	while (!IsBitEnabled(SPSR, SPIF));
 }

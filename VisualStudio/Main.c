@@ -43,7 +43,9 @@
 int main()
 {
 	SetPortDMode(true);
-	SetPortBMode(true);
+	SetPortBPinMode(2, true);
+	SetPortBPinMode(3, true);
+	SetPortBPinMode(5, true);
 
 	BindMUXToADCPin(0);
 
@@ -57,9 +59,10 @@ int main()
 
 	while (1)
 	{
-		uint32 currADC = ReadADCValue();
+		//uint32 currADC = ReadADCValue();
 
-		TransmitSPI(currADC >> 2);
+		//TransmitSPI(currADC >> 2);
+		TransmitSPI(0x3FF);
 	}
 
 	return 0;
