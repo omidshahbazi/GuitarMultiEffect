@@ -9,6 +9,28 @@
 #define true 1
 #define false 0
 
+#define ADC_DIVISION_FACTOR_2 2
+#define ADC_DIVISION_FACTOR_4 4
+#define ADC_DIVISION_FACTOR_8 8
+#define ADC_DIVISION_FACTOR_16 16
+#define ADC_DIVISION_FACTOR_32 32
+#define ADC_DIVISION_FACTOR_64 64
+#define ADC_DIVISION_FACTOR_128 128
+
+#define PWM_PIN_8BIT_1 1
+#define PWM_PIN_8BIT_2 2
+#define PWM_PIN_16BIT 3
+
+#define PWM_MODE_FAST 0
+#define PWM_MODE_PHASE_CORRECT 1
+#define PWM_MODE_FREQ_AND_PHASE_CORRECT 2
+
+#define PWM_PRESCALER_OFF 1
+#define PWM_PRESCALER_8 8
+#define PWM_PRESCALER_64 64
+#define PWM_PRESCALER_256 256
+#define PWM_PRESCALER_1024 1024
+
 #define EnableBit(Mask, BitIndex) (Mask |= (1 << BitIndex))
 #define DisableBit(Mask, BitIndex) (Mask &= ~(1 << BitIndex))
 #define ToggleBit(Mask, BitIndex) (Mask ^= (1 << BitIndex))
@@ -154,54 +176,54 @@ void DisableADCFreeRun(void)
 	DisableBit(ADCSRA, ADFR);
 }
 
-//2, 4, 8, 16, 32, 64, 128, the larger value, the slower ADC clock
+//The larger value, the slower ADC clock
 void SetADCDivisionFactor(uint8 Value)
 {
 	switch (Value)
 	{
-	case 2:
+	case ADC_DIVISION_FACTOR_2:
 	{
 		EnableBit(ADCSRA, ADPS0);
 		DisableBit(ADCSRA, ADPS1);
 		DisableBit(ADCSRA, ADPS2);
 	} break;
 
-	case 4:
+	case ADC_DIVISION_FACTOR_4:
 	{
 		DisableBit(ADCSRA, ADPS0);
 		EnableBit(ADCSRA, ADPS1);
 		DisableBit(ADCSRA, ADPS2);
 	} break;
 
-	case 8:
+	case ADC_DIVISION_FACTOR_8:
 	{
 		EnableBit(ADCSRA, ADPS0);
 		EnableBit(ADCSRA, ADPS1);
 		DisableBit(ADCSRA, ADPS2);
 	} break;
 
-	case 16:
+	case ADC_DIVISION_FACTOR_16:
 	{
 		DisableBit(ADCSRA, ADPS0);
 		DisableBit(ADCSRA, ADPS1);
 		EnableBit(ADCSRA, ADPS2);
 	} break;
 
-	case 32:
+	case ADC_DIVISION_FACTOR_32:
 	{
 		EnableBit(ADCSRA, ADPS0);
 		DisableBit(ADCSRA, ADPS1);
 		EnableBit(ADCSRA, ADPS2);
 	} break;
 
-	case 64:
+	case ADC_DIVISION_FACTOR_64:
 	{
 		DisableBit(ADCSRA, ADPS0);
 		EnableBit(ADCSRA, ADPS1);
 		EnableBit(ADCSRA, ADPS2);
 	} break;
 
-	case 128:
+	case ADC_DIVISION_FACTOR_128:
 	{
 		EnableBit(ADCSRA, ADPS0);
 		EnableBit(ADCSRA, ADPS1);
@@ -275,6 +297,78 @@ void TransmitSPI(uint16 Value)
 	SPDR = (uint8)Value;
 
 	while (!IsBitEnabled(SPSR, SPIF));
+}
+
+void InitializePWM(uint8 Pin, uint8 Mode)
+{
+	TCCR1A &= ~((1 << WGM10) | (1 << WGM11) | (1 << COM1A1));
+	TCCR1B &= ~((1 << WGM12) | (1 << WGM13));
+
+	switch (Mode)
+	{
+	case PWM_MODE_FAST:
+	{
+		TCCR1A |= (1 << COM1A1) | (1 << WGM10);
+		TCCR1B |= (1 << WGM12);
+	} break;
+
+	case PWM_MODE_PHASE_CORRECT:
+	{
+		TCCR1A |= (1 << COM1A1);
+		TCCR1B |= (1 << WGM13);
+	} break;
+
+	case PWM_MODE_FREQ_AND_PHASE_CORRECT:
+	{
+		TCCR1A |= (1 << COM1A1) | (1 << WGM10);
+		TCCR1B |= (1 << WGM13);
+	} break;
+	}
+
+	TCCR1B |= (1 << CS11) | (1 << CS10);
+}
+
+//0.0-1.0
+void SetPWM(uint8 Pin, float DutyCycle)
+{
+	uint16 compareValue = 255 * DutyCycle;
+
+	switch (Pin)
+	{
+	case PWM_PIN_8BIT_1:
+		OCR1A = compareValue;
+		break;
+
+	case PWM_PIN_8BIT_2:
+		OCR1B = compareValue;
+		break;
+
+	case PWM_PIN_16BIT:
+		ICR1 = compareValue;
+		break;
+	}
+
+	TCCR1B |= (1 << CS11) | (1 << CS10);
+}
+
+void SetPWM1(uint8 Pin, float Frequency, uint8 Prescaler)
+{
+	uint16 top = F_CPU / (Frequency * 2 * Prescaler) - 1;
+
+	switch (Pin)
+	{
+	case PWM_PIN_8BIT_1:
+		OCR1A = top;
+		break;
+
+	case PWM_PIN_8BIT_2:
+		OCR1B = top;
+		break;
+
+	case PWM_PIN_16BIT:
+		ICR1 = top;
+		break;
+	}
 }
 
 void Sleep(uint32 Milliseconds)

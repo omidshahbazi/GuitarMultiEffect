@@ -43,26 +43,41 @@
 int main()
 {
 	SetPortDMode(true);
-	SetPortBPinMode(2, true);
-	SetPortBPinMode(3, true);
-	SetPortBPinMode(5, true);
+	SetPortBPinMode(1, true);
 
 	BindMUXToADCPin(0);
 
-	SetADCDivisionFactor(128);
+	SetADCDivisionFactor(ADC_DIVISION_FACTOR_128);
 
 	EnableADC();
 	EnableADCFreeRun();
 	StartADC();
 
-	EnableMasterSPI(16);
+	//InitializePWM(PWM_PIN_8BIT_1, PWM_MODE_FAST);
 
+	 // Set PORTA as an output
+	DDRB |= (1 << PB1);  // Assuming you are using PA0
+
+	// Configure Timer0 for Fast PWM mode
+	TCCR0 = (1 << WGM10) | (1 << WGM20) | (1 << COM1B0) | (1 << CS01) | (1 << CS00);
+
+	// Set initial PWM value
+
+	uint8 brightness = 0;
 	while (1)
 	{
-		//uint32 currADC = ReadADCValue();
+		uint32 currADC = ReadADCValue();
 
-		//TransmitSPI(currADC >> 2);
-		TransmitSPI(0x3FF);
+		//SetPWM1(PWM_PIN_8BIT_1, currADC / 1024.0F, PWM_PRESCALER_8);
+
+		while (brightness++ <= 100)
+		{
+			OCR1A = currADC / 1023.0F * 3;  // Update PWM value
+			//SetPWM(PWM_PIN_8BIT_1, brightness / 100.0F);
+			//Sleep(10); // Delay for smoother transition
+		}
+
+		//Sleep(10);
 	}
 
 	return 0;
