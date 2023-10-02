@@ -4,7 +4,7 @@
   "name": "EasyEDA",
   "content": "",
   "created_at": "2023-09-30 16:12:41",
-  "updated_at": "2023-10-01 13:53:25",
+  "updated_at": "2023-10-02 11:39:43",
   "stick": "",
   "documents": [
     {
@@ -19,7 +19,8 @@
         "7716d1df151c406ba97d28ed79da1dbb": 1,
         "c5e3c95bc91b4c29ade5b871ddf776a2": 2,
         "5173f1664af2464998f4808604494d1e": 1,
-        "9f8cc0cd9e5e4cd2b2210ffcbc462abe": 1
+        "9f8cc0cd9e5e4cd2b2210ffcbc462abe": 1,
+        "48e8490fd07d4bffb9936423cccbe19e": 1
       },
       "BOM": [
         [
@@ -58,6 +59,24 @@
             "spiceSymbolName": "25YXF100MFFC6.3X11",
             "puuid": "1a9b494b74c34d3b879eb7f824b3824d",
             "uuid": "9f8cc0cd9e5e4cd2b2210ffcbc462abe"
+          }
+        ],
+        [
+          "Reset Switch",
+          1,
+          "SW-TH_5P-L6.0-W6.0-P4.50-LS6.5",
+          "SW1",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C470256",
+            "Manufacturer": "ALPSALPINE(阿尔卑斯阿尔派)",
+            "Manufacturer Part": "SKHHQVA010",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C470256&%26type=1&ref=editor",
+            "spiceSymbolName": "SKHHQVA010",
+            "puuid": "e8d77d12525643559763a2de1af23fd1",
+            "uuid": "48e8490fd07d4bffb9936423cccbe19e"
           }
         ],
         [
@@ -130,11 +149,11 @@
           }
         ]
       ],
-      "updateTime": 1696155805,
+      "updateTime": 1696234183,
       "createTime": 1696077761,
       "histories": [],
       "created_at": "2023-09-30 16:12:41",
-      "updated_at": "2023-10-01 13:53:25"
+      "updated_at": "2023-10-02 11:39:43"
     },
     {
       "uuid": "eb5450a507fdd005a1de6fc2c2b59e62",
@@ -150,19 +169,20 @@
         "73cc8e56761c4d8f93a9ef6846d6a786": 1,
         "273e4b1e1ad84e4b86d86b52ec4530fd": 2,
         "8e9a9f5fd1b442e89cf7754d2edc1b02": 1,
-        "1a9b494b74c34d3b879eb7f824b3824d": 1
+        "1a9b494b74c34d3b879eb7f824b3824d": 1,
+        "e8d77d12525643559763a2de1af23fd1": 1
       },
       "BOM": [],
-      "updateTime": 1696155747,
+      "updateTime": 1696179951,
       "createTime": 1696078414,
       "histories": [],
       "created_at": "2023-09-30 16:23:34",
-      "updated_at": "2023-10-01 13:52:27"
+      "updated_at": "2023-10-01 20:35:51"
     }
   ],
   "sort": [],
   "title": "EasyEDA",
   "foldername": "EasyEDA",
   "schfilename": "GuitarMultiEffect.json",
-  "schfilemtime": 1696155805055
+  "schfilemtime": 1696234183506
 }

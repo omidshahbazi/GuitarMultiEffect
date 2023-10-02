@@ -18,6 +18,15 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ArduinoIDE\ArduinoIDE.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ArduinoIDE\Application.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ArduinoIDE\Application.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -71,8 +80,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeIncludeSearchPath>C:\WinAVR-20100110\avr\include;$(ProjectDir)</NMakeIncludeSearchPath>
-    <NMakePreprocessorDefinitions>__DOXYGEN__;STM32F401xx;__STATIC_INLINE=inline</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\esp_common\include;C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\esp_hw_support\include;C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\freertos\include;C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\soc\include;C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\soc\esp32s2\include;C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\hal\include;C:\Users\Omid\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.11\tools\sdk\esp32s2\include\driver\include</NMakeIncludeSearchPath>
+    <NMakePreprocessorDefinitions>SOC_I2S_SUPPORTS_ADC;ESP_PLATFORM</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -130,19 +139,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Main.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="core_cm4.h" />
-    <ClInclude Include="core_cmFunc.h" />
-    <ClInclude Include="core_cmInstr.h" />
-    <ClInclude Include="core_cmSimd.h" />
-    <ClInclude Include="stm32f4xx.h" />
-    <ClInclude Include="stm32f4xx_it.h" />
-    <ClInclude Include="system_stm32f4xx.h" />
-    <ClInclude Include="Utils.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

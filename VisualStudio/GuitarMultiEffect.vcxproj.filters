@@ -15,33 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c">
+    <None Include="..\ArduinoIDE\ArduinoIDE.ino">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ArduinoIDE\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core_cm4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core_cmFunc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core_cmInstr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core_cmSimd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stm32f4xx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stm32f4xx_it.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="system_stm32f4xx.h">
+    <ClInclude Include="..\ArduinoIDE\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
