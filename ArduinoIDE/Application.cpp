@@ -1,11 +1,12 @@
 #include "Application.h"
+#include "Arduino.h"
 #include "driver/i2s.h"
 #include "esp_task_wdt.h"
 
-#define ES8388
+#define AC101
 
 
-#define SAMPLE_RATE 44100
+#define SAMPLE_RATE 16000//44100
 #define DMA_BUFFER_COUNT 2
 #define DMA_BUFFER_LENGTH 32
 
@@ -21,7 +22,7 @@
 #define I2S_NUM 0
 
 #if defined(AC101)
-//ESP32-A1S-AC101 Pin Setup
+
 #define I2S_MCLK GPI_NUM_0
 
 #define I2S_BCK_IO GPIO_NUM_27
@@ -32,12 +33,14 @@
 #define AC101_SDA GPIO_NUM_33
 #define AC101_SCK GPIO_NUM_32
 #define AC101_ADDR 0x1A
+
 #elif defined(ES8388)
-//ESP32-A1S-ES8388 Pin Setup
+
 #define I2S_BCK_IO GPIO_NUM_5
 #define I2S_WS_IO GPIO_NUM_25
 #define I2S_DI_IO GPIO_NUM_35
 #define I2S_DO_IO GPIO_NUM_26
+
 #endif
 
 Application::Application(void)

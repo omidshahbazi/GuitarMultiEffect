@@ -11,6 +11,5 @@ void setup()
 
 void loop()
 {
-    Serial.print("TEST loop\n");
     g_App.Update();
 }
