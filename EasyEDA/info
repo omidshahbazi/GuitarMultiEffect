@@ -1,26 +1,20 @@
 {
-  "uuid": "0ee89feb1840a776fe5438bc45f599e5",
+  "uuid": "1b704a982a365e841422acec9db2a462",
   "path": "Offline/EasyEDA",
   "name": "EasyEDA",
   "content": "",
   "created_at": "2023-09-30 16:12:41",
-  "updated_at": "2023-10-02 17:55:30",
+  "updated_at": "2023-10-03 18:31:33",
   "stick": "",
   "documents": [
     {
-      "uuid": "c77357c9e57ca8ee1b58a8947c567915",
+      "uuid": "cc4d4b2d508db206210bd160ca9e35cc",
       "title": "Shematic",
       "description": "",
       "docType": "1",
       "master": "",
       "thumb": "/images/thumb-default.png",
-      "components": {
-        "8ba4e400652745a0a1ce03c877134888": 1,
-        "c5e3c95bc91b4c29ade5b871ddf776a2": 2,
-        "48e8490fd07d4bffb9936423cccbe19e": 2,
-        "7716d1df151c406ba97d28ed79da1dbb": 1,
-        "5173f1664af2464998f4808604494d1e": 1
-      },
+      "components": {},
       "BOM": [
         [
           "Value",
@@ -28,159 +22,21 @@
           "Package",
           "Components",
           "CustomPara"
-        ],
-        [
-          "AMS1117-3V3",
-          1,
-          "REG-AMS1117-3P",
-          "2",
-          {
-            "Contributor": "Giri Priyadarshan",
-            "spiceSymbolName": "REG-AMS1117-3P-*",
-            "Manufacturer Part": "",
-            "puuid": "8e9a9f5fd1b442e89cf7754d2edc1b02",
-            "uuid": "5173f1664af2464998f4808604494d1e"
-          }
-        ],
-        [
-          "Program Mode Switch",
-          1,
-          "SW-TH_5P-L6.0-W6.0-P4.50-LS6.5",
-          "SW2",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C470256",
-            "Manufacturer": "ALPSALPINE(阿尔卑斯阿尔派)",
-            "Manufacturer Part": "SKHHQVA010",
-            "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C470256&%26type=1&ref=editor",
-            "spiceSymbolName": "SKHHQVA010",
-            "puuid": "e8d77d12525643559763a2de1af23fd1",
-            "uuid": "48e8490fd07d4bffb9936423cccbe19e"
-          }
-        ],
-        [
-          "Reset Switch",
-          1,
-          "SW-TH_5P-L6.0-W6.0-P4.50-LS6.5",
-          "SW3",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C470256",
-            "Manufacturer": "ALPSALPINE(阿尔卑斯阿尔派)",
-            "Manufacturer Part": "SKHHQVA010",
-            "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C470256&%26type=1&ref=editor",
-            "spiceSymbolName": "SKHHQVA010",
-            "puuid": "e8d77d12525643559763a2de1af23fd1",
-            "uuid": "48e8490fd07d4bffb9936423cccbe19e"
-          }
-        ],
-        [
-          "ESP32-A1S",
-          1,
-          "ESP32-A1S",
-          "U2",
-          {
-            "Supplier": "LCSC",
-            "Supplier Part": "C277945",
-            "Manufacturer": "Ai-Thinker",
-            "Manufacturer Part": "ESP32-A1S",
-            "Contributor": "zqx100",
-            "spiceSymbolName": "ESP32-A1S",
-            "puuid": "f05f7e61a5e44a27b90ceb2c6d0903c9",
-            "uuid": "8ba4e400652745a0a1ce03c877134888"
-          }
-        ],
-        [
-          "ESP32-A1S 20-38",
-          1,
-          "HDR-TH_19P-P1.27-V-M",
-          "U3",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C2881664",
-            "Manufacturer": "XKB Connectivity(中国星坤)",
-            "Manufacturer Part": "X1311WV-19J-C18D27",
-            "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C2881664&%26type=1&ref=editor",
-            "spiceSymbolName": "X1311WV-19J-C18D27",
-            "puuid": "273e4b1e1ad84e4b86d86b52ec4530fd",
-            "uuid": "c5e3c95bc91b4c29ade5b871ddf776a2"
-          }
-        ],
-        [
-          "ESP32-A1S 1-19",
-          1,
-          "HDR-TH_19P-P1.27-V-M",
-          "U4",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C2881664",
-            "Manufacturer": "XKB Connectivity(中国星坤)",
-            "Manufacturer Part": "X1311WV-19J-C18D27",
-            "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C2881664&%26type=1&ref=editor",
-            "spiceSymbolName": "X1311WV-19J-C18D27",
-            "puuid": "273e4b1e1ad84e4b86d86b52ec4530fd",
-            "uuid": "c5e3c95bc91b4c29ade5b871ddf776a2"
-          }
-        ],
-        [
-          "CP2102",
-          1,
-          "CP2102",
-          "U5",
-          {
-            "Manufacturer": "",
-            "Manufacturer Part": "",
-            "Supplier Part": "",
-            "Supplier": "",
-            "link": "",
-            "Contributor": "mateoramos",
-            "spiceSymbolName": "CP2102_SCH",
-            "puuid": "73cc8e56761c4d8f93a9ef6846d6a786",
-            "uuid": "7716d1df151c406ba97d28ed79da1dbb"
-          }
         ]
       ],
-      "updateTime": 1696256726,
+      "updateTime": 1696345293,
       "createTime": 1696077761,
       "histories": [],
       "created_at": "2023-09-30 16:12:41",
-      "updated_at": "2023-10-02 17:55:26"
-    },
-    {
-      "uuid": "eb5450a507fdd005a1de6fc2c2b59e62",
-      "puuid": "0ee89feb1840a776fe5438bc45f599e5",
-      "title": "PCB_EasyEDA",
-      "filename": "PCB_EasyEDA.json",
-      "description": "",
-      "docType": "3",
-      "master": "",
-      "thumb": "/images/thumb-default.png",
-      "components": {
-        "f05f7e61a5e44a27b90ceb2c6d0903c9": 1,
-        "273e4b1e1ad84e4b86d86b52ec4530fd": 2,
-        "8e9a9f5fd1b442e89cf7754d2edc1b02": 1,
-        "e8d77d12525643559763a2de1af23fd1": 2,
-        "73cc8e56761c4d8f93a9ef6846d6a786": 1
-      },
-      "BOM": [],
-      "updateTime": 1696256730,
-      "createTime": 1696078414,
-      "histories": [],
-      "created_at": "2023-09-30 16:23:34",
-      "updated_at": "2023-10-02 17:55:30"
+      "updated_at": "2023-10-03 18:31:33"
     }
   ],
-  "sort": [],
+  "sort": [
+    "c77357c9e57ca8ee1b58a8947c567915",
+    "d3cf0f4c2c85d82a5e77b65679112658"
+  ],
   "title": "EasyEDA",
   "foldername": "EasyEDA",
   "schfilename": "GuitarMultiEffect.json",
-  "schfilemtime": 1696256726768
+  "schfilemtime": 1696345293831
 }
