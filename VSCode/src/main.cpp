@@ -1,13 +1,14 @@
-#include "Application.h"
+// #include "Application.h"
 
-Application g_App;
+// Application g_App;
 
-void setup()
-{
-	g_App.Initialize();
-}
+// void setup()
+// {
+// 	g_App.Initialize();
+// }
 
-void loop()
-{
-	g_App.Update();
-}
+// void loop()
+// {
+// 	g_App.Update();
+// }
+
