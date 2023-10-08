@@ -7,7 +7,7 @@
 #include "driver/gpio.h"
 #include "driver/i2s.h"
 #include "soc/gpio_sig_map.h"
-#include "ES8388Coded.h"
+#include "codec_es8388.h"
 #include "math.h"
 
 #define I2C_MASTER_NUM 0
@@ -22,7 +22,7 @@
 
 #define SAMPLE_RATE (44100)
 #define I2S_NUM (i2s_port_t)(0)
-#define WAVE_FREQ_HZ (700)
+#define WAVE_FREQ_HZ (1000)
 #define PI (3.14159265)
 
 #define I2S_BCK_IO (GPIO_NUM_27)
@@ -63,10 +63,10 @@ esp_err_t event_handler(void *ctx, system_event_t *event)
 uint8_t i2c_write_bulk(uint8_t i2c_bus_addr, uint8_t reg, uint8_t bytes, uint8_t *data)
 {
         /*
-        printf( "Writing [%02x]=", reg );
-        for ( int i = 0 ; i < bytes ; i++ )
-                printf( "%02x:", data[i] );
-        printf( "\n");
+    printf( "Writing [%02x]=", reg );
+    for ( int i = 0 ; i < bytes ; i++ )
+        printf( "%02x:", data[i] );
+    printf( "\n");
 */
 
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -372,7 +372,7 @@ void es8388_config()
         es_format_t fmt = I2S_NORMAL;
 
         es8388_config_i2s(bits_length, ES_MODULE_ADC_DAC, fmt);
-        es8388_set_voice_volume(100);
+        es8388_set_voice_volume(70);
         es8388_start(module);
 }
 
@@ -435,6 +435,7 @@ esp_err_t i2s_mclk_gpio_select(i2s_port_t i2s_num, gpio_num_t gpio_num)
 
 void i2s_init()
 {
+
         i2s_config_t i2s_config = {
             .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX),
             .sample_rate = SAMPLE_RATE,
@@ -460,7 +461,7 @@ void i2s_init()
         //    i2s_mclk_gpio_select(I2S_NUM, (gpio_num_t)GPIO_NUM_3 );
         i2s_mclk_gpio_select(I2S_NUM, (gpio_num_t)IS2_MCLK_PIN);
 
-        i2s_set_clk(I2S_NUM, SAMPLE_RATE, 16, (i2s_channel_t)2);
+        i2s_set_clk(I2S_NUM, SAMPLE_RATE, 16, I2S_CHANNEL_STEREO);
 }
 
 static void setup_sine_waves16(int amplitude)
@@ -497,20 +498,22 @@ void setup()
 
 size_t i2s_bytes_write = 0;
 
-int amplitude = 10000;
+int amplitude = 8000;
 int start_dir = 50;
 int dir = start_dir;
 
 void loop()
 {
         amplitude -= dir;
-        if (amplitude <= start_dir || amplitude >= 15000)
+        if (amplitude <= start_dir || amplitude >= 30000)
                 dir *= -1;
+
+        printf("Amp: %i\n", amplitude);
 
         setup_sine_waves16(amplitude);
 
         // i2s_write(I2S_NUM, txBuf, BUF_SAMPLES*2, &i2s_bytes_write, -1);
         i2s_write(I2S_NUM, txBuf, BUF_SAMPLES * 2, &i2s_bytes_write, -1);
-        printf("Bytes: %d %d\n", i2s_bytes_write, txBuf[10]);
+        // printf( "Bytes: %d\n", i2s_bytes_write );
         // vTaskDelay(10/portTICK_RATE_MS);
 }
