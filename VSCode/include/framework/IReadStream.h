@@ -1,3 +1,4 @@
+#pragma once
 #ifndef I_READ_STREAM_H
 #define I_READ_STREAM_H
 

@@ -2,7 +2,7 @@
 #include <memory.h>
 #include "framework/Debug.h"
 #include "framework/Memory.h"
-#include "framework/AnalogReadStream"
+#include "framework/AnalogReadStream.h"
 
 #define FRAME_LENGTH 64
 #define SAMPLE_COUNT FRAME_LENGTH / 2
