@@ -1,26 +1,31 @@
 #include "Application.h"
 #include <memory.h>
+#include "framework/Debug.h"
+#include "framework/Memory.h"
+#include "framework/AnalogReadStream"
 
 #define FRAME_LENGTH 64
 #define SAMPLE_COUNT FRAME_LENGTH / 2
 #define FRAME_SIZE FRAME_LENGTH * 4
 
 Application::Application(void)
+	: m_ReadStream(nullptr),
+	  m_InBufferInt(nullptr),
+	  m_InBuffer(nullptr),
+	  m_OutBufferInt(nullptr),
+	  m_OutBuffer(nullptr)
 {
-	m_InBufferInt = reinterpret_cast<int32_t *>(malloc(FRAME_LENGTH));
-	m_InBuffer = reinterpret_cast<float *>(malloc(FRAME_SIZE));
-
-	m_OutBufferInt = reinterpret_cast<int32_t *>(malloc(FRAME_LENGTH));
-	memset(m_OutBufferInt, 0, FRAME_LENGTH);
-
-	m_OutBuffer = reinterpret_cast<float *>(malloc(FRAME_SIZE));
-	memset(m_OutBuffer, 0, FRAME_SIZE);
-
-	m_OutCorrectionGain = 1;
+	m_ReadStream = Allocate<AnalogReadStream>();
+	m_InBufferInt = Allocate<int32_t>(FRAME_LENGTH);
+	m_InBuffer = Allocate<float>(FRAME_SIZE);
+	m_OutBufferInt = Allocate<int32_t>(FRAME_LENGTH);
+	m_OutBuffer = Allocate<float>(FRAME_SIZE);
 }
 
 void Application::Initialize(void)
 {
+	CHECK_CALL(m_ReadStream->Init());
+
 	SetupI2S();
 }
 

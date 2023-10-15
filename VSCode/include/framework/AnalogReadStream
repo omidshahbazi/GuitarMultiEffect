@@ -1,0 +1,23 @@
+#ifndef ANALOG_READ_STREAM_H
+#define ANALOG_READ_STREAM_H
+
+#include "IReadStream.h"
+#include "ES8388Codec.h"
+
+class AnalogReadStream : public IReadStream
+{
+public:
+	virtual bool Init(void) override
+	{
+	}
+
+	virtual bool Deinit(void) override
+	{
+	}
+
+	virtual bool Read(uint8_t *Buffer, uint16_t Count) override
+	{
+	}
+};
+
+#endif
