@@ -1,12 +1,8 @@
 #pragma once
-#ifndef ES8388_CODEC_H
-#define ES8388_CODEC_H
+#ifndef ESP32_A1S_MODULE_H
+#define ESP32_A1S_MODULE_H
 
-#include "Debug.h"
-#include "driver/i2s.h"
-#include "driver/i2c.h"
-
-#define ESP_CHECK_CALL(Expression) ASSERT((Expression) == ESP_OK, "Call failed %s", #Expression);
+#include "ES8388.h"
 
 // /* ES8388 register */
 // #define ES8388_CONTROL1 0x00
@@ -168,29 +164,6 @@
 
 // typedef enum
 // {
-// 	ADC_INPUT_MIN = -1,
-// 	ADC_INPUT_LINPUT1_RINPUT1 = 0x00,
-// 	ADC_INPUT_MIC1 = 0x05,
-// 	ADC_INPUT_MIC2 = 0x06,
-// 	ADC_INPUT_LINPUT2_RINPUT2 = 0x50,
-// 	ADC_INPUT_DIFFERENCE = 0xf0,
-// 	ADC_INPUT_MAX,
-// } es_adc_input_t;
-
-// typedef enum
-// {
-// 	DAC_OUTPUT_MIN = -1,
-// 	DAC_OUTPUT_LOUT1 = 0x20,
-// 	DAC_OUTPUT_LOUT2 = 0x08,
-// 	DAC_OUTPUT_SPK = 0x09,
-// 	DAC_OUTPUT_ROUT1 = 0x10,
-// 	DAC_OUTPUT_ROUT2 = 0x04,
-// 	DAC_OUTPUT_ALL = 0x3c,
-// 	DAC_OUTPUT_MAX,
-// } es_dac_output_t;
-
-// typedef enum
-// {
 // 	MIC_GAIN_MIN = -1,
 // 	MIC_GAIN_0DB = 0,
 // 	MIC_GAIN_3DB = 3,
@@ -241,7 +214,7 @@
 // 	es_lclk_div_t lclk_div; /*!< WS clock divide */
 // } es_i2s_clock_t;
 
-class ES8388Codec
+class ESP32A1SModule
 {
 public:
 	enum class Modes
@@ -257,6 +230,16 @@ public:
 	};
 
 public:
+	static bool Initialize(Modes Mode, ModuleVersions ModuleVersion, ES8388::InputModes InputMode, ES8388::OutputModes OutputMode)
+	{
+		CHECK_CALL(I2CInitialize(Mode, ModuleVersion));
+
+		CHECK_CALL(SetI2SPin(ModuleVersion));
+
+		CHECK_CALL(ES8388::Initialize(InputMode, OutputMode));
+	}
+
+private:
 	static bool I2CInitialize(Modes Mode, ModuleVersions ModuleVersion)
 	{
 		i2c_config_t config = {};
@@ -285,7 +268,7 @@ public:
 		return true;
 	}
 
-	static bool SetI2SPin(i2s_port_t Port, ModuleVersions ModuleVersion)
+	static bool SetI2SPin(ModuleVersions ModuleVersion)
 	{
 		i2s_pin_config_t config = {};
 		config.ws_io_num = GPIO_NUM_25;
@@ -307,14 +290,13 @@ public:
 		else
 			return false;
 
-		ESP_CHECK_CALL(i2s_set_pin(Port, &config));
+		ESP_CHECK_CALL(i2s_set_pin(I2S_NUM_0, &config));
 
 		SetMasterClockPin(I2S_NUM_0, masterClockPin);
 
 		return true;
 	}
 
-private:
 	static void SetMasterClockPin(i2s_port_t port, gpio_num_t gpio)
 	{
 		ASSERT(port != I2S_NUM_MAX, "Does not support I2S_NUM_MAX");
@@ -363,7 +345,5 @@ private:
 private:
 	static const char *TAG;
 };
-
-const char *ES8388Codec::TAG = "ES8388_DRIVER";
 
 #endif

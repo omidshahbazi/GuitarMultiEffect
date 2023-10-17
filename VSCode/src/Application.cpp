@@ -16,9 +16,9 @@ Application::Application(void)
 	  m_OutBuffer(nullptr)
 {
 	m_ReadStream = Allocate<AnalogReadStream>();
-	m_InBufferInt = Allocate<int32_t>(FRAME_LENGTH);
+	m_InBufferInt = Allocate<int32>(FRAME_LENGTH);
 	m_InBuffer = Allocate<float>(FRAME_SIZE);
-	m_OutBufferInt = Allocate<int32_t>(FRAME_LENGTH);
+	m_OutBufferInt = Allocate<int32>(FRAME_LENGTH);
 	m_OutBuffer = Allocate<float>(FRAME_SIZE);
 }
 

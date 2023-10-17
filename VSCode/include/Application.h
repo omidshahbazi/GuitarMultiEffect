@@ -2,7 +2,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <inttypes.h>
 #include "framework/IReadStream.h"
 
 class Application
@@ -26,10 +25,10 @@ private:
 private:
 	IReadStream *m_ReadStream;
 
-	int32_t *m_InBufferInt;
+	int32 *m_InBufferInt;
 	float *m_InBuffer;
 
-	int32_t *m_OutBufferInt;
+	int32 *m_OutBufferInt;
 	float *m_OutBuffer;
 };
 
