@@ -20,23 +20,21 @@ public:
 		Line = 0x04
 	};
 
-	enum class BitLengths
+	enum class BitsPerSamples
 	{
 		None = -1,
-		BitLength16 = 0x03,
-		BitLength18 = 0x02,
-		BitLength20 = 0x01,
-		BitLength24 = 0x00,
-		BitLength32 = 0x04,
+		BPS16 = 0x03,
+		BPS24 = 0x00,
+		BPS32 = 0x04,
 	};
 
 	enum class InputModes
 	{
 		None = -1,
-		LeftRightInput1 = 0x00,
+		LeftAndRightInput1 = 0x00,
 		Microphone1 = 0x05,
 		Microphone2 = 0x06,
-		LeftRightInput2 = 0x50,
+		LeftAndRightInput2 = 0x50,
 		Difference = 0xf0
 	};
 
@@ -53,10 +51,10 @@ public:
 
 	enum class Formats
 	{
-		Normal = 0, /*!< set normal I2S format */
-		Left,		/*!< set all left format */
-		Right,		/*!< set all right format */
-		DSP,		/*!< set dsp/pcm format */
+		Normal = 0,
+		Left,
+		Right,
+		DSP,
 	};
 
 private:
@@ -123,11 +121,11 @@ private:
 	};
 
 public:
-	static bool Initialize(Modules Module, BitLengths BitLength, InputModes InputMode, OutputModes OutputMode, Formats Format)
+	static bool Initialize(Modules Module, BitsPerSamples BitsPerSample, InputModes InputMode, OutputModes OutputMode, Formats Format)
 	{
 		CHECK_CALL(SetRegisters(InputMode, OutputMode));
 
-		CHECK_CALL(ConfigI2S(Module, BitLength, Format));
+		CHECK_CALL(ConfigI2S(Module, BitsPerSample, Format));
 
 		CHECK_CALL(SetVolume(70));
 
@@ -209,7 +207,7 @@ private:
 		return true;
 	}
 
-	static bool ConfigI2S(Modules Module, BitLengths BitLength, Formats Format)
+	static bool ConfigI2S(Modules Module, BitsPerSamples BitsPerSample, Formats Format)
 	{
 		if (Bitwise::IsEnabled(Module, Modules::ADC))
 		{
@@ -218,8 +216,8 @@ private:
 			LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Format");
 			I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xfc) | (uint8)Format);
 
-			LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Bits: %i", BitLength);
-			I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xe3) | ((int32)BitLength << 2));
+			LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
+			I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xe3) | ((int32)BitsPerSample << 2));
 		}
 
 		if (Bitwise::IsEnabled(Module, Modules::DAC))
@@ -229,8 +227,8 @@ private:
 			LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Format");
 			I2CWrite((uint8)DACRegisters::Control1, (reg & 0xfc) | ((uint8)Format << 1));
 
-			LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Bits: %i", BitLength);
-			I2CWrite((uint8)DACRegisters::Control1, (reg & 0xc7) | ((int32)BitLength << 3));
+			LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Bits: %x", BitsPerSample);
+			I2CWrite((uint8)DACRegisters::Control1, (reg & 0xc7) | ((int32)BitsPerSample << 3));
 		}
 
 		return true;

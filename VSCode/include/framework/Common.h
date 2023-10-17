@@ -12,6 +12,9 @@ typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 
+#define KHz 1000
+#define MHz 1000 * KHz
+
 class Bitwise
 {
 public:
@@ -21,5 +24,17 @@ public:
 		return (((int32)Mask & (int32)Bits) == (int32)Bits);
 	}
 };
+
+template <typename T, typename U>
+T operator|(T Left, U Right)
+{
+	return (T)((uint32)Left | (uint32)Right);
+}
+
+template <typename T, typename U>
+T operator|=(T Left, U Right)
+{
+	return (T)((uint32)Left | (uint32)Right);
+}
 
 #endif

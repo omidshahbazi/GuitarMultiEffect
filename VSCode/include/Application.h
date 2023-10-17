@@ -2,7 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "framework/IReadStream.h"
+#include "framework/Common.h"
 
 class Application
 {
@@ -22,8 +22,6 @@ private:
 	}
 
 private:
-	IReadStream *m_ReadStream;
-
 	int32 *m_InBufferInt;
 	float *m_InBuffer;
 
