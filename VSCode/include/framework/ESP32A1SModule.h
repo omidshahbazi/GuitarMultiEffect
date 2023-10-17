@@ -22,20 +22,17 @@ public:
 public:
 	static bool Initialize(Modes Mode, Versions Version, ES8388::Modules Module, ES8388::BitLengths BitLength, ES8388::InputModes InputMode, ES8388::OutputModes OutputMode, ES8388::Formats Format)
 	{
-		Print(ESP_LOG_INFO, "Tag", "Initialize1");
-		CHECK_CALL(I2CInitialize(Mode, Version));
+		CHECK_CALL(InitializeI2C(Mode, Version));
 
-		Print(ESP_LOG_INFO, "Tag", "Initialize2");
-		CHECK_CALL(SetI2SPin(Version));
-
-		Print(ESP_LOG_INFO, "Tag", "Initialize3");
 		CHECK_CALL(ES8388::Initialize(Module, BitLength, InputMode, OutputMode, Format));
+
+		CHECK_CALL(InitializeI2S(Version));
 
 		return true;
 	}
 
 private:
-	static bool I2CInitialize(Modes Mode, Versions Version)
+	static bool InitializeI2C(Modes Mode, Versions Version)
 	{
 		i2c_config_t config = {};
 		config.mode = (Mode == Modes::Master ? I2C_MODE_MASTER : I2C_MODE_SLAVE);
@@ -59,6 +56,30 @@ private:
 		ESP_CHECK_CALL(i2c_param_config(I2S_NUM_0, &config));
 
 		ESP_CHECK_CALL(i2c_driver_install(I2S_NUM_0, config.mode, 0, 0, 0));
+
+		return true;
+	}
+
+	static bool InitializeI2S(Versions Version)
+	{
+		i2s_config_t config = {};
+		config.mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX);
+		config.sample_rate = 44100;
+		config.bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT;
+		config.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT;
+		config.communication_format = I2S_COMM_FORMAT_STAND_MSB;
+		config.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1;
+		config.dma_buf_count = 3;
+		config.dma_buf_len = 300;
+		config.use_apll = true;
+		config.tx_desc_auto_clear = true;
+		config.fixed_mclk = 0;
+
+		ESP_CHECK_CALL(i2s_driver_install(I2S_NUM_0, &config, 0, nullptr));
+
+		CHECK_CALL(SetI2SPin(Version));
+
+		ESP_CHECK_CALL(i2s_set_clk(I2S_NUM_0, 44100, 16, I2S_CHANNEL_STEREO));
 
 		return true;
 	}

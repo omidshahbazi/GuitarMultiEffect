@@ -5,8 +5,6 @@ Application g_App;
 
 void setup()
 {
-	Serial.begin(115200);
-
 	g_App.Initialize();
 }
 

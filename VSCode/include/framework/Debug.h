@@ -11,6 +11,7 @@ void Print(esp_log_level_t Level, const char *Tag, const char *Message, ArgsT...
 	char buff[100];
 	int32 len = snprintf(buff, sizeof(buff), Message, Args...);
 	buff[len] = '\n';
+	buff[len + 1] = '\0';
 
 	printf(buff);
 }
@@ -42,6 +43,6 @@ void Print(esp_log_level_t Level, const char *Tag, const char *Message, ArgsT...
 		esp_restart();                          \
 	} while (false)
 
-#define CHECK_CALL(Expression) ASSERT(Expression, "Call Failed", "%s", #Expression);
+#define CHECK_CALL(Expression) ASSERT(Expression, "CHECK_CALL", "Call Failed: %s", #Expression);
 
 #endif

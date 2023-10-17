@@ -10,8 +10,6 @@ class AnalogReadStream : public IReadStream
 public:
 	virtual bool Init(void) override
 	{
-		Print(ESP_LOG_INFO, "Tag", "Initialize0");
-
 		CHECK_CALL(ESP32A1SModule::Initialize(
 			ESP32A1SModule::Modes::Master,
 			ESP32A1SModule::Versions::V2974,
