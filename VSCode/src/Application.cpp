@@ -1,5 +1,4 @@
 #include "Application.h"
-#include <memory.h>
 #include "framework/Debug.h"
 #include "framework/Memory.h"
 #include "framework/AnalogReadStream.h"
@@ -24,16 +23,12 @@ Application::Application(void)
 
 void Application::Initialize(void)
 {
-	CHECK_CALL(m_ReadStream->Init());
+	AnalogReadStream().Init();
 
-	SetupI2S();
+	// CHECK_CALL(m_ReadStream->Init());
 }
 
 void Application::Update(void)
-{
-}
-
-void Application::SetupI2S(void)
 {
 }
 

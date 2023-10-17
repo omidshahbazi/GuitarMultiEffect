@@ -9,16 +9,32 @@
 class I2CUtils
 {
 public:
+	static uint8 Read(uint8 BusAddress, uint8 Register)
+	{
+		uint8 buffer[2];
+		buffer[0] = Register;
+
+		i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+
+		// Write the register address to be read
+		ESP_CHECK_CALL(i2c_master_start(cmd));
+		ESP_CHECK_CALL(i2c_master_write_byte(cmd, BusAddress << 1 | I2C_MASTER_WRITE, ACK_CHECK_EN));
+		ESP_CHECK_CALL(i2c_master_write_byte(cmd, buffer[0], ACK_CHECK_EN));
+
+		// Read the data for the register from the slave
+		ESP_CHECK_CALL(i2c_master_start(cmd));
+		ESP_CHECK_CALL(i2c_master_write_byte(cmd, BusAddress << 1 | I2C_MASTER_READ, ACK_CHECK_EN));
+		ESP_CHECK_CALL(i2c_master_read_byte(cmd, &buffer[0], I2C_MASTER_NACK));
+		ESP_CHECK_CALL(i2c_master_stop(cmd));
+		ESP_CHECK_CALL(i2c_master_cmd_begin(MASTER_NUM, cmd, 1000 / portTICK_RATE_MS));
+
+		i2c_cmd_link_delete(cmd);
+
+		return buffer[0];
+	}
+
 	static bool WriteBulk(uint8 BusAddress, uint8 Register, uint8 *Data, uint8 Length)
 	{
-		const uint8 MASTER_NUM = 0;
-		const uint8 ACK_CHECK_EN = 0x1;
-
-		// printf("Writing [%02x]=", Register);
-		// for (int i = 0; i < Length; i++)
-		// 	printf("%02x:", Data[i]);
-		// printf("\n");
-
 		i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
 		ESP_CHECK_CALL(i2c_master_start(cmd));
@@ -38,6 +54,13 @@ public:
 	{
 		return WriteBulk(BusAddress, Register, &Value, 1);
 	}
+
+private:
+	static const uint8 ACK_CHECK_EN;
+	static const uint8 MASTER_NUM;
 };
+
+const uint8 I2CUtils::ACK_CHECK_EN = 0x1;
+const uint8 I2CUtils::MASTER_NUM = 0;
 
 #endif

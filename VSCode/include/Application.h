@@ -14,7 +14,6 @@ public:
 	void Update(void);
 
 private:
-	void SetupI2S(void);
 	void I2SRoutine(void);
 
 	static void I2SRoutine(void *arg)

@@ -10,7 +10,16 @@ class AnalogReadStream : public IReadStream
 public:
 	virtual bool Init(void) override
 	{
-		CHECK_CALL(ESP32A1SModule::Initialize(ES8388Codec::Modes::Master, ES8388Codec::ModuleVersions::V2974, ES8388::InputModes::LeftRightInput1, ES8388::OutputModes::AllLineOutputs));
+		Print(ESP_LOG_INFO, "Tag", "Initialize0");
+
+		CHECK_CALL(ESP32A1SModule::Initialize(
+			ESP32A1SModule::Modes::Master,
+			ESP32A1SModule::Versions::V2974,
+			ES8388::Modules::DAC,
+			ES8388::BitLengths::BitLength16,
+			ES8388::InputModes::LeftRightInput1,
+			ES8388::OutputModes::AllLineOutputs,
+			ES8388::Formats::Normal));
 
 		return true;
 	}

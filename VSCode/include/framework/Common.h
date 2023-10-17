@@ -12,4 +12,14 @@ typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 
+class Bitwise
+{
+public:
+	template <typename T>
+	static bool IsEnabled(T Mask, T Bits)
+	{
+		return (((int32)Mask & (int32)Bits) == (int32)Bits);
+	}
+};
+
 #endif
