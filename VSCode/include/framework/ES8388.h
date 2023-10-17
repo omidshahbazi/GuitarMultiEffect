@@ -127,7 +127,7 @@ public:
 
 		CHECK_CALL(ConfigI2S(Module, BitsPerSample, Format));
 
-		CHECK_CALL(SetVolume(70));
+		CHECK_CALL(SetVolume(100));
 
 		CHECK_CALL(Start(Module));
 

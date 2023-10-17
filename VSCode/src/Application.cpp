@@ -35,6 +35,8 @@ void Application::Initialize(void)
 	configs.Format = ES8388::Formats::Normal;
 
 	CHECK_CALL(ESP32A1SAudioModule::Initialize(&configs));
+
+	xTaskCreatePinnedToCore(I2SRoutine, "i2s_task", 4096, this, 10, nullptr, 1);
 }
 
 void Application::Update(void)
@@ -43,4 +45,14 @@ void Application::Update(void)
 
 void Application::I2SRoutine(void)
 {
+	vTaskDelay(1000);
+
+	uint16 data = 10000;
+
+	while (true)
+	{
+		ESP32A1SAudioModule::Write(&data, 1);
+	}
+
+	vTaskDelete(nullptr);
 }

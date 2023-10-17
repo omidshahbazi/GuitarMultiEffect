@@ -69,6 +69,33 @@ public:
 		return true;
 	}
 
+	static bool SetVolume(int32 Value)
+	{
+		return ES8388::SetVolume(Value);
+	}
+
+	static bool SetMute(bool Enabled)
+	{
+		return ES8388::SetMute(Enabled);
+	}
+
+	template <typename T>
+	static bool Write(const T *Data, uint32 Count, int32 TicksToWait = -1)
+	{
+		uint32 writtenByteCount = 0;
+		Write(Data, Count, &writtenByteCount, TicksToWait);
+
+		return true;
+	}
+
+	template <typename T>
+	static bool Write(const T *Data, uint32 Count, uint32 *WrittenByteCount, int32 TicksToWait = -1)
+	{
+		ESP_CHECK_CALL(i2s_write(I2S_PORT, Data, Count * sizeof(T), WrittenByteCount, TicksToWait));
+
+		return true;
+	}
+
 private:
 	static bool InitializeI2C(Configs *Configs)
 	{
