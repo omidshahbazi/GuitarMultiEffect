@@ -177,21 +177,21 @@ private:
 		return true;
 	}
 
-	static void SetMasterClockPin(i2s_port_t port, gpio_num_t gpio)
+	static void SetMasterClockPin(i2s_port_t Port, gpio_num_t GPIO)
 	{
-		ASSERT(port != I2S_NUM_MAX, "Setting MasterClockPin", "Does not support I2S_NUM_MAX");
-		ASSERT(gpio == GPIO_NUM_0 || gpio == GPIO_NUM_1 || gpio == GPIO_NUM_3, "Setting MasterClockPin", "GPIO_NUM_0, GPIO_NUM_1 and GPIO_NUM_3 are only supported for master");
+		ASSERT(Port != I2S_NUM_MAX, "Setting MasterClockPin", "Does not support I2S_NUM_MAX");
+		ASSERT(GPIO == GPIO_NUM_0 || GPIO == GPIO_NUM_1 || GPIO == GPIO_NUM_3, "Setting MasterClockPin", "GPIO_NUM_0, GPIO_NUM_1 and GPIO_NUM_3 are only supported for master");
 
-		LOG_INFO(FRAMEWORK_TAG, "Setting master clock for I2S%d on GPIO%d", port, gpio);
+		LOG_INFO(FRAMEWORK_TAG, "Setting master clock for I2S%d on GPIO%d", Port, GPIO);
 
-		if (port == I2S_NUM_0)
+		if (Port == I2S_NUM_0)
 		{
-			if (gpio == GPIO_NUM_0)
+			if (GPIO == GPIO_NUM_0)
 			{
 				PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
 				WRITE_PERI_REG(PIN_CTRL, 0xFFF0);
 			}
-			else if (gpio == GPIO_NUM_1)
+			else if (GPIO == GPIO_NUM_1)
 			{
 				PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD_CLK_OUT3);
 				WRITE_PERI_REG(PIN_CTRL, 0xF0F0);
@@ -202,14 +202,14 @@ private:
 				WRITE_PERI_REG(PIN_CTRL, 0xFF00);
 			}
 		}
-		else if (port == I2S_NUM_1)
+		else if (Port == I2S_NUM_1)
 		{
-			if (gpio == GPIO_NUM_0)
+			if (GPIO == GPIO_NUM_0)
 			{
 				PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
 				WRITE_PERI_REG(PIN_CTRL, 0xFFFF);
 			}
-			else if (gpio == GPIO_NUM_1)
+			else if (GPIO == GPIO_NUM_1)
 			{
 				PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD_CLK_OUT3);
 				WRITE_PERI_REG(PIN_CTRL, 0xF0FF);
