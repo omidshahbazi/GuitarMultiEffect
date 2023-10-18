@@ -58,7 +58,7 @@ void Application::Initialize(void)
 	ESP32A1SAudioModule::Configs configs;
 	configs.Version = ESP32A1SAudioModule::Versions::V2974;
 	configs.Mode = ESP32A1SAudioModule::Modes::Master;
-	configs.TransmissionMode = ESP32A1SAudioModule::TransmissionModes::Transmit;
+	configs.TransmissionMode = ESP32A1SAudioModule::TransmissionModes::Both;
 	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ES8388::BitsPerSamples::BPS16;
 	configs.ChannelFormat = ESP32A1SAudioModule::ChannelFormats::SeparatedLeftAndRight;
