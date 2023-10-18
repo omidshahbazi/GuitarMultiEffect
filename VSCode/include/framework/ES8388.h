@@ -127,7 +127,7 @@ public:
 
 		CHECK_CALL(ConfigI2S(BitsPerSample, Format));
 
-		CHECK_CALL(SetVolume(100));
+		CHECK_CALL(SetVolume(70));
 
 		CHECK_CALL(Start(Module));
 
@@ -153,8 +153,7 @@ public:
 
 	static bool SetMute(bool Enabled)
 	{
-		uint8 reg = I2CRead((uint8)DACRegisters::Control3);
-		I2CWrite((uint8)DACRegisters::Control3, (reg & 0xFB) | (((int32)Enabled) << 2));
+		I2CWrite((uint8)DACRegisters::Control3, (I2CRead((uint8)DACRegisters::Control3) & 0xFB) | (((int32)Enabled) << 2));
 
 		return true;
 	}
@@ -172,8 +171,7 @@ private:
 		I2CWrite((uint8)DACRegisters::Control3, 0x04); // 0x04 mute/0x00 unmute&ramp;DAC unmute and  disabled digital volume control soft ramp
 
 		I2CWrite((uint8)ChipRegisters::Control2, 0x50);
-		I2CWrite((uint8)ChipRegisters::Power, 0x00); // normal all and power up all
-
+		I2CWrite((uint8)ChipRegisters::Power, 0x00);					 // normal all and power up all
 		I2CWrite((uint8)ChipRegisters::Mode, (uint8)MasterModes::Slave); // CODEC IN I2S SLAVE MODE
 
 		I2CWrite((uint8)DACRegisters::Power, 0xC0);		// disable DAC and disable Lout/Rout/1/2
@@ -209,29 +207,17 @@ private:
 
 	static bool ConfigI2S(BitsPerSamples BitsPerSample, Formats Format) // Modules Module,
 	{
-		uint8 reg;
-
-		// if (Bitwise::IsEnabled(Module, Modules::ADC))
-		// {
-		reg = I2CRead((uint8)ADCRegisters::Control4);
-
 		LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Format: %x", Format);
-		I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xfc) | (uint8)Format);
-
-		LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
-		I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xe3) | ((int32)BitsPerSample << 2));
-		// }
-
-		// if (Bitwise::IsEnabled(Module, Modules::DAC))
-		// {
-		reg = I2CRead((uint8)DACRegisters::Control1);
+		I2CWrite((uint8)ADCRegisters::Control4, (I2CRead((uint8)ADCRegisters::Control4) & 0xfc) | (uint8)Format);
 
 		LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Format: %x", Format);
-		I2CWrite((uint8)DACRegisters::Control1, (reg & 0xfc) | ((uint8)Format << 1));
+		I2CWrite((uint8)DACRegisters::Control1, (I2CRead((uint8)DACRegisters::Control1) & 0xf9) | ((uint8)Format << 1));
+
+		LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
+		I2CWrite((uint8)ADCRegisters::Control4, (I2CRead((uint8)ADCRegisters::Control4) & 0xe3) | ((int32)BitsPerSample << 2));
 
 		LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Bits: %x", BitsPerSample);
-		I2CWrite((uint8)DACRegisters::Control1, (reg & 0xc7) | ((int32)BitsPerSample << 3));
-		// }
+		I2CWrite((uint8)DACRegisters::Control1, (I2CRead((uint8)DACRegisters::Control1) & 0xc7) | ((int32)BitsPerSample << 3));
 
 		return true;
 	}
@@ -265,14 +251,14 @@ private:
 			I2CWrite((uint8)ChipRegisters::Power, 0x00); // start state machine
 		}
 
-		if (Bitwise::IsEnabled(Module, Modules::ADC) || Bitwise::IsEnabled(Module, Modules::Both) || Bitwise::IsEnabled(Module, Modules::Line))
+		if (Bitwise::IsEnabled(Module, Modules::ADC) || Bitwise::IsEnabled(Module, Modules::Line))
 		{
 			LOG_INFO(FRAMEWORK_TAG, "Powering up ADC");
 
 			I2CWrite((uint8)ADCRegisters::Power, 0x00);
 		}
 
-		if (Bitwise::IsEnabled(Module, Modules::DAC) || Bitwise::IsEnabled(Module, Modules::Both) || Bitwise::IsEnabled(Module, Modules::Line))
+		if (Bitwise::IsEnabled(Module, Modules::DAC) || Bitwise::IsEnabled(Module, Modules::Line))
 		{
 			LOG_INFO(FRAMEWORK_TAG, "Powering up DAC");
 

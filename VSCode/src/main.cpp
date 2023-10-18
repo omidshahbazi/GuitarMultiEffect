@@ -1,5 +1,4 @@
 #include "Application.h"
-#include <Arduino.h>
 
 Application g_App;
 

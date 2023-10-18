@@ -9,7 +9,6 @@
 #define FRAME_SIZE FRAME_LENGTH * 4
 
 #define SAMPLE_RATE (44100)
-#define I2S_NUM (i2s_port_t)(0)
 #define WAVE_FREQ_HZ (700)
 #define PI (3.14159265)
 
@@ -60,7 +59,7 @@ void Application::Initialize(void)
 	configs.Version = ESP32A1SAudioModule::Versions::V2974;
 	configs.Mode = ESP32A1SAudioModule::Modes::Master;
 	configs.TransmissionMode = ESP32A1SAudioModule::TransmissionModes::Transmit;
-	configs.SampleRate = 44100;
+	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ES8388::BitsPerSamples::BPS16;
 	configs.ChannelFormat = ESP32A1SAudioModule::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
@@ -70,6 +69,7 @@ void Application::Initialize(void)
 	configs.Format = ES8388::Formats::Normal;
 
 	CHECK_CALL(ESP32A1SAudioModule::Initialize(&configs));
+	CHECK_CALL(ESP32A1SAudioModule::SetVolume(70));
 
 	xTaskCreatePinnedToCore(I2SRoutine, "i2s_task", 4096, this, 10, nullptr, 1);
 }
@@ -86,11 +86,19 @@ void Application::I2SRoutine(void)
 	int start_dir = 50;
 	int dir = start_dir;
 
-	setup_sine_waves16(amplitude);
-
 	while (true)
 	{
-		ESP32A1SAudioModule::Write(txBuf, BUF_SAMPLES * 2);
+
+		amplitude -= dir;
+		if (amplitude <= start_dir || amplitude >= 15000)
+			dir *= -1;
+
+		setup_sine_waves16(amplitude);
+
+		ESP32A1SAudioModule::Write(txBuf, BUF_SAMPLES, -1);
+
+		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
+		// vTaskDelay(xDelay);
 	}
 
 	vTaskDelete(nullptr);

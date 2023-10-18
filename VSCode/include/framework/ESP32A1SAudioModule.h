@@ -28,11 +28,11 @@ public:
 
 	enum class ChannelFormats
 	{
-		SeparatedLeftAndRight,
-		AllFromLeft,
-		AllFromRight,
-		OnlyLeft,
-		OnlyRight
+		SeparatedLeftAndRight = I2S_CHANNEL_FMT_RIGHT_LEFT,
+		AllFromLeft = I2S_CHANNEL_FMT_ALL_LEFT,
+		AllFromRight = I2S_CHANNEL_FMT_ALL_RIGHT,
+		OnlyLeft = I2S_CHANNEL_FMT_ONLY_LEFT,
+		OnlyRight = I2S_CHANNEL_FMT_ONLY_RIGHT
 	};
 
 	struct Configs
@@ -147,7 +147,7 @@ private:
 		config.mode = (i2s_mode_t)(Configs->Mode | Configs->TransmissionMode);
 		config.sample_rate = Configs->SampleRate;
 		config.bits_per_sample = bps;
-		config.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT; //
+		config.channel_format = (i2s_channel_fmt_t)Configs->ChannelFormat;
 		config.communication_format = I2S_COMM_FORMAT_STAND_MSB;
 		config.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1;
 		config.dma_buf_count = Configs->BufferCount;
