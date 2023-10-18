@@ -56,11 +56,11 @@ public:
 	{
 		CHECK_CALL(InitializeI2C(Configs));
 
-		ES8388::Modules modules = ES8388::Modules::None;
-		if (Bitwise::IsEnabled(Configs->TransmissionMode, TransmissionModes::Transmit))
-			modules |= ES8388::Modules::DAC;
+		ES8388::Modules modules = (ES8388::Modules)0;
 		if (Bitwise::IsEnabled(Configs->TransmissionMode, TransmissionModes::Receive))
 			modules |= ES8388::Modules::ADC;
+		if (Bitwise::IsEnabled(Configs->TransmissionMode, TransmissionModes::Transmit))
+			modules |= ES8388::Modules::DAC;
 
 		CHECK_CALL(ES8388::Initialize(modules, Configs->BitsPerSample, Configs->InputMode, Configs->OutputMode, Configs->Format));
 

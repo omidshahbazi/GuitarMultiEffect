@@ -2,6 +2,7 @@
 #ifndef ES8388_H
 #define ES8388_H
 
+#include "Bitwise.h"
 #include "Debug.h"
 #include "ESPDebug.h"
 #include "I2CUtils.h"
@@ -13,11 +14,10 @@ class ES8388
 public:
 	enum class Modules
 	{
-		None = -1,
-		ADC = 0x01,
-		DAC = 0x02,
+		ADC = 0x1,
+		DAC = 0x2,
 		Both = ADC | DAC,
-		Line = 0x04
+		Line = 0x4
 	};
 
 	enum class BitsPerSamples
@@ -125,7 +125,7 @@ public:
 	{
 		CHECK_CALL(SetRegisters(InputMode, OutputMode));
 
-		CHECK_CALL(ConfigI2S(Module, BitsPerSample, Format));
+		CHECK_CALL(ConfigI2S(BitsPerSample, Format));
 
 		CHECK_CALL(SetVolume(100));
 
@@ -207,29 +207,31 @@ private:
 		return true;
 	}
 
-	static bool ConfigI2S(Modules Module, BitsPerSamples BitsPerSample, Formats Format)
+	static bool ConfigI2S(BitsPerSamples BitsPerSample, Formats Format) // Modules Module,
 	{
-		if (Bitwise::IsEnabled(Module, Modules::ADC))
-		{
-			uint8 reg = I2CRead((uint8)ADCRegisters::Control4);
+		uint8 reg;
 
-			LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Format");
-			I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xfc) | (uint8)Format);
+		// if (Bitwise::IsEnabled(Module, Modules::ADC))
+		// {
+		reg = I2CRead((uint8)ADCRegisters::Control4);
 
-			LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
-			I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xe3) | ((int32)BitsPerSample << 2));
-		}
+		LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Format: %x", Format);
+		I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xfc) | (uint8)Format);
 
-		if (Bitwise::IsEnabled(Module, Modules::DAC))
-		{
-			uint8 reg = I2CRead((uint8)DACRegisters::Control1);
+		LOG_INFO(FRAMEWORK_TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
+		I2CWrite((uint8)ADCRegisters::Control4, (reg & 0xe3) | ((int32)BitsPerSample << 2));
+		// }
 
-			LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Format");
-			I2CWrite((uint8)DACRegisters::Control1, (reg & 0xfc) | ((uint8)Format << 1));
+		// if (Bitwise::IsEnabled(Module, Modules::DAC))
+		// {
+		reg = I2CRead((uint8)DACRegisters::Control1);
 
-			LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Bits: %x", BitsPerSample);
-			I2CWrite((uint8)DACRegisters::Control1, (reg & 0xc7) | ((int32)BitsPerSample << 3));
-		}
+		LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Format: %x", Format);
+		I2CWrite((uint8)DACRegisters::Control1, (reg & 0xfc) | ((uint8)Format << 1));
+
+		LOG_INFO(FRAMEWORK_TAG, "Setting I2S DAC Bits: %x", BitsPerSample);
+		I2CWrite((uint8)DACRegisters::Control1, (reg & 0xc7) | ((int32)BitsPerSample << 3));
+		// }
 
 		return true;
 	}

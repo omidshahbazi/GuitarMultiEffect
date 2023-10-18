@@ -15,26 +15,4 @@ typedef uint32_t uint32;
 #define KHz 1000
 #define MHz 1000 * KHz
 
-class Bitwise
-{
-public:
-	template <typename T>
-	static bool IsEnabled(T Mask, T Bits)
-	{
-		return (((int32)Mask & (int32)Bits) == (int32)Bits);
-	}
-};
-
-template <typename T, typename U>
-T operator|(T Left, U Right)
-{
-	return (T)((uint32)Left | (uint32)Right);
-}
-
-template <typename T, typename U>
-T operator|=(T Left, U Right)
-{
-	return (T)((uint32)Left | (uint32)Right);
-}
-
 #endif
