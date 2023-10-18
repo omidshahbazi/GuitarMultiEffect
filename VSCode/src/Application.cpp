@@ -95,7 +95,7 @@ void Application::I2SRoutine(void)
 
 		setup_sine_waves16(amplitude);
 
-		ESP32A1SAudioModule::Write(txBuf, BUF_SAMPLES, -1);
+		ESP32A1SAudioModule::Write(txBuf, BUF_SAMPLES);
 
 		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
 		// vTaskDelay(xDelay);
