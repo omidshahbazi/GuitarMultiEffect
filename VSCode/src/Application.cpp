@@ -55,6 +55,8 @@ Application::Application(void)
 
 void Application::Initialize(void)
 {
+	Log::SetMask(Log::Types::All);
+
 	ESP32A1SAudioModule::Configs configs;
 	configs.Version = ESP32A1SAudioModule::Versions::V2974;
 	configs.Mode = ESP32A1SAudioModule::Modes::Master;

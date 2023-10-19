@@ -209,7 +209,7 @@ private:
 		ASSERT(Port != I2S_NUM_MAX, "Setting MasterClockPin", "Does not support I2S_NUM_MAX");
 		ASSERT(GPIO == GPIO_NUM_0 || GPIO == GPIO_NUM_1 || GPIO == GPIO_NUM_3, "Setting MasterClockPin", "GPIO_NUM_0, GPIO_NUM_1 and GPIO_NUM_3 are only supported for master");
 
-		LOG_INFO(FRAMEWORK_TAG, "Setting master clock for I2S%d on GPIO%d", Port, GPIO);
+		Log::WriteInfo(FRAMEWORK_TAG, "Setting master clock for I2S%d on GPIO%d", Port, GPIO);
 
 		if (Port == I2S_NUM_0)
 		{
