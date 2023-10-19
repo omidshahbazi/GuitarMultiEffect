@@ -11,11 +11,13 @@ public:
 	enum class Types
 	{
 		None = 0,
-		Info = 1,
-		Warning = 2,
-		Error = 4,
-		Critical = 8,
-		All = Info | Warning | Error | Critical
+		Debug = 1,
+		Info = 2,
+		Warning = 4,
+		Error = 8,
+		Critical = 16,
+		General = Info | Warning | Error | Critical,
+		All = Debug | Info | Warning | Error | Critical
 	};
 
 public:
@@ -39,6 +41,8 @@ public:
 		int32 index = 0;
 
 		index += snprintf(buff + index, SIZE, "[");
+		if (Bitwise::IsEnabled(Type, Types::Debug))
+			index += snprintf(buff + index, SIZE, "D");
 		if (Bitwise::IsEnabled(Type, Types::Info))
 			index += snprintf(buff + index, SIZE, "I");
 		if (Bitwise::IsEnabled(Type, Types::Warning))
@@ -59,6 +63,18 @@ public:
 		buff[index] = '\0';
 
 		printf(buff);
+	}
+
+	template <typename... ArgsT>
+	static void WriteDebug(const char *FormattedMessage, ArgsT... Args)
+	{
+		Write(Types::Debug, nullptr, FormattedMessage, Args...);
+	}
+
+	template <typename... ArgsT>
+	static void WriteDebug(const char *Tag, const char *FormattedMessage, ArgsT... Args)
+	{
+		Write(Types::Debug, Tag, FormattedMessage, Args...);
 	}
 
 	template <typename... ArgsT>
