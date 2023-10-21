@@ -82,20 +82,39 @@ public:
 	}
 
 	template <typename T>
-	static bool Write(const T *Data, uint32 Count, int32 TicksToWait = -1)
+	static bool Read(T *Buffer, uint32 Count, int32 TicksToWait = -1)
 	{
-		uint32 writtenByteCount = 0;
-		Write(Data, Count, &writtenByteCount, TicksToWait);
+		uint32 readByteCount = 0;
+		Read(Buffer, Count, &readByteCount, TicksToWait);
 
 		return true;
 	}
 
 	template <typename T>
-	static bool Write(const T *Data, uint32 Count, uint32 *WrittenByteCount, int32 TicksToWait = -1)
+	static bool Read(T *Buffer, uint32 Count, uint32 *ReadByteCount, int32 TicksToWait = -1)
 	{
-		Log::WriteDebug(TAG, "Writing %ib on the I2S with %iticks for timeout", Count * sizeof(T), TicksToWait);
+		ESP_CHECK_CALL(i2s_read(I2S_PORT, Buffer, Count * sizeof(T), ReadByteCount, TicksToWait));
 
-		ESP_CHECK_CALL(i2s_write(I2S_PORT, Data, Count * sizeof(T), WrittenByteCount, TicksToWait));
+		Log::WriteDebug(TAG, "Read %ib from the I2S in a %ib long buffer with %iticks for timeout", *ReadByteCount, Count * sizeof(T), TicksToWait);
+
+		return true;
+	}
+
+	template <typename T>
+	static bool Write(const T *Buffer, uint32 Count, int32 TicksToWait = -1)
+	{
+		uint32 writtenByteCount = 0;
+		Write(Buffer, Count, &writtenByteCount, TicksToWait);
+
+		return true;
+	}
+
+	template <typename T>
+	static bool Write(const T *Buffer, uint32 Count, uint32 *WrittenByteCount, int32 TicksToWait = -1)
+	{
+		ESP_CHECK_CALL(i2s_write(I2S_PORT, Buffer, Count * sizeof(T), WrittenByteCount, TicksToWait));
+
+		Log::WriteDebug(TAG, "Wrote %ib to the I2S from a %ib long buffer with %iticks for timeout", *WrittenByteCount, Count * sizeof(T), TicksToWait);
 
 		return true;
 	}
@@ -163,7 +182,10 @@ private:
 		config.use_apll = true;
 		config.tx_desc_auto_clear = true;
 		config.mclk_multiple = I2S_MCLK_MULTIPLE_DEFAULT;
-		config.fixed_mclk = I2S_BITS_PER_CHAN_DEFAULT;
+		config.fixed_mclk = 33868800;
+
+		// PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
+		// WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) & 0xFFFFFFF0);
 
 		ESP_CHECK_CALL(i2s_driver_install(I2S_PORT, &config, 0, nullptr));
 
