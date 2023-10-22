@@ -121,7 +121,8 @@ private:
 	};
 
 public:
-	static bool Initialize(Modules Module, BitsPerSamples BitsPerSample, InputModes InputMode, OutputModes OutputMode, Formats Format)
+	ES8388(Modules Module, BitsPerSamples BitsPerSample, InputModes InputMode, OutputModes OutputMode, Formats Format)
+		: m_InputMode(InputMode)
 	{
 		Log::WriteInfo(TAG, "Intializing");
 
@@ -129,39 +130,139 @@ public:
 
 		CHECK_CALL(ConfigI2S(BitsPerSample, Format));
 
-		CHECK_CALL(SetVolume(70));
+		CHECK_CALL(SetOutputVolume(70));
 
 		CHECK_CALL(Start(Module));
-
-		return true;
 	}
 
-	static bool SetVolume(int32 Volume)
+	// Get and set the output level (analog gain)
+	// vol = 0-30 for ES83-version module
+	// vol = 0-31 for AC101-version module
+	bool SetOutputVolume(uint8 Value)
 	{
-		Log::WriteInfo(TAG, "Setting the volume: %i", Volume);
+		if (Value < 0)
+			Value = 0;
+		else if (Value > 100)
+			Value = 100;
 
-		if (Volume < 0)
-			Volume = 0;
-		else if (Volume > 100)
-			Volume = 100;
+		Value /= 3;
 
-		Volume /= 3;
+		Log::WriteInfo(TAG, "Setting the volume: %i", Value);
 
-		I2CWrite((uint8)DACRegisters::Control24, Volume);
-		I2CWrite((uint8)DACRegisters::Control25, Volume);
-		I2CWrite((uint8)DACRegisters::Control26, Volume);
-		I2CWrite((uint8)DACRegisters::Control27, Volume);
+		I2CWrite(DACRegisters::Control24, Value); // LOUT1VOL
+		I2CWrite(DACRegisters::Control25, Value); // ROUT1VOL
+		I2CWrite(DACRegisters::Control26, Value); // LOUT2VOL
+		I2CWrite(DACRegisters::Control27, Value); // ROUT2VOL
 
 		return true;
 	}
+	uint8 GetOutputVolume(void)
+	{
+		return I2CRead(DACRegisters::Control24);
+	}
 
-	static bool SetMute(bool Enabled)
+	bool SetMute(bool Enabled)
 	{
 		Log::WriteInfo(TAG, "Setting the Mute: %i", Enabled);
 
-		I2CWrite((uint8)DACRegisters::Control3, (I2CRead((uint8)DACRegisters::Control3) & 0xFB) | (((int32)Enabled) << 2));
+		I2CWrite(DACRegisters::Control3, (I2CRead(DACRegisters::Control3) & 0xFB) | (((int32)Enabled) << 2));
 
 		return true;
+	}
+
+	// Get and set the input gain (analog)
+	bool SetInputGain(uint8 Value)
+	{
+		if (Value > 8)
+			Value = 8;
+
+		Log::WriteInfo(TAG, "Setting the Input Gain: %i", Value);
+
+		uint8 temp = I2CRead(ADCRegisters::Control1);
+
+		if (m_InputMode == InputModes::LeftAndRightInput1) // input mode = IM_LR
+			temp = (Value << 4) | Value;
+		else // input mode = IM_LMIC
+			temp = (0x0F & temp) | (Value << 4);
+
+		I2CWrite(ADCRegisters::Control1, temp);
+
+		return true;
+	}
+	uint8 GetInputGain(void)
+	{
+		return (I2CRead(ADCRegisters::Control1) & 0xF0) >> 4;
+	}
+
+	// Get and set microphone gain (0:0dB,1-7:30dB-48dB)
+	bool SetMicrophoneGain(uint8 Value)
+	{
+		// if (m_InputMode != InputModes::Microphone1 && m_InputMode != InputModes::Microphone2)
+		// 	return false;
+		// input mode = LMIC/RMIC
+
+		if (Value > 8)
+			Value = 8;
+
+		Log::WriteInfo(TAG, "Setting the Microphone Gain: %i", Value);
+
+		I2CWrite(ADCRegisters::Control1, (I2CRead(ADCRegisters::Control1) & 0xF0) | Value);
+
+		return true;
+	}
+	uint8 GetMicrophoneGain(void)
+	{
+		if (m_InputMode != InputModes::Microphone1 && m_InputMode != InputModes::Microphone2)
+			return false;
+		// input mode = LMIC/RMIC
+
+		return (0x0F & I2CRead(ADCRegisters::Control1));
+	}
+
+	// Get and set microphone noise gate (0-31: -76.5dB, -75.0dB,...., -30.0dB)
+	bool SetMicrophoneNoiseGate(uint8 Value)
+	{
+		if (m_InputMode != InputModes::Microphone1 && m_InputMode != InputModes::Microphone2)
+			return false;
+		// input mode = LMIC/RMIC
+
+		if (Value > 32)
+			Value = 32;
+
+		Log::WriteInfo(TAG, "Setting the Microphone Noise Gate: %i", Value);
+
+		if (Value > 0)
+			I2CWrite(ADCRegisters::Control14, ((Value - 1) << 3) | 1);
+		else // turn off the noise gate at gate = 0
+			I2CWrite(ADCRegisters::Control14, 0);
+
+		return true;
+	}
+	uint8 GetMicrophoneNoiseGate(void)
+	{
+		if (m_InputMode != InputModes::Microphone1 && m_InputMode != InputModes::Microphone2)
+			return false;
+		// input mode = LMIC/RMIC
+
+		return I2CRead(ADCRegisters::Control14) >> 3;
+	}
+
+	// Optimize the analog to digital conversion range
+	// range: 0, 1, 2, 3, 4 (1Vrms/2.83Vpp, 0.5Vrms/1.41Vpp, 0.25Vrms/707mVpp, 0.125Vrms/354mVpp, 0.625Vrms/177mVpp)
+	void OptimizeConversion(uint8 Range = 2)
+	{
+		static uint8 INPUT_GAIN[] = {0, 2, 4, 6, 8};		 // 0db, 6dB, 12dB, 18dB, 24dB
+		static uint8 OUTPUT_VOLUME[] = {30, 26, 22, 18, 14}; // 0db, -6dB, -12dB, -18dB, -24dB
+
+		if (Range < 0)
+			Range = 0;
+		if (Range > 4)
+			Range = 4;
+
+		Log::WriteInfo(TAG, "Optimizing Conversion: %i, InputGain: %i, Output Volume: %i", Range, INPUT_GAIN[Range], OUTPUT_VOLUME[Range]);
+
+		SetInputGain(INPUT_GAIN[Range]);
+		SetOutputVolume(OUTPUT_VOLUME[Range]);
 	}
 
 private:
@@ -176,39 +277,39 @@ private:
 			Master = 0x01
 		};
 
-		I2CWrite((uint8)DACRegisters::Control3, 0x04); // 0x04 mute/0x00 unmute&ramp;DAC unmute and  disabled digital volume control soft ramp
+		I2CWrite(DACRegisters::Control3, 0x04); // 0x04 mute/0x00 unmute&ramp;DAC unmute and  disabled digital volume control soft ramp
 
-		I2CWrite((uint8)ChipRegisters::Control2, 0x50);
-		I2CWrite((uint8)ChipRegisters::Power, 0x00);					 // normal all and power up all
-		I2CWrite((uint8)ChipRegisters::Mode, (uint8)MasterModes::Slave); // CODEC IN I2S SLAVE MODE
+		I2CWrite(ChipRegisters::Control2, 0x50);
+		I2CWrite(ChipRegisters::Power, 0x00);					  // normal all and power up all
+		I2CWrite(ChipRegisters::Mode, (uint8)MasterModes::Slave); // CODEC IN I2S SLAVE MODE
 
-		I2CWrite((uint8)DACRegisters::Power, 0xC0);		// disable DAC and disable Lout/Rout/1/2
-		I2CWrite((uint8)ChipRegisters::Control1, 0x12); // Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
-		I2CWrite((uint8)DACRegisters::Control1, 0x18);	// 1a 0x18:16bit iis , 0x00:24
-		I2CWrite((uint8)DACRegisters::Control2, 0x02);	// DACFsMode,SINGLE SPEED; DACFsRatio,256
-		I2CWrite((uint8)DACRegisters::Control16, 0x00); // 0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2
-		I2CWrite((uint8)DACRegisters::Control17, 0x90); // only left DAC to left mixer enable 0db
-		I2CWrite((uint8)DACRegisters::Control20, 0x90); // only right DAC to right mixer enable 0db
-		I2CWrite((uint8)DACRegisters::Control21, 0x80); // set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
-		I2CWrite((uint8)DACRegisters::Control23, 0x00); // vroi=0
+		I2CWrite(DACRegisters::Power, 0xC0);	 // disable DAC and disable Lout/Rout/1/2
+		I2CWrite(ChipRegisters::Control1, 0x12); // Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
+		I2CWrite(DACRegisters::Control1, 0x18);	 // 1a 0x18:16bit iis , 0x00:24
+		I2CWrite(DACRegisters::Control2, 0x02);	 // DACFsMode,SINGLE SPEED; DACFsRatio,256
+		I2CWrite(DACRegisters::Control16, 0x00); // 0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2
+		I2CWrite(DACRegisters::Control17, 0x90); // only left DAC to left mixer enable 0db
+		I2CWrite(DACRegisters::Control20, 0x90); // only right DAC to right mixer enable 0db
+		I2CWrite(DACRegisters::Control21, 0x80); // set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
+		I2CWrite(DACRegisters::Control23, 0x00); // vroi=0
 
 		SetDACVolume(0, 0); // 0db
 
 		Log::WriteInfo(TAG, "Setting DAC Output: %02x", OutputMode);
-		I2CWrite((uint8)DACRegisters::Power, (uint8)OutputMode);
+		I2CWrite(DACRegisters::Power, (uint8)OutputMode);
 
 		Log::WriteInfo(TAG, "Setting ADC Input: %02x", InputMode);
-		I2CWrite((uint8)ADCRegisters::Power, 0xFF);
-		I2CWrite((uint8)ADCRegisters::Control1, 0xbb); // MIC Left and Right channel PGA gain
-		I2CWrite((uint8)ADCRegisters::Control2, (uint8)InputMode);
+		I2CWrite(ADCRegisters::Power, 0xFF);
+		I2CWrite(ADCRegisters::Control1, 0xbb); // MIC Left and Right channel PGA gain
+		I2CWrite(ADCRegisters::Control2, (uint8)InputMode);
 
-		I2CWrite((uint8)ADCRegisters::Control3, 0x02);
-		I2CWrite((uint8)ADCRegisters::Control4, 0x0d); // Left/Right data, Left/Right justified mode, Bits length, I2S format
-		I2CWrite((uint8)ADCRegisters::Control5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
+		I2CWrite(ADCRegisters::Control3, 0x02);
+		I2CWrite(ADCRegisters::Control4, 0x0d); // Left/Right data, Left/Right justified mode, Bits length, I2S format
+		I2CWrite(ADCRegisters::Control5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
 
 		// ALC for Microphone
-		SetADCVolume(0, 0);							// 0db
-		I2CWrite((uint8)ADCRegisters::Power, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
+		SetADCVolume(0, 0);					 // 0db
+		I2CWrite(ADCRegisters::Power, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
 
 		return true;
 	}
@@ -216,63 +317,64 @@ private:
 	static bool ConfigI2S(BitsPerSamples BitsPerSample, Formats Format) // Modules Module,
 	{
 		Log::WriteInfo(TAG, "Setting I2S ADC Format: %x", Format);
-		I2CWrite((uint8)ADCRegisters::Control4, (I2CRead((uint8)ADCRegisters::Control4) & 0xfc) | (uint8)Format);
+		I2CWrite(ADCRegisters::Control4, (I2CRead(ADCRegisters::Control4) & 0xfc) | (uint8)Format);
 
 		Log::WriteInfo(TAG, "Setting I2S DAC Format: %x", Format);
-		I2CWrite((uint8)DACRegisters::Control1, (I2CRead((uint8)DACRegisters::Control1) & 0xf9) | ((uint8)Format << 1));
+		I2CWrite(DACRegisters::Control1, (I2CRead(DACRegisters::Control1) & 0xf9) | ((uint8)Format << 1));
 
 		Log::WriteInfo(TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
-		I2CWrite((uint8)ADCRegisters::Control4, (I2CRead((uint8)ADCRegisters::Control4) & 0xe3) | ((int32)BitsPerSample << 2));
+		I2CWrite(ADCRegisters::Control4, (I2CRead(ADCRegisters::Control4) & 0xe3) | ((int32)BitsPerSample << 2));
 
 		Log::WriteInfo(TAG, "Setting I2S DAC Bits: %x", BitsPerSample);
-		I2CWrite((uint8)DACRegisters::Control1, (I2CRead((uint8)DACRegisters::Control1) & 0xc7) | ((int32)BitsPerSample << 3));
+		I2CWrite(DACRegisters::Control1, (I2CRead(DACRegisters::Control1) & 0xc7) | ((int32)BitsPerSample << 3));
 
 		return true;
 	}
 
-	static bool Start(Modules Module)
+	bool Start(Modules Module)
 	{
-		uint8 prevData = I2CRead((uint8)DACRegisters::Control21);
+		uint8 prevData = I2CRead(DACRegisters::Control21);
 
 		if (Bitwise::IsEnabled(Module, Modules::Line))
 		{
-			I2CWrite((uint8)DACRegisters::Control16, 0x09); // 0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2 by pass enable
-			I2CWrite((uint8)DACRegisters::Control17, 0x50); // left DAC to left mixer enable  and  LIN signal to left mixer enable 0db  : bupass enable
-			I2CWrite((uint8)DACRegisters::Control20, 0x50); // right DAC to right mixer enable  and  LIN signal to right mixer enable 0db : bupass enable
-			I2CWrite((uint8)DACRegisters::Control21, 0xC0); // enable adc
+			I2CWrite(DACRegisters::Control16, 0x09); // 0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2 by pass enable
+			I2CWrite(DACRegisters::Control17, 0x50); // left DAC to left mixer enable  and  LIN signal to left mixer enable 0db  : bupass enable
+			I2CWrite(DACRegisters::Control20, 0x50); // right DAC to right mixer enable  and  LIN signal to right mixer enable 0db : bupass enable
+			I2CWrite(DACRegisters::Control21, 0xC0); // enable adc
 		}
 		else
 		{
-			I2CWrite((uint8)DACRegisters::Control21, 0x80); // enable dac
+			I2CWrite(DACRegisters::Control21, 0x80); // enable dac
 		}
 
-		uint8 data = I2CRead((uint8)DACRegisters::Control21);
+		uint8 data = I2CRead(DACRegisters::Control21);
 
 		if (prevData != data)
 		{
 			Log::WriteInfo(TAG, "Resetting State Machine");
 
-			I2CWrite((uint8)ChipRegisters::Power, 0xF0); // start state machine
-			// I2CWrite((uint8)ChipRegisters::Control1, 0x16);
-			// I2CWrite((uint8)ChipRegisters::Control2, 0x50);
-			// I2CWrite((uint8)ChipRegisters::Control2, 0x50);
-			I2CWrite((uint8)ChipRegisters::Power, 0x00); // start state machine
+			I2CWrite(ChipRegisters::Power, 0xF0); // start state machine
+			// I2CWrite(ChipRegisters::Control1, 0x16);
+			// I2CWrite(ChipRegisters::Control2, 0x50);
+			// I2CWrite(ChipRegisters::Control2, 0x50);
+			I2CWrite(ChipRegisters::Power, 0x00); // start state machine
 		}
 
 		if (Bitwise::IsEnabled(Module, Modules::ADC) || Bitwise::IsEnabled(Module, Modules::Line))
 		{
 			Log::WriteInfo(TAG, "Starting the ADC");
 
-			I2CWrite((uint8)ADCRegisters::Power, 0x00);
+			I2CWrite(ADCRegisters::Power, 0x00);
 		}
 
 		if (Bitwise::IsEnabled(Module, Modules::DAC) || Bitwise::IsEnabled(Module, Modules::Line))
 		{
 			Log::WriteInfo(TAG, "Starting the DAC");
 
-			I2CWrite((uint8)DACRegisters::Power, 0x3c);
+			I2CWrite(DACRegisters::Power, 0x3c);
 
 			CHECK_CALL(SetMute(false));
+			//- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -
 		}
 
 		return true;
@@ -282,8 +384,8 @@ private:
 	{
 		int32 vol = GetVolume(Volume, Dot);
 
-		I2CWrite((uint8)ADCRegisters::Control8, vol);
-		I2CWrite((uint8)ADCRegisters::Control9, vol); // ADC Right Volume=0db
+		I2CWrite(ADCRegisters::Control8, vol);
+		I2CWrite(ADCRegisters::Control9, vol); // ADC Right Volume=0db
 
 		return true;
 	}
@@ -292,8 +394,8 @@ private:
 	{
 		int32 vol = GetVolume(Volume, Dot);
 
-		I2CWrite((uint8)DACRegisters::Control5, vol);
-		I2CWrite((uint8)DACRegisters::Control4, vol);
+		I2CWrite(DACRegisters::Control5, vol);
+		I2CWrite(DACRegisters::Control4, vol);
 
 		return true;
 	}
@@ -317,17 +419,21 @@ private:
 		return Volume;
 	}
 
-	static uint8 I2CRead(uint8 Register)
+	template <typename T>
+	static uint8 I2CRead(T Register)
 	{
-		return I2CUtils::Read(ADDRESS, Register);
+		return I2CUtils::Read(ADDRESS, (uint8)Register);
 	}
 
-	static void I2CWrite(uint8 Register, uint8 Value)
+	template <typename T>
+	static void I2CWrite(T Register, uint8 Value)
 	{
-		CHECK_CALL(I2CUtils::Write(ADDRESS, Register, Value));
+		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, Value));
 	}
 
 private:
+	InputModes m_InputMode;
+
 	static const char *TAG;
 	static const int32 ADDRESS;
 };

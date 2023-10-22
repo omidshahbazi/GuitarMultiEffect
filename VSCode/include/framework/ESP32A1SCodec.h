@@ -1,10 +1,11 @@
 #pragma once
-#ifndef ESP32_A1S_AUDIO_MODULE_H
-#define ESP32_A1S_AUDIO_MODULE_H
+#ifndef ESP32_A1S_CODEC_H
+#define ESP32_A1S_CODEC_H
 
 #include "ES8388.h"
+#include "Memory.h"
 
-class ESP32A1SAudioModule
+class ESP32A1SCodec
 {
 public:
 	enum class Versions
@@ -64,38 +65,77 @@ public:
 		if (Bitwise::IsEnabled(Configs->TransmissionMode, TransmissionModes::Transmit))
 			modules |= ES8388::Modules::DAC;
 
-		CHECK_CALL(ES8388::Initialize(modules, Configs->BitsPerSample, Configs->InputMode, Configs->OutputMode, Configs->Format));
+		m_Codec = new ES8388(modules, Configs->BitsPerSample, Configs->InputMode, Configs->OutputMode, Configs->Format);
 
 		CHECK_CALL(InitializeI2S(Configs));
 
 		return true;
 	}
 
-	static bool SetVolume(int32 Value)
+	static bool SetOutputVolume(uint8 Value)
 	{
-		return ES8388::SetVolume(Value);
+		return m_Codec->SetOutputVolume(Value);
+	}
+	static uint8 GetOutputVolume(void)
+	{
+		return m_Codec->GetOutputVolume();
 	}
 
 	static bool SetMute(bool Enabled)
 	{
-		return ES8388::SetMute(Enabled);
+		return m_Codec->SetMute(Enabled);
+	}
+
+	static bool SetInputGain(uint8 Value)
+	{
+		return m_Codec->SetInputGain(Value);
+	}
+	static uint8 GetInputGain(void)
+	{
+		return m_Codec->GetInputGain();
+	}
+
+	static bool SetMicrophoneGain(uint8 Value)
+	{
+		return m_Codec->SetMicrophoneGain(Value);
+	}
+	static uint8 GetMicrophoneGain(void)
+	{
+		return m_Codec->GetMicrophoneGain();
+	}
+
+	static bool SetMicrophoneNoiseGate(uint8 Value)
+	{
+		return m_Codec->SetMicrophoneNoiseGate(Value);
+	}
+	static uint8 GetMicrophoneNoiseGate(void)
+	{
+		return m_Codec->GetMicrophoneNoiseGate();
+	}
+
+	static void OptimizeConversion(uint8 Range = 2)
+	{
+		return m_Codec->OptimizeConversion(Range);
 	}
 
 	template <typename T>
 	static bool Read(T *Buffer, uint32 Count, int32 TicksToWait = -1)
 	{
 		uint32 readByteCount = 0;
-		Read(Buffer, Count, &readByteCount, TicksToWait);
-
-		return true;
+		return Read(Buffer, Count, &readByteCount, TicksToWait);
 	}
 
 	template <typename T>
 	static bool Read(T *Buffer, uint32 Count, uint32 *ReadByteCount, int32 TicksToWait = -1)
 	{
-		ESP_CHECK_CALL(i2s_read(I2S_PORT, Buffer, Count * sizeof(T), ReadByteCount, TicksToWait));
+		return ReadRaw(Buffer, Count * sizeof(T), ReadByteCount, TicksToWait);
+	}
 
-		Log::WriteDebug(TAG, "Read %ib from the I2S in a %ib long buffer with %iticks for timeout", *ReadByteCount, Count * sizeof(T), TicksToWait);
+	static bool ReadRaw(void *Buffer, uint32 Length, uint32 *ReadByteCount, int32 TicksToWait = -1)
+	{
+		ESP_CHECK_CALL(i2s_read(I2S_PORT, Buffer, Length, ReadByteCount, TicksToWait));
+
+		Log::WriteDebug(TAG, "Read %ib from the I2S in a %ib long buffer with %iticks for timeout", *ReadByteCount, Length, TicksToWait);
 
 		return true;
 	}
@@ -104,17 +144,20 @@ public:
 	static bool Write(const T *Buffer, uint32 Count, int32 TicksToWait = -1)
 	{
 		uint32 writtenByteCount = 0;
-		Write(Buffer, Count, &writtenByteCount, TicksToWait);
-
-		return true;
+		return Write(Buffer, Count, &writtenByteCount, TicksToWait);
 	}
 
 	template <typename T>
 	static bool Write(const T *Buffer, uint32 Count, uint32 *WrittenByteCount, int32 TicksToWait = -1)
 	{
-		ESP_CHECK_CALL(i2s_write(I2S_PORT, Buffer, Count * sizeof(T), WrittenByteCount, TicksToWait));
+		return WriteRaw(Buffer, Count * sizeof(T), WrittenByteCount, TicksToWait);
+	}
 
-		Log::WriteDebug(TAG, "Wrote %ib to the I2S from a %ib long buffer with %iticks for timeout", *WrittenByteCount, Count * sizeof(T), TicksToWait);
+	static bool WriteRaw(const void *Buffer, uint32 Length, uint32 *WrittenByteCount, int32 TicksToWait = -1)
+	{
+		ESP_CHECK_CALL(i2s_write(I2S_PORT, Buffer, Length, WrittenByteCount, TicksToWait));
+
+		Log::WriteDebug(TAG, "Wrote %ib to the I2S from a %ib long buffer with %iticks for timeout", *WrittenByteCount, Length, TicksToWait);
 
 		return true;
 	}
@@ -285,13 +328,16 @@ private:
 	}
 
 private:
+	static ES8388 *m_Codec;
+
 	static const char *TAG;
 	static const i2c_port_t I2C_PORT;
 	static const i2s_port_t I2S_PORT;
 };
 
-const char *ESP32A1SAudioModule::TAG = "ESP32";
-const i2c_port_t ESP32A1SAudioModule::I2C_PORT = I2C_NUM_0;
-const i2s_port_t ESP32A1SAudioModule::I2S_PORT = I2S_NUM_0;
+ES8388 *ESP32A1SCodec::m_Codec = nullptr;
+const char *ESP32A1SCodec::TAG = "ESP32";
+const i2c_port_t ESP32A1SCodec::I2C_PORT = I2C_NUM_0;
+const i2s_port_t ESP32A1SCodec::I2S_PORT = I2S_NUM_0;
 
 #endif

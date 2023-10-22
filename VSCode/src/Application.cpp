@@ -1,12 +1,10 @@
 #include "Application.h"
 #include "framework/Debug.h"
 #include "framework/Memory.h"
-#include "framework/ESP32A1SAudioModule.h"
+#include "framework/ESP32A1SCodec.h"
 #include <math.h>
 #include <esp_bt.h>
 #include <esp_adc_cal.h>
-
-// #include "codec.h"
 
 #define FRAME_LENGTH 64
 #define SAMPLE_COUNT FRAME_LENGTH / 2
@@ -61,21 +59,22 @@ Application::Application(void)
 
 void Application::Initialize(void)
 {
-	ESP32A1SAudioModule::Configs configs;
-	configs.Version = ESP32A1SAudioModule::Versions::V2974;
-	configs.Mode = ESP32A1SAudioModule::Modes::Master;
-	configs.TransmissionMode = ESP32A1SAudioModule::TransmissionModes::Both;
+	ESP32A1SCodec::Configs configs;
+	configs.Version = ESP32A1SCodec::Versions::V2974;
+	configs.Mode = ESP32A1SCodec::Modes::Master;
+	configs.TransmissionMode = ESP32A1SCodec::TransmissionModes::Both;
 	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ES8388::BitsPerSamples::BPS32;
-	configs.ChannelFormat = ESP32A1SAudioModule::ChannelFormats::SeparatedLeftAndRight;
+	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLegth = 100;
 	configs.InputMode = ES8388::InputModes::LeftAndRightInput1;
 	configs.OutputMode = ES8388::OutputModes::AllLineOutputs;
 	configs.Format = ES8388::Formats::Normal;
 
-	CHECK_CALL(ESP32A1SAudioModule::Initialize(&configs));
-	CHECK_CALL(ESP32A1SAudioModule::SetVolume(70));
+	CHECK_CALL(ESP32A1SCodec::Initialize(&configs));
+	CHECK_CALL(ESP32A1SCodec::SetOutputVolume(70));
+	CHECK_CALL(ESP32A1SCodec::SetMicrophoneGain(8));
 
 	xTaskCreatePinnedToCore(I2SRoutine, "i2s_task", 4096, this, 10, nullptr, 1);
 
@@ -97,11 +96,11 @@ void Application::I2SRoutine(void)
 {
 	while (true)
 	{
-		ESP32A1SAudioModule::Read(m_InBufferInt, FRAME_LENGTH, 20);
+		ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
 
-		// for (int i = 0; i < FRAME_LENGTH; ++i)
-		// {
-		// }
+		for (int i = 0; i < FRAME_LENGTH; ++i)
+		{
+		}
 
 		// for (int i = 0; i < FRAME_LENGTH; ++i)
 		// {
@@ -123,7 +122,7 @@ void Application::I2SRoutine(void)
 		// 	break;
 		// }
 
-		ESP32A1SAudioModule::Write(m_InBufferInt, FRAME_LENGTH);
+		ESP32A1SCodec::Write(m_InBufferInt, FRAME_LENGTH);
 
 		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
 		// vTaskDelay(xDelay);
@@ -144,7 +143,7 @@ void Application::I2SRoutine(void)
 
 	// 	setup_sine_waves16(amplitude);
 
-	// 	ESP32A1SAudioModule::Write(txBuf, BUF_SAMPLES);
+	// 	ESP32A1SCodec::Write(txBuf, BUF_SAMPLES);
 
 	// 	// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
 	// 	// vTaskDelay(xDelay);
