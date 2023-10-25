@@ -7,11 +7,11 @@
 class ES8388Control
 {
 public:
-	enum class ChipRegisters
+	enum class Registers
 	{
-		Control1 = 0,
-		Control2 = 1,
-		Power = 2,
+		ChipControl1 = 0,
+		ChipControl2 = 1,
+		ChipPower = 2,
 		ADCPower = 3,
 		DACPower = 4,
 		LowPower1 = 5,
@@ -66,22 +66,22 @@ public:
 		DACControl30 = 52
 	};
 
-	enum class ChipRegisterBitMasks
+	enum class Masks
 	{
-		Control1_VMIDSEL = 0b00000011,
-		Control1_EnRef = 0b00000100,
-		Control1_SeqEn = 0b00001000,
-		Control1_SameFs = 0b00010000,
-		Control1_DACMCLK = 0b00100000,
-		Control1_LRCM = 0b01000000,
-		Control1_SCPReset = 0b10000000,
+		ChipControl1_VMIDSEL = 0b00000011,
+		ChipControl1_EnRef = 0b00000100,
+		ChipControl1_SeqEn = 0b00001000,
+		ChipControl1_SameFs = 0b00010000,
+		ChipControl1_DACMCLK = 0b00100000,
+		ChipControl1_LRCM = 0b01000000,
+		ChipControl1_SCPReset = 0b10000000,
 
-		Control2_PdnVrefbuf = 0b00000001,
-		Control2_VrefLo = 0b00000010,
-		Control2_PdnIbiasgen = 0b00000100,
-		Control2_PdnAna = 0b00001000,
-		Control2_LPVrefBuf = 0b00010000,
-		Control2_LPVcmMod = 0b00100000,
+		ChipControl2_PdnVrefbuf = 0b00000001,
+		ChipControl2_VrefLo = 0b00000010,
+		ChipControl2_PdnIbiasgen = 0b00000100,
+		ChipControl2_PdnAna = 0b00001000,
+		ChipControl2_LPVrefBuf = 0b00010000,
+		ChipControl2_LPVcmMod = 0b00100000,
 
 		ChipPower_dacVref_PDN = 0b00000001,
 		ChipPower_adcVref_PDN = 0b00000010,
@@ -262,48 +262,48 @@ public:
 		DACControl30_spkLout2_ref1 = 0b10000000
 	};
 
-	enum class ChipRegisterBitValues
+	enum class Values
 	{
-		Control1_VMIDSEL_00 = 0b00000000, // Vmid disabled
-		Control1_VMIDSEL_01 = 0b00000001, // 50 kΩ divider enabled
-		Control1_VMIDSEL_10 = 0b00000010, // 500 kΩ divider enabled (default)
-		Control1_VMIDSEL_11 = 0b00000011, // 5 kΩ divider enabled
+		ChipControl1_VMIDSEL_00 = 0b00000000, // Vmid disabled
+		ChipControl1_VMIDSEL_01 = 0b00000001, // 50 kΩ divider enabled
+		ChipControl1_VMIDSEL_10 = 0b00000010, // 500 kΩ divider enabled (default)
+		ChipControl1_VMIDSEL_11 = 0b00000011, // 5 kΩ divider enabled
 
-		Control1_EnRef_0 = 0b00000000, // disable reference
-		Control1_EnRef_1 = 0b00000100, // enable reference (default)
+		ChipControl1_EnRef_0 = 0b00000000, // disable reference
+		ChipControl1_EnRef_1 = 0b00000100, // enable reference (default)
 
-		Control1_SeqEn_0 = 0b00000000, // internal power up/down sequence disable (default)
-		Control1_SeqEn_1 = 0b00001000, // internal power up/down sequence enable
+		ChipControl1_SeqEn_0 = 0b00000000, // internal power up/down sequence disable (default)
+		ChipControl1_SeqEn_1 = 0b00001000, // internal power up/down sequence enable
 
-		Control1_SameFs_0 = 0b00000000, // ADC Fs differs from DAC Fs (default)
-		Control1_SameFs_1 = 0b00010000, // ADC Fs is the same as DAC Fs
+		ChipControl1_SameFs_0 = 0b00000000, // ADC Fs differs from DAC Fs (default)
+		ChipControl1_SameFs_1 = 0b00010000, // ADC Fs is the same as DAC Fs
 
-		Control1_DACMCLK_0 = 0b00000000, // when SameFs=1, ADCMCLK is the chip master clock source (default)
-		Control1_DACMCLK_1 = 0b00100000, // when SameFs=1, DACMCLK is the chip master clock source
+		ChipControl1_DACMCLK_0 = 0b00000000, // when SameFs=1, ADCMCLK is the chip master clock source (default)
+		ChipControl1_DACMCLK_1 = 0b00100000, // when SameFs=1, DACMCLK is the chip master clock source
 
-		Control1_LRCM_0 = 0b00000000, // ALRCK disabled when both ADC disabled; DLRCK disabled when both DAC disabled (default)
-		Control1_LRCM_1 = 0b01000000, // ALRCK and DLRCK disabled when all ADC and DAC disabled
+		ChipControl1_LRCM_0 = 0b00000000, // ALRCK disabled when both ADC disabled; DLRCK disabled when both DAC disabled (default)
+		ChipControl1_LRCM_1 = 0b01000000, // ALRCK and DLRCK disabled when all ADC and DAC disabled
 
-		Control1_SCPReset_0 = 0b00000000, // normal (default)
-		Control1_SCPReset_1 = 0b10000000, // reset control port register to default
+		ChipControl1_SCPReset_0 = 0b00000000, // normal (default)
+		ChipControl1_SCPReset_1 = 0b10000000, // reset control port register to default
 
-		Control2_PdnVrefbuf_0 = 0b00000000, // normal (default)
-		Control2_PdnVrefbuf_1 = 0b00000001, // power down
+		ChipControl2_PdnVrefbuf_0 = 0b00000000, // normal (default)
+		ChipControl2_PdnVrefbuf_1 = 0b00000001, // power down
 
-		Control2_VrefLo_0 = 0b00000000, // normal (default)
-		Control2_VrefLo_1 = 0b00000010, // low power
+		ChipControl2_VrefLo_0 = 0b00000000, // normal (default)
+		ChipControl2_VrefLo_1 = 0b00000010, // low power
 
-		Control2_PdnIbiasgen_0 = 0b00000000, // normal
-		Control2_PdnIbiasgen_1 = 0b00000100, // ibiasgen power down (default)
+		ChipControl2_PdnIbiasgen_0 = 0b00000000, // normal
+		ChipControl2_PdnIbiasgen_1 = 0b00000100, // ibiasgen power down (default)
 
-		Control2_PdnAna_0 = 0b00000000, // normal
-		Control2_PdnAna_1 = 0b00001000, // entire analog power down (default)
+		ChipControl2_PdnAna_0 = 0b00000000, // normal
+		ChipControl2_PdnAna_1 = 0b00001000, // entire analog power down (default)
 
-		Control2_LPVrefBuf_0 = 0b00000000, // normal
-		Control2_LPVrefBuf_1 = 0b00010000, // low power (default)
+		ChipControl2_LPVrefBuf_0 = 0b00000000, // normal
+		ChipControl2_LPVrefBuf_1 = 0b00010000, // low power (default)
 
-		Control2_LPVcmMod_0 = 0b00000000, // normal (default)
-		Control2_LPVcmMod_1 = 0b00100000, // low power
+		ChipControl2_LPVcmMod_0 = 0b00000000, // normal (default)
+		ChipControl2_LPVcmMod_1 = 0b00100000, // low power
 
 		ChipPower_dacVref_PDN_0 = 0b00000000, // DAC analog reference power up
 		ChipPower_dacVref_PDN_1 = 0b00000001, // DAC analog reference power down (default)
@@ -670,14 +670,14 @@ public:
 		DACCOntrol2_DACFsMode_0 = 0b00000000, // single speed mode (default
 		DACCOntrol2_DACFsMode_1 = 0b00100000, // double speed mode
 
-		DACControl3_DACMute_0 = 0b00000000, // – normal (default)
+		DACControl3_DACMute_0 = 0b00000000, // normal (default)
 		DACControl3_DACMute_1 = 0b00000100, // mute analog outputs for both channels
 
 		DACControl3_DACLeR_0 = 0b00000000, // normal (default)
-		DACControl3_DACLeR_1 = 0b00001000, // – both channel gain control is set by DAC left gain control register
+		DACControl3_DACLeR_1 = 0b00001000, // both channel gain control is set by DAC left gain control register
 
-		DACControl3_DACSoftRamp_0 = 0b00000000, // – disabled digital volume control soft ramp
-		DACControl3_DACSoftRamp_1 = 0b00100000, // – enabled digital volume control soft ramp (default)
+		DACControl3_DACSoftRamp_0 = 0b00000000, // disabled digital volume control soft ramp
+		DACControl3_DACSoftRamp_1 = 0b00100000, // enabled digital volume control soft ramp (default)
 
 		DACControl3_DACRampRate_00 = 0b00000000, // 0.5 dB per 4 LRCK digital volume control ramp rate (default)
 		DACControl3_DACRampRate_01 = 0b01000000, // 0.5 dB per 32 LRCK digital volume control ramp rate
@@ -716,14 +716,14 @@ public:
 		DACControl7_SE_111 = 0b00011100, //
 		//-------------------------------------------------------------------------------------------------------------------------------------
 
-		DACControl7_Mono_0 = 0b00000000, // – stereo (default)
-		DACControl7_Mono_1 = 0b00100000, // – mono (L+R)/2 into DACL and DACR
+		DACControl7_Mono_0 = 0b00000000, // stereo (default)
+		DACControl7_Mono_1 = 0b00100000, // mono (L+R)/2 into DACL and DACR
 
-		DACControl7_ZeroR_0 = 0b00000000, // – normal (default)
-		DACControl7_ZeroR_1 = 0b01000000, // – set Right Channel DAC output all zero
+		DACControl7_ZeroR_0 = 0b00000000, // normal (default)
+		DACControl7_ZeroR_1 = 0b01000000, // set Right Channel DAC output all zero
 
 		DACControl7_ZeroL_0 = 0b00000000, // normal (default)
-		DACControl7_ZeroL_1 = 0b10000000, // – set Left Channel DAC output all zero
+		DACControl7_ZeroL_1 = 0b10000000, // set Left Channel DAC output all zero
 
 		DACControl8_Shelving_a_24_29_000000 = 0b00000000, // 30-bit a coefficient for shelving filter, Default value is {5'h0f, 5'h1f, 5'h0f, 5'h1f, 5'h0f, 5'h1f}
 		DACControl8_Shelving_a_24_29_111111 = 0b00111111, // 30-bit a coefficient for shelving filter, Default value is {5'h0f, 5'h1f, 5'h0f, 5'h1f, 5'h0f, 5'h1f}
@@ -791,29 +791,29 @@ public:
 		DACControl20_RD2RO_0 = 0b00000000, // right DAC to right mixer disable (default)
 		DACControl20_RD2RO_1 = 0b10000000, // right DAC to right mixer enable
 
-		DACControl21_dac_dll_pwd_0 = 0b00000000, // – normal (default)
-		DACControl21_dac_dll_pwd_1 = 0b00000100, // – DAC DLL power down
+		DACControl21_dac_dll_pwd_0 = 0b00000000, // normal (default)
+		DACControl21_dac_dll_pwd_1 = 0b00000100, // DAC DLL power down
 
-		DACControl21_adc_dll_pwd_0 = 0b00000000, // – normal (default)
-		DACControl21_adc_dll_pwd_1 = 0b00001000, // – ADC DLL power down
+		DACControl21_adc_dll_pwd_0 = 0b00000000, // normal (default)
+		DACControl21_adc_dll_pwd_1 = 0b00001000, // ADC DLL power down
 
-		DACControl21_mclk_dis_0 = 0b00000000, // – normal (default)
+		DACControl21_mclk_dis_0 = 0b00000000, // normal (default)
 		DACControl21_mclk_dis_1 = 0b00010000, // disable MCLK input from PAD
 
-		DACControl21_offset_dis_0 = 0b00000000, // – disable offset (default)
+		DACControl21_offset_dis_0 = 0b00000000, // disable offset (default)
 		DACControl21_offset_dis_1 = 0b00100000, // enable offset
 
 		DACControl21_lrck_sel_0 = 0b00000000, // Master mode, if slrck = 1 then, use DAC LRCK (default)
 		DACControl21_lrck_sel_1 = 0b01000000, // Master mode, if slrck = 1 then, use ADC LRCK
 
-		DACControl21_slrck_0 = 0b00000000, // – DACLRC and ADCLRC separate (default)
+		DACControl21_slrck_0 = 0b00000000, // DACLRC and ADCLRC separate (default)
 		DACControl21_slrck_1 = 0b10000000, // DACLRC and ADCLRC same
 
 		DACControl22_offset_00000000 = 0b00000000, // DC offset
 		DACControl22_offset_11111111 = 0b11111111, // DC offset
 
-		DACControl23_VROI_0 = 0b00000000, // – 1.5k VREF to analog output resistance (default)
-		DACControl23_VROI_1 = 0b00010000, // – 40k VREF to analog output resistance
+		DACControl23_VROI_0 = 0b00000000, // 1.5k VREF to analog output resistance (default)
+		DACControl23_VROI_1 = 0b00010000, // 40k VREF to analog output resistance
 
 		//-------------------------------------------------------------------------------------------------------------------------------------
 		DACControl24_LOUT1VOL_000000 = 0b00000000, //
@@ -846,22 +846,22 @@ public:
 		DACControl30_spkLout2_ref1_0 = 0b00000000, // Reserved
 	};
 
-	static uint8 Read(ChipRegisters Register)
+	static uint8 Read(Registers Register)
 	{
 		return I2CUtils::Read(ADDRESS, (uint8)Register);
 	}
 
-	static void Write(ChipRegisters Register, uint8 Value)
+	static void Write(Registers Register, uint8 Value)
 	{
 		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, Value));
 	}
 
-	static ChipRegisterBitValues Read(ChipRegisters Register, ChipRegisterBitMasks Mask)
+	static Values Read(Registers Register, Masks Mask)
 	{
-		return (ChipRegisterBitValues)(Read(Register) | Mask);
+		return (Values)(Read(Register) | Mask);
 	}
 
-	static void Write(ChipRegisters Register, ChipRegisterBitMasks Mask, ChipRegisterBitValues Value)
+	static void Write(Registers Register, Values Value, Masks Mask)
 	{
 		ASSERT(((uint8)Value & ~(uint8)Mask) == 0, "ES83288Control", "Mask %i and Value %i are not compatible", (uint8)Mask, (uint8)Value);
 
