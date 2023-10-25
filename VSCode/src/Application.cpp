@@ -68,7 +68,7 @@ void Application::Initialize(void)
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLegth = 100;
-	configs.InputMode = ES8388::InputModes::LeftAndRightInput1;
+	configs.InputMode = ES8388::InputModes::LeftAndRightInput2;
 	configs.OutputMode = ES8388::OutputModes::AllLineOutputs;
 	configs.Format = ES8388::Formats::Normal;
 
