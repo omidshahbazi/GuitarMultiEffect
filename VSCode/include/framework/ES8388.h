@@ -2,12 +2,12 @@
 #ifndef ES8388_H
 #define ES8388_H
 
-#include "Bitwise.h"
+// #include "Bitwise.h"
 #include "Debug.h"
-#include "ESPDebug.h"
-#include "I2CUtils.h"
-#include <driver/i2s.h>
-#include <driver/i2c.h>
+// #include "ESPDebug.h"
+// #include <driver/i2s.h>
+// #include <driver/i2c.h>
+#include "ES8388Interface.h"
 
 class ES8388
 {
@@ -58,6 +58,8 @@ public:
 	ES8388(Modules Module, BitsPerSamples BitsPerSample, InputModes InputMode, OutputModes OutputMode, Formats Format) : m_InputMode(InputMode)
 	{
 		Log::WriteInfo(TAG, "Intializing");
+
+		ES8388Interface::Initialize();
 
 		CHECK_CALL(SetRegisters(InputMode, OutputMode));
 
@@ -253,16 +255,16 @@ private:
 
 	static bool ConfigI2S(BitsPerSamples BitsPerSample, Formats Format) // Modules Module,
 	{
-		// Log::WriteInfo(TAG, "Setting I2S ADC Format: %x", Format);
+		// Log::WriteInfo(TAG, "Setting I2S ADC Format: %#02x", Format);
 		// I2CWrite(ADCRegisters::Control4, (I2CRead(ADCRegisters::Control4) & 0xfc) | (uint8)Format);
 
-		// Log::WriteInfo(TAG, "Setting I2S DAC Format: %x", Format);
+		// Log::WriteInfo(TAG, "Setting I2S DAC Format: %#02x", Format);
 		// I2CWrite(DACRegisters::Control1, (I2CRead(DACRegisters::Control1) & 0xf9) | ((uint8)Format << 1));
 
-		// Log::WriteInfo(TAG, "Setting I2S ADC Bits: %x", BitsPerSample);
+		// Log::WriteInfo(TAG, "Setting I2S ADC Bits: %#02x", BitsPerSample);
 		// I2CWrite(ADCRegisters::Control4, (I2CRead(ADCRegisters::Control4) & 0xe3) | ((int32)BitsPerSample << 2));
 
-		// Log::WriteInfo(TAG, "Setting I2S DAC Bits: %x", BitsPerSample);
+		// Log::WriteInfo(TAG, "Setting I2S DAC Bits: %#02x", BitsPerSample);
 		// I2CWrite(DACRegisters::Control1, (I2CRead(DACRegisters::Control1) & 0xc7) | ((int32)BitsPerSample << 3));
 
 		return true;

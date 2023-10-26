@@ -7,7 +7,7 @@
 class ES8388Interface
 {
 public:
-	static bool SetRegisters()
+	static bool Initialize()
 	{
 		Log::WriteInfo(TAG, "Setting the Registers");
 
@@ -53,13 +53,49 @@ public:
 		// SetADCVolume(0, 0);												// 0db
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
 
+		Log::WriteInfo(TAG, "Setting I2S ADC Format");
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCFORMAT_00, ES8388Control::Masks::ADCControl4_ADCFORMAT);
+
+		Log::WriteInfo(TAG, "Setting I2S DAC Format");
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACFORMAT_00, ES8388Control::Masks::DACControl1_DACFORMAT);
+
+		Log::WriteInfo(TAG, "Setting I2S ADC Bits");
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_100, ES8388Control::Masks::ADCControl4_ADCWL);
+
+		Log::WriteInfo(TAG, "Setting I2S DAC Bits");
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_100, ES8388Control::Masks::DACControl1_DACWL);
+
 		return true;
+	}
+
+	bool SetOutputVolume(uint8 Value)
+	{
+		if (Value < 0)
+			Value = 0;
+		else if (Value > 100)
+			Value = 100;
+
+		Log::WriteInfo(TAG, "Setting the volume: %i", Value);
+
+		Value /= 3;
+
+		ES8388Control::Write(ES8388Control::Registers::DACCControl24, Value); // LOUT1VOL
+		ES8388Control::Write(ES8388Control::Registers::DACCControl25, Value); // ROUT1VOL
+		ES8388Control::Write(ES8388Control::Registers::DACCControl26, Value); // LOUT2VOL
+		ES8388Control::Write(ES8388Control::Registers::DACCControl27, Value); // ROUT2VOL
+
+		return true;
+	}
+	uint8 GetOutputVolume(void)
+	{
+		// return I2CRead(DACRegisters::Control24);
+		return 0;
 	}
 
 private:
 	static const char *TAG;
 };
 
-const char *ES8388Interface::TAG = "ES8388";
+const char *ES8388Interface::TAG = "ES8388Interface";
 
 #endif

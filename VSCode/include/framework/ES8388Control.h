@@ -557,56 +557,54 @@ public:
 		ADCControl7_ADCSoftRamp_0 = 0b00000000, // disabled digital volume control soft ramp
 		ADCControl7_ADCSoftRamp_1 = 0b00010000, // enabled digital volume control soft ramp (default)
 
-		ADCControl7_ADCRampRate_00 = 0b00000000, // 0.5 dB per 4 LRCK digital volume control ramp rate (default)
-		ADCControl7_ADCRampRate_01 = 0b01000000, // 0.5 dB per 8 LRCK digital volume control ramp rate
-		ADCControl7_ADCRampRate_10 = 0b10000000, // 0.5 dB per 16 LRCK digital volume control ramp rate
-		ADCControl7_ADCRampRate_11 = 0b11000000, // 0.5 dB per 32 LRCK digital volume control ramp rate
+		ADCControl7_ADCRampRate_00 = 0b00000000, // 0.5dB per 4 LRCK digital volume control ramp rate (default)
+		ADCControl7_ADCRampRate_01 = 0b01000000, // 0.5dB per 8 LRCK digital volume control ramp rate
+		ADCControl7_ADCRampRate_10 = 0b10000000, // 0.5dB per 16 LRCK digital volume control ramp rate
+		ADCControl7_ADCRampRate_11 = 0b11000000, // 0.5dB per 32 LRCK digital volume control ramp rate
 
-		ADCControl8_LADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0 to –96 dB. 0 dB, (Expected dB between [-96, 0]) * -2 would be the interpolated value between these two
-		ADCControl8_LADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0 to –96 dB. -96 dB (default), (Expected dB between [-96, 0]) * -2 would be the interpolated value between these two
+		ADCControl8_LADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		ADCControl8_LADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB (default), (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
 
-		ADCControl9_RADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0 to –96 dB. 0 dB, (Expected dB between [-96, 0]) * -2 would be the interpolated value between these two
-		ADCControl9_RADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0 to –96 dB. -96 dB, (Expected dB between [-96, 0]) * -2 would be the interpolated value between these two
+		ADCControl9_RADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		ADCControl9_RADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
 
-		ADCControl10_MINGAIN_000 = 0b00000000, // Set minimum gain of PGA -12 dB
-		ADCControl10_MINGAIN_001 = 0b00000001, // Set minimum gain of PGA -6 dB
-		ADCControl10_MINGAIN_010 = 0b00000010, // Set minimum gain of PGA 0 dB
-		ADCControl10_MINGAIN_011 = 0b00000011, // Set minimum gain of PGA +6 dB
-		ADCControl10_MINGAIN_100 = 0b00000100, // Set minimum gain of PGA +12 dB
-		ADCControl10_MINGAIN_101 = 0b00000101, // Set minimum gain of PGA +18 dB
-		ADCControl10_MINGAIN_110 = 0b00000110, // Set minimum gain of PGA +24 dB
-		ADCControl10_MINGAIN_111 = 0b00000111, // Set minimum gain of PGA +30 dB
+		ADCControl10_MINGAIN_000 = 0b00000000, // Set minimum gain of PGA -12dB
+		ADCControl10_MINGAIN_001 = 0b00000001, // Set minimum gain of PGA -6dB
+		ADCControl10_MINGAIN_010 = 0b00000010, // Set minimum gain of PGA 0dB
+		ADCControl10_MINGAIN_011 = 0b00000011, // Set minimum gain of PGA +6dB
+		ADCControl10_MINGAIN_100 = 0b00000100, // Set minimum gain of PGA +12dB
+		ADCControl10_MINGAIN_101 = 0b00000101, // Set minimum gain of PGA +18dB
+		ADCControl10_MINGAIN_110 = 0b00000110, // Set minimum gain of PGA +24dB
+		ADCControl10_MINGAIN_111 = 0b00000111, // Set minimum gain of PGA +30dB
 
-		ADCControl10_MAXGAIN_000 = 0b00000000, // Set maximum gain of PGA -6.5 dB
-		ADCControl10_MAXGAIN_001 = 0b00001000, // Set maximum gain of PGA -0.5 dB
-		ADCControl10_MAXGAIN_010 = 0b00010000, // Set maximum gain of PGA 5.5 dB
-		ADCControl10_MAXGAIN_011 = 0b00011000, // Set maximum gain of PGA 11.5 dB
-		ADCControl10_MAXGAIN_100 = 0b00100000, // Set maximum gain of PGA 17.5 dB
-		ADCControl10_MAXGAIN_101 = 0b00101000, // Set maximum gain of PGA 23.5 dB
-		ADCControl10_MAXGAIN_110 = 0b00110000, // Set maximum gain of PGA 29.5 dB
-		ADCControl10_MAXGAIN_111 = 0b00111000, // Set maximum gain of PGA 35.5 dB
+		ADCControl10_MAXGAIN_000 = 0b00000000, // Set maximum gain of PGA -6.5dB
+		ADCControl10_MAXGAIN_001 = 0b00001000, // Set maximum gain of PGA -0.5dB
+		ADCControl10_MAXGAIN_010 = 0b00010000, // Set maximum gain of PGA 5.5dB
+		ADCControl10_MAXGAIN_011 = 0b00011000, // Set maximum gain of PGA 11.5dB
+		ADCControl10_MAXGAIN_100 = 0b00100000, // Set maximum gain of PGA 17.5dB
+		ADCControl10_MAXGAIN_101 = 0b00101000, // Set maximum gain of PGA 23.5dB
+		ADCControl10_MAXGAIN_110 = 0b00110000, // Set maximum gain of PGA 29.5dB
+		ADCControl10_MAXGAIN_111 = 0b00111000, // Set maximum gain of PGA 35.5dB
 
 		ADCControl10_ALCSEL_00 = 0b00000000, // ALC off
 		ADCControl10_ALCSEL_01 = 0b01000000, // ALC right channel only
 		ADCControl10_ALCSEL_10 = 0b10000000, // ALC left channel only
 		ADCControl10_ALCSEL_11 = 0b11000000, // ALC stereo
 
-		ADCControl11_ALCHLD_0000 = 0b00000000, // ALC hold time before gain is increased, 0ms, 10 - (1.36s / (Expected time between [0, 1.36s] + 1)) would be the interpolated value between these two
-		ADCControl11_ALCHLD_1010 = 0b00001010, // ALC hold time before gain is increased, 1.36s, 10 - (1.36s / (Expected time between [0, 1.36s] + 1)) would be the interpolated value between these two
+		ADCControl11_ALCHLD_0000 = 0b00000000, // ALC hold time before gain is increased, 0ms, Floor(Log2((Expected time between [0ms, 1360ms] + 1000ms) / 0.67ms) - 1000ms) would be the interpolated value between these two
+		ADCControl11_ALCHLD_1010 = 0b00001010, // ALC hold time before gain is increased, 1360ms, Floor(Log2((Expected time between [0ms, 1360ms] + 1000ms) / 0.67ms) - 1000ms) would be the interpolated value between these two
 
-		ADCControl11_ALCLVL_0000 = 0b00000000, // ALC target, -16.5dB, (10 - (((Expected dB between [-16.5dB, -1.5dB]) / -1.5dB) - 1)) << 4 would be the interpolated value between these two
-		ADCControl11_ALCLVL_1010 = 0b10100000, // ALC target, -1.5dB, (10 - (((Expected dB between [-16.5dB, -1.5dB]) / -1.5dB) - 1)) << 4 would be the interpolated value between these two
+		ADCControl11_ALCLVL_0000 = 0b00000000, // ALC target, -16.5dB, Floor(((Expected dB between [-16.5dB, -1.5dB]) + 16.5dB) / 1.5dB) << 4 would be the interpolated value between these two
+		ADCControl11_ALCLVL_1010 = 0b10100000, // ALC target, -1.5dB, Floor(((Expected dB between [-16.5dB, -1.5dB]) + 16.5dB) / 1.5dB) << 4 would be the interpolated value between these two
 
-		//-------------------------------------------------------------------------------------------------------------------------------------
-		ADCControl12_ALCATK_0000 = 0b00000000, // ALC attack (gain ramp down) time, ALC mode/limiter mode, 0.104 ms/0.0227 ms, (Expected dB between [0.104 ms/0.0227 ms, 106 ms/23.2 ms]) * 2 would be the interpolated value between these two
-		ADCControl12_ALCATK_1010 = 0b00001010, // ALC attack (gain ramp down) time, ALC mode/limiter mode, 106 ms/23.2 ms, (((Expected dB between [-16.5dB, -1.5dB]) / -1.5db) - 1) << 4 would be the interpolated value between these two
+		ADCControl12_ALCATK_0000 = 0b00000000, // ALC attack (gain ramp down) time, ALC mode/limiter mode, 0.104ms/0.0227ms, Floor(Log2(Expected time between [0.104ms, 106ms] / 0.053ms)) would be the interpolated value between these two
+		ADCControl12_ALCATK_1010 = 0b00001010, // ALC attack (gain ramp down) time, ALC mode/limiter mode, 106ms/23.2ms, Floor(Log2(Expected time between [0.104ms, 106ms] / 0.053ms)) would be the interpolated value between these two
 
-		ADCControl12_ALCDCY_0000 = 0b00000000, //
-		ADCControl12_ALCDCY_1010 = 0b10100000, //
-		//--------------------------------------------------------------------------------------------------------------------------------------------
+		ADCControl12_ALCDCY_0000 = 0b00000000, // ALC decay (gain ramp up) time, ALC mode/limiter mode, 0.410ms/0.0908ms, Floor(Log2(Expected time between [0.410ms, 420ms] / 0.21ms)) << 4 would be the interpolated value between these two
+		ADCControl12_ALCDCY_1010 = 0b10100000, // ALC decay (gain ramp up) time, ALC mode/limiter mode, 420ms/93ms, Floor(Log2(Expected time between [0.410ms, 420ms] / 0.21ms)) << 4 would be the interpolated value between these two
 
-		ADCControl13_WIN_SIZE_00110 = 0b00000110, // Windows size for peak detector，set the window size to N*16 samples, 96, (Expected number between [96, 496]) / 16 would be the interpolated value between these two
-		ADCControl13_WIN_SIZE_11111 = 0b00011111, // Windows size for peak detector，set the window size to N*16 samples, 496, (Expected number between [96, 496]) / 16 would be the interpolated value between these two
+		ADCControl13_WIN_SIZE_00110 = 0b00000110, // Windows size for peak detector，set the window size to N*16 samples, 96, Floor((Expected number between [96, 496]) / 16) would be the interpolated value between these two
+		ADCControl13_WIN_SIZE_11111 = 0b00011111, // Windows size for peak detector，set the window size to N*16 samples, 496, Floor((Expected number between [96, 496]) / 16) would be the interpolated value between these two
 
 		ADCControl13_TIME_OUT_0 = 0b00000000, // Zero Cross time out, disable (default)
 		ADCControl13_TIME_OUT_1 = 0b00100000, // Zero Cross time out, enable
@@ -624,8 +622,8 @@ public:
 		ADCControl14_NGG_01 = 0b00000010, // Noise gate type, mute ADC output
 		ADCControl14_NGG_11 = 0b00000110, // Noise gate type, reserved
 
-		ADCControl14_NGTH_00000 = 0b00000000, // Noise gate threshold, -76.5dBFS, (((Expected dB between [-76.5dBFS, -30dBFS]) + 30dBFS) / -1.5dBFS) << 3 would be the interpolated value between these two
-		ADCControl14_NGTH_11111 = 0b11111000, // Noise gate threshold, -30dBFS, (((Expected dB between [-76.5dBFS, -30dBFS]) + 30dBFS) / -1.5dBFS) << 3 would be the interpolated value between these two
+		ADCControl14_NGTH_00000 = 0b00000000, // Noise gate threshold, -76.5dBFS, Floor(((Expected dBFS between [-76.5dBFS, -30dBFS]) + 76.5dBFS) / -1.5dBFS) << 3 would be the interpolated value between these two
+		ADCControl14_NGTH_11111 = 0b11111000, // Noise gate threshold, -30dBFS, Floor(((Expected dBFS between [-76.5dBFS, -30dBFS]) + 76.5dBFS) / -1.5dBFS) << 3 would be the interpolated value between these two
 
 		DACControl1_DACFORMAT_00 = 0b00000000, // I2S serial audio data format
 		DACControl1_DACFORMAT_01 = 0b00000010, // left justify serial audio data format
@@ -682,18 +680,16 @@ public:
 		DACControl3_DACSoftRamp_0 = 0b00000000, // disabled digital volume control soft ramp
 		DACControl3_DACSoftRamp_1 = 0b00100000, // enabled digital volume control soft ramp (default)
 
-		DACControl3_DACRampRate_00 = 0b00000000, // 0.5 dB per 4 LRCK digital volume control ramp rate (default)
-		DACControl3_DACRampRate_01 = 0b01000000, // 0.5 dB per 32 LRCK digital volume control ramp rate
-		DACControl3_DACRampRate_10 = 0b10000000, // 0.5 dB per 64 LRCK digital volume control ramp rate
-		DACControl3_DACRampRate_11 = 0b11000001, // 0.5 dB per 128 LRCK digital volume control ramp rate
+		DACControl3_DACRampRate_00 = 0b00000000, // 0.5dB per 4 LRCK digital volume control ramp rate (default)
+		DACControl3_DACRampRate_01 = 0b01000000, // 0.5dB per 32 LRCK digital volume control ramp rate
+		DACControl3_DACRampRate_10 = 0b10000000, // 0.5dB per 64 LRCK digital volume control ramp rate
+		DACControl3_DACRampRate_11 = 0b11000001, // 0.5dB per 128 LRCK digital volume control ramp rate
 
-		//-------------------------------------------------------------------------------------------------------------------------------------
-		DACControl4_LDACVOL_00000000 = 0b00000000, //
-		DACControl4_LDACVOL_11000000 = 0b11000000, //
+		DACControl4_LDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		DACControl4_LDACVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
 
-		DACControl5_RDACVOL_00000000 = 0b00000000, //
-		DACControl5_RDACVOL_11000000 = 0b00000001, //
-		//-------------------------------------------------------------------------------------------------------------------------------------
+		DACControl5_RDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		DACControl5_RDACVOL_11000000 = 0b00000001, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
 
 		DACControl6_DEEMP_0 = 0b00000000, // disable digital click free power up and down
 		DACControl6_DEEMP_1 = 0b00001000, // enable digital click free power up and down (default)
@@ -714,10 +710,8 @@ public:
 		DACControl7_Vpp_scale_10 = 0b00000010, // Vpp set at 3.0V
 		DACControl7_Vpp_scale_11 = 0b00000011, // Vpp set at 2.5V
 
-		//-------------------------------------------------------------------------------------------------------------------------------------
-		DACControl7_SE_000 = 0b00000000, //
-		DACControl7_SE_111 = 0b00011100, //
-		//-------------------------------------------------------------------------------------------------------------------------------------
+		DACControl7_SE_000 = 0b00000000, // SE strength, 0, (Expected length between [0, 7]) << 2 would be the interpolated value between these two
+		DACControl7_SE_111 = 0b00011100, // SE strength, 7, (Expected length between [0, 7]) << 2 would be the interpolated value between these two
 
 		DACControl7_Mono_0 = 0b00000000, // stereo (default)
 		DACControl7_Mono_1 = 0b00100000, // mono (L+R)/2 into DACL and DACR
@@ -764,14 +758,14 @@ public:
 		DACControl16_LMIXSEL_011 = 0b00011000, // Left input select for output mix, left ADC P input (after mic amplifier)
 		DACControl16_LMIXSEL_100 = 0b00100000, // Left input select for output mix, left ADC N input (after mic amplifier)
 
-		DACControl17_LI2LOVOL_000 = 0b00000000, // LIN signal to left mixer gain, 6 dB
-		DACControl17_LI2LOVOL_001 = 0b00001000, // LIN signal to left mixer gain, 3 dB
-		DACControl17_LI2LOVOL_010 = 0b00010000, // LIN signal to left mixer gain, 0 dB
-		DACControl17_LI2LOVOL_011 = 0b00011000, // LIN signal to left mixer gain, -3 dB
-		DACControl17_LI2LOVOL_100 = 0b00100000, // LIN signal to left mixer gain, -6 dB
-		DACControl17_LI2LOVOL_101 = 0b00101000, // LIN signal to left mixer gain, -9 dB
-		DACControl17_LI2LOVOL_110 = 0b00110000, // LIN signal to left mixer gain, -12 dB
-		DACControl17_LI2LOVOL_111 = 0b00111000, // LIN signal to left mixer gain, -15 dB (default)
+		DACControl17_LI2LOVOL_000 = 0b00000000, // LIN signal to left mixer gain, 6dB
+		DACControl17_LI2LOVOL_001 = 0b00001000, // LIN signal to left mixer gain, 3dB
+		DACControl17_LI2LOVOL_010 = 0b00010000, // LIN signal to left mixer gain, 0dB
+		DACControl17_LI2LOVOL_011 = 0b00011000, // LIN signal to left mixer gain, -3dB
+		DACControl17_LI2LOVOL_100 = 0b00100000, // LIN signal to left mixer gain, -6dB
+		DACControl17_LI2LOVOL_101 = 0b00101000, // LIN signal to left mixer gain, -9dB
+		DACControl17_LI2LOVOL_110 = 0b00110000, // LIN signal to left mixer gain, -12dB
+		DACControl17_LI2LOVOL_111 = 0b00111000, // LIN signal to left mixer gain, -15dB (default)
 
 		DACControl17_LI2LO_0 = 0b00000000, // LIN signal to left mixer disable (default)
 		DACControl17_LI2LO_1 = 0b01000000, // LIN signal to left mixer enable
@@ -779,14 +773,14 @@ public:
 		DACControl17_LD2LO_0 = 0b00000000, // left DAC to left mixer disable (default)
 		DACControl17_LD2LO_1 = 0b10000000, // left DAC to left mixer enable
 
-		DACControl20_RI2ROVOL_000 = 0b00000000, // RIN signal to right mixer gain, 6 dB
-		DACControl20_RI2ROVOL_001 = 0b00001000, // RIN signal to right mixer gain, 3 dB
-		DACControl20_RI2ROVOL_010 = 0b00010000, // RIN signal to right mixer gain, 0 dB
-		DACControl20_RI2ROVOL_011 = 0b00011000, // RIN signal to right mixer gain, -3 dB
-		DACControl20_RI2ROVOL_100 = 0b00100000, // RIN signal to right mixer gain, -6 dB
-		DACControl20_RI2ROVOL_101 = 0b00101000, // RIN signal to right mixer gain, -9 dB
-		DACControl20_RI2ROVOL_110 = 0b00110000, // RIN signal to right mixer gain, -12 dB
-		DACControl20_RI2ROVOL_111 = 0b00111000, // RIN signal to right mixer gain, -15 dB (default)
+		DACControl20_RI2ROVOL_000 = 0b00000000, // RIN signal to right mixer gain, 6dB
+		DACControl20_RI2ROVOL_001 = 0b00001000, // RIN signal to right mixer gain, 3dB
+		DACControl20_RI2ROVOL_010 = 0b00010000, // RIN signal to right mixer gain, 0dB
+		DACControl20_RI2ROVOL_011 = 0b00011000, // RIN signal to right mixer gain, -3dB
+		DACControl20_RI2ROVOL_100 = 0b00100000, // RIN signal to right mixer gain, -6dB
+		DACControl20_RI2ROVOL_101 = 0b00101000, // RIN signal to right mixer gain, -9dB
+		DACControl20_RI2ROVOL_110 = 0b00110000, // RIN signal to right mixer gain, -12dB
+		DACControl20_RI2ROVOL_111 = 0b00111000, // RIN signal to right mixer gain, -15dB (default)
 
 		DACControl20_RI2RO_0 = 0b00000000, // RIN signal to right mixer disable (default)
 		DACControl20_RI2RO_1 = 0b01000000, // RIN signal to right mixer enable
@@ -818,19 +812,17 @@ public:
 		DACControl23_VROI_0 = 0b00000000, // 1.5k VREF to analog output resistance (default)
 		DACControl23_VROI_1 = 0b00010000, // 40k VREF to analog output resistance
 
-		//-------------------------------------------------------------------------------------------------------------------------------------
-		DACControl24_LOUT1VOL_000000 = 0b00000000, //
-		DACControl24_LOUT1VOL_100001 = 0b00000001, //
+		DACControl24_LOUT1VOL_000000 = 0b00000000, // LOUT1 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl24_LOUT1VOL_100001 = 0b00100001, // LOUT1 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
-		DACControl25_ROUT1VOL_000000 = 0b00000000, //
-		DACControl25_ROUT1VOL_100001 = 0b00000001, //
+		DACControl25_ROUT1VOL_000000 = 0b00000000, // ROUT1 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl25_ROUT1VOL_100001 = 0b00100001, // ROUT1 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
-		DACControl26_LOUT2VOL_000000 = 0b00000000, //
-		DACControl26_LOUT2VOL_100001 = 0b00100001, //
+		DACControl26_LOUT2VOL_000000 = 0b00000000, // LOUT2 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl26_LOUT2VOL_100001 = 0b00100001, // LOUT2 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
-		DACControl27_ROUT2VOL_000000 = 0b00000000, //
-		DACControl27_ROUT2VOL_100001 = 0b00100001, //
-		//-------------------------------------------------------------------------------------------------------------------------------------
+		DACControl27_ROUT2VOL_000000 = 0b00000000, // ROUT2 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl27_ROUT2VOL_100001 = 0b00100001, // ROUT2 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
 		DACControl29_hpLout1_ref2_0 = 0b00000000, // Reserved
 
@@ -851,34 +843,51 @@ public:
 
 	static uint8 Read(Registers Register)
 	{
-		return I2CUtils::Read(ADDRESS, (uint8)Register);
+		uint8 value = I2CUtils::Read(ADDRESS, (uint8)Register);
+
+		Log::WriteInfo(TAG, "Reading from address: %#02x register: %#02x the value: %#02x", ADDRESS, Register, value);
+
+		return value;
 	}
 
 	static void Write(Registers Register, uint8 Value)
 	{
+		Log::WriteInfo(TAG, "Writing to address: %#02x register: %#02x the value: %#02x", ADDRESS, Register, Value);
+
 		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, Value));
 	}
 
 	static Values Read(Registers Register, Masks Mask)
 	{
-		return (Values)(Read(Register) | Mask);
+		uint8 value = I2CUtils::Read(ADDRESS, (uint8)Register) & (uint8)Mask;
+
+		Log::WriteInfo(TAG, "Reading from address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, value, Mask);
+
+		return (Values)value;
 	}
 
 	static void Write(Registers Register, Values Value, Masks Mask)
 	{
-		ASSERT(((uint8)Value & ~(uint8)Mask) == 0, "ES83288Control", "Mask %i and Value %i are not compatible", (uint8)Mask, (uint8)Value);
+		ASSERT(((uint8)Value & ~(uint8)Mask) == 0, TAG, "Mask %i and Value %i are not compatible", (uint8)Mask, (uint8)Value);
 
-		uint8 value = Read(Register);
+		Log::WriteInfo(TAG, "Writing to address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, Value, Mask);
+
+		uint8 value = I2CUtils::Read(ADDRESS, (uint8)Register);
 
 		value |= ((uint8)Mask & (uint8)Value);
 
-		Write(Register, value);
+		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, value));
 	}
 
 public:
 	static const int32 ADDRESS;
+
+private:
+	static const char *TAG;
 };
 
-const int32 ES8388Control::ADDRESS = 0b0010000;
+const int32 ES8388Control::ADDRESS = 0x10;
+
+const char *ES8388Control::TAG = "ES83288Control";
 
 #endif

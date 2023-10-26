@@ -4,6 +4,8 @@
 
 #include "ES8388.h"
 #include "Memory.h"
+#include <driver/i2s.h>
+#include <driver/i2c.h>
 
 class ESP32A1SCodec
 {
