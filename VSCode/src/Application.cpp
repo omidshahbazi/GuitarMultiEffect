@@ -94,60 +94,60 @@ void Application::Update(void)
 
 void Application::I2SRoutine(void)
 {
-	while (true)
-	{
-		ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
-
-		for (int i = 0; i < FRAME_LENGTH; ++i)
-		{
-		}
-
-		// for (int i = 0; i < FRAME_LENGTH; ++i)
-		// {
-		// 	if (m_InBufferInt[i] == 0)
-		// 		continue;
-
-		// 	Log::WriteError("Data from input: %i %i %i %i %i %i %i %i %i %i",
-		// 					m_InBufferInt[i + 0],
-		// 					m_InBufferInt[i + 1],
-		// 					m_InBufferInt[i + 2],
-		// 					m_InBufferInt[i + 3],
-		// 					m_InBufferInt[i + 4],
-		// 					m_InBufferInt[i + 5],
-		// 					m_InBufferInt[i + 6],
-		// 					m_InBufferInt[i + 7],
-		// 					m_InBufferInt[i + 8],
-		// 					m_InBufferInt[i + 9]);
-
-		// 	break;
-		// }
-
-		ESP32A1SCodec::Write(m_InBufferInt, FRAME_LENGTH);
-
-		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
-		// vTaskDelay(xDelay);
-	}
-
-	// vTaskDelay(1000);
-
-	// int amplitude = 8000;
-	// int start_dir = 50;
-	// int dir = start_dir;
-
 	// while (true)
 	// {
+	// 	ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
 
-	// 	amplitude -= dir;
-	// 	if (amplitude <= start_dir || amplitude >= 15000)
-	// 		dir *= -1;
+	// 	for (int i = 0; i < FRAME_LENGTH; ++i)
+	// 	{
+	// 	}
 
-	// 	setup_sine_waves16(amplitude);
+	// 	// for (int i = 0; i < FRAME_LENGTH; ++i)
+	// 	// {
+	// 	// 	if (m_InBufferInt[i] == 0)
+	// 	// 		continue;
 
-	// 	ESP32A1SCodec::Write(txBuf, BUF_SAMPLES);
+	// 	// 	Log::WriteError("Data from input: %i %i %i %i %i %i %i %i %i %i",
+	// 	// 					m_InBufferInt[i + 0],
+	// 	// 					m_InBufferInt[i + 1],
+	// 	// 					m_InBufferInt[i + 2],
+	// 	// 					m_InBufferInt[i + 3],
+	// 	// 					m_InBufferInt[i + 4],
+	// 	// 					m_InBufferInt[i + 5],
+	// 	// 					m_InBufferInt[i + 6],
+	// 	// 					m_InBufferInt[i + 7],
+	// 	// 					m_InBufferInt[i + 8],
+	// 	// 					m_InBufferInt[i + 9]);
+
+	// 	// 	break;
+	// 	// }
+
+	// 	ESP32A1SCodec::Write(m_InBufferInt, FRAME_LENGTH);
 
 	// 	// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
 	// 	// vTaskDelay(xDelay);
 	// }
 
-	// vTaskDelete(nullptr);
+	// vTaskDelay(1000);
+
+	int amplitude = 8000;
+	int start_dir = 50;
+	int dir = start_dir;
+
+	while (true)
+	{
+
+		amplitude -= dir;
+		if (amplitude <= start_dir || amplitude >= 15000)
+			dir *= -1;
+
+		setup_sine_waves16(amplitude);
+
+		ESP32A1SCodec::Write(txBuf, BUF_SAMPLES);
+
+		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
+		// vTaskDelay(xDelay);
+	}
+
+	vTaskDelete(nullptr);
 }
