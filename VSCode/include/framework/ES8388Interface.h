@@ -29,25 +29,28 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::DACControl21, 0x80); // set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
 		ES8388Control::Write(ES8388Control::Registers::DACControl23, 0x00); // vroi=0
 
-		SetDACVolume(0, 0); // 0db
+		// SetDACVolume(0, 0); // 0db
 
-		// Log::WriteInfo(TAG, "Setting DAC Output: %02x", OutputMode);
+		Log::WriteInfo(TAG, "Setting DAC Output");
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_LOUT1_1, ES8388Control::Masks::DACPower_LOUT1);
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_ROUT1_1, ES8388Control::Masks::DACPower_ROUT1);
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_LOUT2_1, ES8388Control::Masks::DACPower_LOUT2);
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_ROUT2_1, ES8388Control::Masks::DACPower_ROUT2);
 
-		// Log::WriteInfo(TAG, "Setting ADC Input: %02x", InputMode);
+		Log::WriteInfo(TAG, "Setting ADC Input");
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0xFF);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl1, 0xbb); // MIC Left and Right channel PGA gain
-		ES8388Control::Write(ES8388Control::Registers::ADCControl2, (uint8)InputMode);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSR_0, ES8388Control::Masks::ADCControl2_DSR);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSSEL_0, ES8388Control::Masks::ADCControl2_DSSEL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_RINSEL_00, ES8388Control::Masks::ADCControl2_RINSEL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_LINSEL_00, ES8388Control::Masks::ADCControl2_RINSEL);
 
 		ES8388Control::Write(ES8388Control::Registers::ADCControl3, 0x02);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl4, 0x0d); // Left/Right data, Left/Right justified mode, Bits length, I2S format
 		ES8388Control::Write(ES8388Control::Registers::ADCControl5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
 
 		// ALC for Microphone
-		SetADCVolume(0, 0);												// 0db
+		// SetADCVolume(0, 0);												// 0db
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
 
 		return true;
