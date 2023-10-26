@@ -562,11 +562,11 @@ public:
 		ADCControl7_ADCRampRate_10 = 0b10000000, // 0.5dB per 16 LRCK digital volume control ramp rate
 		ADCControl7_ADCRampRate_11 = 0b11000000, // 0.5dB per 32 LRCK digital volume control ramp rate
 
-		ADCControl8_LADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
-		ADCControl8_LADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB (default), (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		ADCControl8_LADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		ADCControl8_LADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB (default), Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
-		ADCControl9_RADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
-		ADCControl9_RADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		ADCControl9_RADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		ADCControl9_RADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
 		ADCControl10_MINGAIN_000 = 0b00000000, // Set minimum gain of PGA -12dB
 		ADCControl10_MINGAIN_001 = 0b00000001, // Set minimum gain of PGA -6dB
@@ -685,11 +685,11 @@ public:
 		DACControl3_DACRampRate_10 = 0b10000000, // 0.5dB per 64 LRCK digital volume control ramp rate
 		DACControl3_DACRampRate_11 = 0b11000001, // 0.5dB per 128 LRCK digital volume control ramp rate
 
-		DACControl4_LDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
-		DACControl4_LDACVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		DACControl4_LDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		DACControl4_LDACVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
-		DACControl5_RDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
-		DACControl5_RDACVOL_11000000 = 0b00000001, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, (Expected dB between [-96dB, 0dB]) * -2 would be the interpolated value between these two
+		DACControl5_RDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		DACControl5_RDACVOL_11000000 = 0b00000001, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
 		DACControl6_DEEMP_0 = 0b00000000, // disable digital click free power up and down
 		DACControl6_DEEMP_1 = 0b00001000, // enable digital click free power up and down (default)
@@ -812,17 +812,17 @@ public:
 		DACControl23_VROI_0 = 0b00000000, // 1.5k VREF to analog output resistance (default)
 		DACControl23_VROI_1 = 0b00010000, // 40k VREF to analog output resistance
 
-		DACControl24_LOUT1VOL_000000 = 0b00000000, // LOUT1 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
-		DACControl24_LOUT1VOL_100001 = 0b00100001, // LOUT1 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl24_LOUT1VOL_000000 = 0b00000000, // LOUT1 volume, -45dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl24_LOUT1VOL_100001 = 0b00100001, // LOUT1 volume, 4.5dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
-		DACControl25_ROUT1VOL_000000 = 0b00000000, // ROUT1 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
-		DACControl25_ROUT1VOL_100001 = 0b00100001, // ROUT1 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl25_ROUT1VOL_000000 = 0b00000000, // ROUT1 volume, -45dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl25_ROUT1VOL_100001 = 0b00100001, // ROUT1 volume, 4.5dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
-		DACControl26_LOUT2VOL_000000 = 0b00000000, // LOUT2 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
-		DACControl26_LOUT2VOL_100001 = 0b00100001, // LOUT2 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl26_LOUT2VOL_000000 = 0b00000000, // LOUT2 volume, -45dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl26_LOUT2VOL_100001 = 0b00100001, // LOUT2 volume, 4.5dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
-		DACControl27_ROUT2VOL_000000 = 0b00000000, // ROUT2 volume, -45dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
-		DACControl27_ROUT2VOL_100001 = 0b00100001, // ROUT2 volume, 4.5dB, (((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl27_ROUT2VOL_000000 = 0b00000000, // ROUT2 volume, -45dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
+		DACControl27_ROUT2VOL_100001 = 0b00100001, // ROUT2 volume, 4.5dB, Floor(((Expected dB between [-45dB, 4.5dB]) + 45dB) / 1.5dB) would be the interpolated value between these two
 
 		DACControl29_hpLout1_ref2_0 = 0b00000000, // Reserved
 
