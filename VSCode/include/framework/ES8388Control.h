@@ -872,11 +872,9 @@ public:
 
 		Log::WriteInfo(TAG, "Writing to address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, Value, Mask);
 
-		uint8 value = I2CUtils::Read(ADDRESS, (uint8)Register);
+		uint8 otherBitValues = I2CUtils::Read(ADDRESS, (uint8)Register) & ~(uint8)Mask;
 
-		value |= ((uint8)Mask & (uint8)Value);
-
-		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, value));
+		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, otherBitValues | (uint8)Value));
 	}
 
 public:

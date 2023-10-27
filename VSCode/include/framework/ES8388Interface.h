@@ -18,7 +18,7 @@ public:
 
 		ES8388Control::Write(ES8388Control::Registers::ChipPower, 0x00); // normal all and power up all
 
-		ES8388Control::Write(ES8388Control::Registers::MasterMode, 0x80); // CODEC IN I2S SLAVE MODE
+		ES8388Control::Write(ES8388Control::Registers::MasterMode, 0x00); // CODEC IN I2S SLAVE MODE
 
 		ES8388Control::Write(ES8388Control::Registers::DACPower, 0xC0);		// disable DAC and disable Lout/Rout/1/2
 		ES8388Control::Write(ES8388Control::Registers::ChipControl1, 0x12); // Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
@@ -43,15 +43,16 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ADCControl1, 0xbb); // MIC Left and Right channel PGA gain
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSR_0, ES8388Control::Masks::ADCControl2_DSR);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSSEL_0, ES8388Control::Masks::ADCControl2_DSSEL);
-		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_RINSEL_00, ES8388Control::Masks::ADCControl2_RINSEL);
-		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_LINSEL_00, ES8388Control::Masks::ADCControl2_RINSEL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_LINSEL_01, ES8388Control::Masks::ADCControl2_LINSEL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_RINSEL_10, ES8388Control::Masks::ADCControl2_RINSEL);
 
 		ES8388Control::Write(ES8388Control::Registers::ADCControl3, 0x02);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl4, 0x0d); // Left/Right data, Left/Right justified mode, Bits length, I2S format
 		ES8388Control::Write(ES8388Control::Registers::ADCControl5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
 
 		// ALC for Microphone
-		SetADCVolume(0, 0);												// 0db
+		SetADCVolume(0, 0); // 0db
+
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
 
 		Log::WriteInfo(TAG, "Setting I2S ADC Format");
@@ -61,10 +62,10 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACFORMAT_00, ES8388Control::Masks::DACControl1_DACFORMAT);
 
 		Log::WriteInfo(TAG, "Setting I2S ADC Bits");
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_100, ES8388Control::Masks::ADCControl4_ADCWL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_001, ES8388Control::Masks::ADCControl4_ADCWL);
 
 		Log::WriteInfo(TAG, "Setting I2S DAC Bits");
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_100, ES8388Control::Masks::DACControl1_DACWL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_001, ES8388Control::Masks::DACControl1_DACWL);
 
 		SetOutputVolume(4.5F);
 
