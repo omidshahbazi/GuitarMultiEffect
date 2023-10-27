@@ -30,7 +30,7 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::DACControl21, 0x80); // set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
 		ES8388Control::Write(ES8388Control::Registers::DACControl23, 0x00); // vroi=0
 
-		SetDACVolume(0, 0); // 0db
+		SetDACVolume(0);
 
 		Log::WriteInfo(TAG, "Setting DAC Output");
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_LOUT1_1, ES8388Control::Masks::DACPower_LOUT1);
@@ -51,7 +51,7 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ADCControl5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
 
 		// ALC for Microphone
-		SetADCVolume(0, 0); // 0db
+		SetADCVolume(0);
 
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
 
@@ -140,12 +140,56 @@ public:
 		return true;
 	}
 
+	//[-96dB, 0dB]
+	static bool SetADCVolume(float dB)
+	{
+		dB = Math::Clamp(dB, -96, 0);
+
+		Log::WriteInfo(TAG, "Setting the ADC volume: %fdB", dB);
+
+		ES8388Control::Values value = (ES8388Control::Values)(((uint8)(dB * 2)) & (uint8)ES8388Control::Masks::ADCControl8_LADCVOL);
+
+		ES8388Control::Write(ES8388Control::Registers::ADCControl8, value, ES8388Control::Masks::ADCControl8_LADCVOL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl9, value, ES8388Control::Masks::ADCControl9_RADCVOL);
+
+		return true;
+	}
+
+	static float GetADCVolume(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::ADCControl8, ES8388Control::Masks::ADCControl8_LADCVOL);
+
+		return (uint8)value / 2.0F;
+	}
+
+	//[-96dB, 0dB]
+	static bool SetDACVolume(float dB)
+	{
+		dB = Math::Clamp(dB, -96, 0);
+
+		Log::WriteInfo(TAG, "Setting the DAC volume: %fdB", dB);
+
+		ES8388Control::Values value = (ES8388Control::Values)(((uint8)(dB * 2)) & (uint8)ES8388Control::Masks::DACControl4_LDACVOL);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl4, value, ES8388Control::Masks::DACControl4_LDACVOL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl5, value, ES8388Control::Masks::DACControl5_RDACVOL);
+
+		return true;
+	}
+
+	static float GetDACVolume(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::DACControl4, ES8388Control::Masks::DACControl4_LDACVOL);
+
+		return (uint8)value / 2.0F;
+	}
+
 	//[-45dB, 4.5dB]
 	static bool SetOutputVolume(float dB)
 	{
 		dB = Math::Clamp(dB, -45, 4.5F);
 
-		Log::WriteInfo(TAG, "Setting the volume: %fdB", dB);
+		Log::WriteInfo(TAG, "Setting the output volume: %fdB", dB);
 
 		ES8388Control::Values value = (ES8388Control::Values)((uint8)((dB + 45) / 1.5F) & (uint8)ES8388Control::Masks::DACControl24_LOUT1VOL);
 
@@ -179,46 +223,6 @@ public:
 	static bool GetMute(void)
 	{
 		return (ES8388Control::Read(ES8388Control::Registers::DACControl3, ES8388Control::Masks::DACControl3_DACMute) == ES8388Control::Values::DACControl3_DACMute_1);
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	static bool SetADCVolume(int32 Volume, int32 Dot)
-	{
-		int32 vol = GetVolume(Volume, Dot);
-
-		ES8388Control::Write(ES8388Control::Registers::ADCControl8, vol);
-		ES8388Control::Write(ES8388Control::Registers::ADCControl9, vol); // ADC Right Volume=0db
-
-		return true;
-	}
-
-	static bool SetDACVolume(int32 Volume, int32 Dot)
-	{
-		int32 vol = GetVolume(Volume, Dot);
-
-		ES8388Control::Write(ES8388Control::Registers::DACControl5, vol);
-		ES8388Control::Write(ES8388Control::Registers::DACControl4, vol);
-
-		return true;
-	}
-
-	static int32 GetVolume(int32 Volume, int32 Dot)
-	{
-		if (Volume < -96 || Volume > 0)
-		{
-			Log::WriteWarning(TAG, "Warning: volume < -96! or > 0!");
-
-			if (Volume < -96)
-				Volume = -96;
-			else
-				Volume = 0;
-		}
-
-		Dot = (Dot >= 5 ? 1 : 0);
-
-		Volume = (-Volume << 1) + Dot;
-
-		return Volume;
 	}
 
 private:
