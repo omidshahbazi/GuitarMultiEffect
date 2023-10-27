@@ -73,8 +73,8 @@ void Application::Initialize(void)
 	configs.Format = ES8388::Formats::Normal;
 
 	CHECK_CALL(ESP32A1SCodec::Initialize(&configs));
-	CHECK_CALL(ESP32A1SCodec::SetOutputVolume(70));
-	CHECK_CALL(ESP32A1SCodec::SetMicrophoneGain(8));
+	// CHECK_CALL(ESP32A1SCodec::SetOutputVolume(70));
+	// CHECK_CALL(ESP32A1SCodec::SetMicrophoneGain(8));
 
 	xTaskCreatePinnedToCore(I2SRoutine, "i2s_task", 4096, this, 10, nullptr, 1);
 
