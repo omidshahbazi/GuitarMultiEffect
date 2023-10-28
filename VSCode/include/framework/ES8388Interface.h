@@ -8,19 +8,33 @@
 class ES8388Interface
 {
 public:
-	static bool Initialize()
+	static bool Initialize(void)
 	{
 		Log::WriteInfo(TAG, "Setting the Registers");
 
-		ES8388Control::Write(ES8388Control::Registers::DACControl3, 0x04); // 0x04 mute/0x00 unmute&ramp;DAC unmute and  disabled digital volume control soft ramp
+		SetOutputMute(true);
 
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, 0x50);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_UNKNOWN_1, ES8388Control::Masks::ChipControl2_UNKNOWN);
 
-		ES8388Control::Write(ES8388Control::Registers::ChipPower, 0x00); // normal all and power up all
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_dacVref_PDN_0, ES8388Control::Masks::ChipPower_dacVref_PDN);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_adcVref_PDN_0, ES8388Control::Masks::ChipPower_adcVref_PDN);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_DACDLL_PDN_0, ES8388Control::Masks::ChipPower_DACDLL_PDN);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_ADCDLL_PDN_0, ES8388Control::Masks::ChipPower_ADCDLL_PDN);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_dac_stm_rst_0, ES8388Control::Masks::ChipPower_dac_stm_rst);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_adc_stm_rst_0, ES8388Control::Masks::ChipPower_adc_stm_rst);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_dac_DigPDN_0, ES8388Control::Masks::ChipPower_dac_DigPDN);
+		ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_adc_DigPDN_0, ES8388Control::Masks::ChipPower_adc_DigPDN);
 
-		ES8388Control::Write(ES8388Control::Registers::MasterMode, 0x00); // CODEC IN I2S SLAVE MODE
+		ES8388Control::Write(ES8388Control::Registers::MasterMode, ES8388Control::Values::MasterMode_MSC_0, ES8388Control::Masks::MasterMode_MSC);
 
-		ES8388Control::Write(ES8388Control::Registers::DACPower, 0xC0);		// disable DAC and disable Lout/Rout/1/2
+		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_ROUT2_0, ES8388Control::Masks::DACPower_ROUT2);
+		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_LOUT2_0, ES8388Control::Masks::DACPower_LOUT2);
+		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_ROUT1_0, ES8388Control::Masks::DACPower_ROUT1);
+		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_LOUT1_0, ES8388Control::Masks::DACPower_LOUT1);
+		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_PdnDACR_1, ES8388Control::Masks::DACPower_PdnDACR);
+		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_PdnDACL_1, ES8388Control::Masks::DACPower_PdnDACL);
+
 		ES8388Control::Write(ES8388Control::Registers::ChipControl1, 0x12); // Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
 		ES8388Control::Write(ES8388Control::Registers::DACControl1, 0x18);	// 1a 0x18:16bit iis , 0x00:24
 		ES8388Control::Write(ES8388Control::Registers::DACControl2, 0x02);	// DACFsMode,SINGLE SPEED; DACFsRatio,256
@@ -134,7 +148,7 @@ public:
 
 			ES8388Control::Write(ES8388Control::Registers::DACPower, 0x3c);
 
-			CHECK_CALL(SetMute(false));
+			CHECK_CALL(SetOutputMute(false));
 		}
 
 		return true;
@@ -147,6 +161,14 @@ public:
 	static bool TurnOffChip(void)
 	{
 	}
+
+	// static bool TurnOnChip(void)
+	// {
+	// }
+
+	// static bool TurnOffChip(void)
+	// {
+	// }
 
 	static bool SetADCBitsPerSample()
 	{
@@ -224,7 +246,7 @@ public:
 		return ((uint8)value * 1.5F) - 45;
 	}
 
-	static bool SetMute(bool Mute)
+	static bool SetOutputMute(bool Mute)
 	{
 		Log::WriteInfo(TAG, "Setting the Mute: %i", Mute);
 
@@ -236,7 +258,7 @@ public:
 		return true;
 	}
 
-	static bool GetMute(void)
+	static bool GetOutputMute(void)
 	{
 		return (ES8388Control::Read(ES8388Control::Registers::DACControl3, ES8388Control::Masks::DACControl3_DACMute) == ES8388Control::Values::DACControl3_DACMute_1);
 	}

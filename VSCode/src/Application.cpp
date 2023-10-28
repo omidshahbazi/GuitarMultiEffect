@@ -94,42 +94,17 @@ void Application::Update(void)
 
 void Application::I2SRoutine(void)
 {
-	// while (true)
-	// {
-	// 	ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
+#if 0
+	while (true)
+	{
+		ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
 
-	// 	for (int i = 0; i < FRAME_LENGTH; ++i)
-	// 	{
-	// 	}
+		ESP32A1SCodec::Write(m_InBufferInt, FRAME_LENGTH);
 
-	// 	// for (int i = 0; i < FRAME_LENGTH; ++i)
-	// 	// {
-	// 	// 	if (m_InBufferInt[i] == 0)
-	// 	// 		continue;
-
-	// 	// 	Log::WriteError("Data from input: %i %i %i %i %i %i %i %i %i %i",
-	// 	// 					m_InBufferInt[i + 0],
-	// 	// 					m_InBufferInt[i + 1],
-	// 	// 					m_InBufferInt[i + 2],
-	// 	// 					m_InBufferInt[i + 3],
-	// 	// 					m_InBufferInt[i + 4],
-	// 	// 					m_InBufferInt[i + 5],
-	// 	// 					m_InBufferInt[i + 6],
-	// 	// 					m_InBufferInt[i + 7],
-	// 	// 					m_InBufferInt[i + 8],
-	// 	// 					m_InBufferInt[i + 9]);
-
-	// 	// 	break;
-	// 	// }
-
-	// 	ESP32A1SCodec::Write(m_InBufferInt, FRAME_LENGTH);
-
-	// 	// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
-	// 	// vTaskDelay(xDelay);
-	// }
-
-	// vTaskDelay(1000);
-
+		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
+		// vTaskDelay(xDelay);
+	}
+#else
 	int amplitude = 8000;
 	int start_dir = 50;
 	int dir = start_dir;
@@ -148,6 +123,8 @@ void Application::I2SRoutine(void)
 		// const TickType_t xDelay = 1000 / portTICK_PERIOD_MS;
 		// vTaskDelay(xDelay);
 	}
+#endif
 
+	// vTaskDelay(1000);
 	vTaskDelete(nullptr);
 }
