@@ -65,7 +65,7 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_001, ES8388Control::Masks::ADCControl4_ADCWL);
 
 		Log::WriteInfo(TAG, "Setting I2S DAC Bits");
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_001, ES8388Control::Masks::DACControl1_DACWL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_011, ES8388Control::Masks::DACControl1_DACWL);
 
 		SetOutputVolume(4.5F);
 
@@ -138,6 +138,22 @@ public:
 		}
 
 		return true;
+	}
+
+	static bool TurnOnChip(void)
+	{
+	}
+
+	static bool TurnOffChip(void)
+	{
+	}
+
+	static bool SetADCBitsPerSample()
+	{
+	}
+
+	static bool SetDACBitsPerSample()
+	{
 	}
 
 	//[-96dB, 0dB]
@@ -223,6 +239,14 @@ public:
 	static bool GetMute(void)
 	{
 		return (ES8388Control::Read(ES8388Control::Registers::DACControl3, ES8388Control::Masks::DACControl3_DACMute) == ES8388Control::Values::DACControl3_DACMute_1);
+	}
+
+	static void SetMicrophoneGain(float dB)
+	{
+	}
+
+	static float GetMicrophoneGain(void)
+	{
 	}
 
 private:

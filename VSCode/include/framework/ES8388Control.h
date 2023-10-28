@@ -845,14 +845,14 @@ public:
 	{
 		uint8 value = I2CUtils::Read(ADDRESS, (uint8)Register);
 
-		Log::WriteInfo(TAG, "Reading from address: %#02x register: %#02x the value: %#02x", ADDRESS, Register, value);
+		Log::WriteDebug(TAG, "Reading from address: %#02x register: %#02x the value: %#02x", ADDRESS, Register, value);
 
 		return value;
 	}
 
 	static void Write(Registers Register, uint8 Value)
 	{
-		Log::WriteInfo(TAG, "Writing to address: %#02x register: %#02x the value: %#02x", ADDRESS, Register, Value);
+		Log::WriteDebug(TAG, "Writing to address: %#02x register: %#02x the value: %#02x", ADDRESS, Register, Value);
 
 		CHECK_CALL(I2CUtils::Write(ADDRESS, (uint8)Register, Value));
 	}
@@ -861,7 +861,7 @@ public:
 	{
 		uint8 value = I2CUtils::Read(ADDRESS, (uint8)Register) & (uint8)Mask;
 
-		Log::WriteInfo(TAG, "Reading from address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, value, Mask);
+		Log::WriteDebug(TAG, "Reading from address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, value, Mask);
 
 		return (Values)value;
 	}
@@ -870,7 +870,7 @@ public:
 	{
 		ASSERT(((uint8)Value & ~(uint8)Mask) == 0, TAG, "Mask %i and Value %i are not compatible", (uint8)Mask, (uint8)Value);
 
-		Log::WriteInfo(TAG, "Writing to address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, Value, Mask);
+		Log::WriteDebug(TAG, "Writing to address: %#02x register: %#02x the value: %#02x with the mask: %#02x", ADDRESS, Register, Value, Mask);
 
 		uint8 otherBitValues = I2CUtils::Read(ADDRESS, (uint8)Register) & ~(uint8)Mask;
 
