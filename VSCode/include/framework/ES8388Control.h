@@ -443,25 +443,11 @@ public:
 		MasterMode_MSC_0 = 0b00000000, // slave serial port mode
 		MasterMode_MSC_1 = 0b10000000, // master serial port mode (default)
 
-		ADCControl1_MicAmpR_0000 = 0b00000000, // Right channel PGA gain 0dB (default)
-		ADCControl1_MicAmpR_0001 = 0b00000001, // Right channel PGA gain +3 dB
-		ADCControl1_MicAmpR_0010 = 0b00000010, // Right channel PGA gain +6 dB
-		ADCControl1_MicAmpR_0011 = 0b00000011, // Right channel PGA gain +9 dB
-		ADCControl1_MicAmpR_0100 = 0b00000100, // Right channel PGA gain +12 dB
-		ADCControl1_MicAmpR_0101 = 0b00000101, // Right channel PGA gain +15 dB
-		ADCControl1_MicAmpR_0110 = 0b00000110, // Right channel PGA gain +18 dB
-		ADCControl1_MicAmpR_0111 = 0b00000111, // Right channel PGA gain +21 dB
-		ADCControl1_MicAmpR_1000 = 0b00001000, // Right channel PGA gain +24 dB
+		ADCControl1_MicAmpR_0000 = 0b00000000, // Right channel PGA gain, 0dB (default), Floor((Expected dB between [0dB, 24dB]) / 3dB) would be the interpolated value between these two
+		ADCControl1_MicAmpR_1000 = 0b00001000, // Right channel PGA gain, 24dB, Floor((Expected dB between [0dB, 24dB]) / 3dB) would be the interpolated value between these two
 
-		ADCControl1_MicAmpL_0000 = 0b00000000, // Left channel PGA gain 0 dB (default)
-		ADCControl1_MicAmpL_0001 = 0b00010000, // Left channel PGA gain +3 dB
-		ADCControl1_MicAmpL_0010 = 0b00100000, // Left channel PGA gain +6 dB
-		ADCControl1_MicAmpL_0011 = 0b00110000, // Left channel PGA gain +9 dB
-		ADCControl1_MicAmpL_0100 = 0b01000000, // Left channel PGA gain +12 dB
-		ADCControl1_MicAmpL_0101 = 0b01010000, // Left channel PGA gain +15 dB
-		ADCControl1_MicAmpL_0110 = 0b01100000, // Left channel PGA gain +18 dB
-		ADCControl1_MicAmpL_0111 = 0b01110000, // Left channel PGA gain +21 dB
-		ADCControl1_MicAmpL_1000 = 0b10000000, // Left channel PGA gain +24 dB
+		ADCControl1_MicAmpL_0000 = 0b00000000, // Left channel PGA gain, 0dB (default), Floor((Expected dB between [0dB, 24dB]) / 3dB) << 4 would be the interpolated value between these
+		ADCControl1_MicAmpL_1000 = 0b10000000, // Left channel PGA gain, 24dB, Floor((Expected dB between [0dB, 24dB]) / 3dB) << 4 would be the interpolated value between these two
 
 		ADCControl2_DSR_0 = 0b00000000, // LINPUT1-RINPUT1 (default)
 		ADCControl2_DSR_1 = 0b00000100, // LINPUT2-RINPUT2
@@ -571,23 +557,11 @@ public:
 		ADCControl9_RADCVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 		ADCControl9_RADCVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB. -96dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
-		ADCControl10_MINGAIN_000 = 0b00000000, // Set minimum gain of PGA -12dB
-		ADCControl10_MINGAIN_001 = 0b00000001, // Set minimum gain of PGA -6dB
-		ADCControl10_MINGAIN_010 = 0b00000010, // Set minimum gain of PGA 0dB
-		ADCControl10_MINGAIN_011 = 0b00000011, // Set minimum gain of PGA +6dB
-		ADCControl10_MINGAIN_100 = 0b00000100, // Set minimum gain of PGA +12dB
-		ADCControl10_MINGAIN_101 = 0b00000101, // Set minimum gain of PGA +18dB
-		ADCControl10_MINGAIN_110 = 0b00000110, // Set minimum gain of PGA +24dB
-		ADCControl10_MINGAIN_111 = 0b00000111, // Set minimum gain of PGA +30dB
+		ADCControl10_MINGAIN_000 = 0b00000000, // Set minimum gain of PGA, -12dB, Floor(((Expected dB between [-12dB, 30dB]) + 12dB) / 6dB) would be the interpolated value between these two
+		ADCControl10_MINGAIN_111 = 0b00000111, // Set minimum gain of PGA, 30dB, Floor(((Expected dB between [-12dB, 30dB]) + 12dB) / 6dB) would be the interpolated value between these two
 
-		ADCControl10_MAXGAIN_000 = 0b00000000, // Set maximum gain of PGA -6.5dB
-		ADCControl10_MAXGAIN_001 = 0b00001000, // Set maximum gain of PGA -0.5dB
-		ADCControl10_MAXGAIN_010 = 0b00010000, // Set maximum gain of PGA 5.5dB
-		ADCControl10_MAXGAIN_011 = 0b00011000, // Set maximum gain of PGA 11.5dB
-		ADCControl10_MAXGAIN_100 = 0b00100000, // Set maximum gain of PGA 17.5dB
-		ADCControl10_MAXGAIN_101 = 0b00101000, // Set maximum gain of PGA 23.5dB
-		ADCControl10_MAXGAIN_110 = 0b00110000, // Set maximum gain of PGA 29.5dB
-		ADCControl10_MAXGAIN_111 = 0b00111000, // Set maximum gain of PGA 35.5dB
+		ADCControl10_MAXGAIN_000 = 0b00000000, // Set maximum gain of PGA -6.5dB, Floor(((Expected dB between [-6.5dB, 35.5dB]) + 6.5dB) / 6dB) << 3 would be the interpolated value between these two
+		ADCControl10_MAXGAIN_111 = 0b00111000, // Set maximum gain of PGA 35.5dB, Floor(((Expected dB between [-6.5dB, 35.5dB]) + 6.5dB) / 6dB) << 3 would be the interpolated value between these two
 
 		ADCControl10_ALCSEL_00 = 0b00000000, // ALC off
 		ADCControl10_ALCSEL_01 = 0b01000000, // ALC right channel only
@@ -688,11 +662,11 @@ public:
 		DACControl3_DACRampRate_10 = 0b10000000, // 0.5dB per 64 LRCK digital volume control ramp rate
 		DACControl3_DACRampRate_11 = 0b11000001, // 0.5dB per 128 LRCK digital volume control ramp rate
 
-		DACControl4_LDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
-		DACControl4_LDACVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		DACControl4_LDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		DACControl4_LDACVOL_11000000 = 0b11000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB, –96dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
-		DACControl5_RDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
-		DACControl5_RDACVOL_11000000 = 0b00000001, // Digital volume control attenuates the signal in 0.5 dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		DACControl5_RDACVOL_00000000 = 0b00000000, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB, 0dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
+		DACControl5_RDACVOL_11000000 = 0b00000001, // Digital volume control attenuates the signal in 0.5dB incremental from 0dB to –96dB, –96dB, Floor((Expected dB between [-96dB, 0dB]) * -2) would be the interpolated value between these two
 
 		DACControl6_DEEMP_0 = 0b00000000, // disable digital click free power up and down
 		DACControl6_DEEMP_1 = 0b00001000, // enable digital click free power up and down (default)
@@ -761,14 +735,8 @@ public:
 		DACControl16_LMIXSEL_011 = 0b00011000, // Left input select for output mix, left ADC P input (after mic amplifier)
 		DACControl16_LMIXSEL_100 = 0b00100000, // Left input select for output mix, left ADC N input (after mic amplifier)
 
-		DACControl17_LI2LOVOL_000 = 0b00000000, // LIN signal to left mixer gain, 6dB
-		DACControl17_LI2LOVOL_001 = 0b00001000, // LIN signal to left mixer gain, 3dB
-		DACControl17_LI2LOVOL_010 = 0b00010000, // LIN signal to left mixer gain, 0dB
-		DACControl17_LI2LOVOL_011 = 0b00011000, // LIN signal to left mixer gain, -3dB
-		DACControl17_LI2LOVOL_100 = 0b00100000, // LIN signal to left mixer gain, -6dB
-		DACControl17_LI2LOVOL_101 = 0b00101000, // LIN signal to left mixer gain, -9dB
-		DACControl17_LI2LOVOL_110 = 0b00110000, // LIN signal to left mixer gain, -12dB
-		DACControl17_LI2LOVOL_111 = 0b00111000, // LIN signal to left mixer gain, -15dB (default)
+		DACControl17_LI2LOVOL_000 = 0b00000000, // LIN signal to left mixer gain, 6dB, (7 - Floor(((Expected dB between [-15dB, 6dB]) + 15dB) / 3dB)) << 3 would be the interpolated value between these two
+		DACControl17_LI2LOVOL_111 = 0b00111000, // LIN signal to left mixer gain, -15dB (default), (7 - Floor(((Expected dB between [-15dB, 6dB]) + 15dB) / 3dB)) << 3 would be the interpolated value between these two
 
 		DACControl17_LI2LO_0 = 0b00000000, // LIN signal to left mixer disable (default)
 		DACControl17_LI2LO_1 = 0b01000000, // LIN signal to left mixer enable
@@ -776,14 +744,8 @@ public:
 		DACControl17_LD2LO_0 = 0b00000000, // left DAC to left mixer disable (default)
 		DACControl17_LD2LO_1 = 0b10000000, // left DAC to left mixer enable
 
-		DACControl20_RI2ROVOL_000 = 0b00000000, // RIN signal to right mixer gain, 6dB
-		DACControl20_RI2ROVOL_001 = 0b00001000, // RIN signal to right mixer gain, 3dB
-		DACControl20_RI2ROVOL_010 = 0b00010000, // RIN signal to right mixer gain, 0dB
-		DACControl20_RI2ROVOL_011 = 0b00011000, // RIN signal to right mixer gain, -3dB
-		DACControl20_RI2ROVOL_100 = 0b00100000, // RIN signal to right mixer gain, -6dB
-		DACControl20_RI2ROVOL_101 = 0b00101000, // RIN signal to right mixer gain, -9dB
-		DACControl20_RI2ROVOL_110 = 0b00110000, // RIN signal to right mixer gain, -12dB
-		DACControl20_RI2ROVOL_111 = 0b00111000, // RIN signal to right mixer gain, -15dB (default)
+		DACControl20_RI2ROVOL_000 = 0b00000000, // RIN signal to right mixer gain, 6dB, (7 - Floor(((Expected dB between [-15dB, 6dB]) + 15dB) / 3dB)) << 3 would be the interpolated value between these two
+		DACControl20_RI2ROVOL_111 = 0b00111000, // RIN signal to right mixer gain, -15dB (default), (7 - Floor(((Expected dB between [-15dB, 6dB]) + 15dB) / 3dB)) << 3 would be the interpolated value between these two
 
 		DACControl20_RI2RO_0 = 0b00000000, // RIN signal to right mixer disable (default)
 		DACControl20_RI2RO_1 = 0b01000000, // RIN signal to right mixer enable

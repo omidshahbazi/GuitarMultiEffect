@@ -14,6 +14,7 @@ public:
 
 		SetOutputMute(true);
 
+		//  ChipControl2_UNKNOWN_1 doesn't exist, is required?
 		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
 		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_UNKNOWN_1, ES8388Control::Masks::ChipControl2_UNKNOWN);
 
@@ -35,14 +36,57 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_PdnDACR_1, ES8388Control::Masks::DACPower_PdnDACR);
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_PdnDACL_1, ES8388Control::Masks::DACPower_PdnDACL);
 
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, 0x12); // Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, 0x18);	// 1a 0x18:16bit iis , 0x00:24
-		ES8388Control::Write(ES8388Control::Registers::DACControl2, 0x02);	// DACFsMode,SINGLE SPEED; DACFsRatio,256
-		ES8388Control::Write(ES8388Control::Registers::DACControl16, 0x00); // 0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2
-		ES8388Control::Write(ES8388Control::Registers::DACControl17, 0x90); // only left DAC to left mixer enable 0db
-		ES8388Control::Write(ES8388Control::Registers::DACControl20, 0x90); // only right DAC to right mixer enable 0db
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, 0x80); // set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
-		ES8388Control::Write(ES8388Control::Registers::DACControl23, 0x00); // vroi=0
+		// new
+		//  Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_VMIDSEL_10, ES8388Control::Masks::ChipControl1_VMIDSEL);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_EnRef_0, ES8388Control::Masks::ChipControl1_EnRef);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SeqEn_0, ES8388Control::Masks::ChipControl1_SeqEn);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SameFs_1, ES8388Control::Masks::ChipControl1_SameFs);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_DACMCLK_0, ES8388Control::Masks::ChipControl1_DACMCLK);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_LRCM_0, ES8388Control::Masks::ChipControl1_LRCM);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SCPReset_0, ES8388Control::Masks::ChipControl1_SCPReset);
+
+		// new
+		//  1a 0x18:16bit iis , 0x00:24
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACFORMAT_00, ES8388Control::Masks::DACControl1_DACFORMAT);
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_011, ES8388Control::Masks::DACControl1_DACWL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRP_0, ES8388Control::Masks::DACControl1_DACLRP);
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRSWAP_0, ES8388Control::Masks::DACControl1_DACLRSWAP);
+
+		// new
+		//  DACFsMode,SINGLE SPEED; DACFsRatio,256
+		ES8388Control::Write(ES8388Control::Registers::DACControl2, ES8388Control::Values::DACCOntrol2_DACFsRatio_00010, ES8388Control::Masks::DACCOntrol2_DACFsRatio);
+		ES8388Control::Write(ES8388Control::Registers::DACControl2, ES8388Control::Values::DACCOntrol2_DACFsMode_0, ES8388Control::Masks::DACCOntrol2_DACFsMode);
+
+		// new
+		//  0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2
+		ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_RMIXSEL_000, ES8388Control::Masks::DACControl16_RMIXSEL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_LMIXSEL_000, ES8388Control::Masks::DACControl16_LMIXSEL);
+
+		// new
+		//  only left DAC to left mixer enable 0db
+		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LI2LOVOL_000, ES8388Control::Masks::DACControl17_LI2LOVOL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LI2LO_0, ES8388Control::Masks::DACControl17_LI2LO);
+		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LD2LO_0, ES8388Control::Masks::DACControl17_LD2LO);
+
+		// new
+		//  only right DAC to right mixer enable 0db
+		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RI2ROVOL_000, ES8388Control::Masks::DACControl20_RI2ROVOL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RI2RO_0, ES8388Control::Masks::DACControl20_RI2RO);
+		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RD2RO_0, ES8388Control::Masks::DACControl20_RD2RO);
+
+		// new
+		//  set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_dac_dll_pwd_0, ES8388Control::Masks::DACControl21_dac_dll_pwd);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_adc_dll_pwd_0, ES8388Control::Masks::DACControl21_adc_dll_pwd);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_mclk_dis_0, ES8388Control::Masks::DACControl21_mclk_dis);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_offset_dis_0, ES8388Control::Masks::DACControl21_offset_dis);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_lrck_sel_0, ES8388Control::Masks::DACControl21_lrck_sel);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_slrck_1, ES8388Control::Masks::DACControl21_slrck);
+
+		// new
+		//  vroi=0
+		ES8388Control::Write(ES8388Control::Registers::DACControl23, ES8388Control::Values::DACControl23_VROI_0, ES8388Control::Masks::DACControl23_VROI);
 
 		SetDACVolume(0);
 
@@ -53,21 +97,51 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::DACPower, ES8388Control::Values::DACPower_ROUT2_1, ES8388Control::Masks::DACPower_ROUT2);
 
 		Log::WriteInfo(TAG, "Setting ADC Input");
-		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0xFF);
-		ES8388Control::Write(ES8388Control::Registers::ADCControl1, 0xbb); // MIC Left and Right channel PGA gain
+
+		// new
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_int1LP_1, ES8388Control::Masks::ADCPower_int1LP);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_flashLP_1, ES8388Control::Masks::ADCPower_flashLP);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnADCBiasgen_1, ES8388Control::Masks::ADCPower_PdnADCBiasgen);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnMICB_1, ES8388Control::Masks::ADCPower_PdnMICB);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnADCR_1, ES8388Control::Masks::ADCPower_PdnADCR);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnADCL_1, ES8388Control::Masks::ADCPower_PdnADCL);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnAINR_1, ES8388Control::Masks::ADCPower_PdnAINR);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnAINL_1, ES8388Control::Masks::ADCPower_PdnAINL);
+
+		// new
+		//  MIC Left and Right channel PGA gain
+		SetMidcrophoneGain(24);
+
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSR_0, ES8388Control::Masks::ADCControl2_DSR);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSSEL_0, ES8388Control::Masks::ADCControl2_DSSEL);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_LINSEL_01, ES8388Control::Masks::ADCControl2_LINSEL);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_RINSEL_10, ES8388Control::Masks::ADCControl2_RINSEL);
 
-		ES8388Control::Write(ES8388Control::Registers::ADCControl3, 0x02);
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, 0x0d); // Left/Right data, Left/Right justified mode, Bits length, I2S format
-		ES8388Control::Write(ES8388Control::Registers::ADCControl5, 0x02); // ADCFsMode,singel SPEED,RATIO=256
+		// new
+		//  0x02 doesn't exist, is required?
+		ES8388Control::Write(ES8388Control::Registers::ADCControl3, ES8388Control::Values::ADCControl3_TRI_0, ES8388Control::Masks::ADCControl3_TRI);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl3, ES8388Control::Values::ADCControl3_MONOMIX_00, ES8388Control::Masks::ADCControl3_MONOMIX);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl3, ES8388Control::Values::ADCControl3_DS_0, ES8388Control::Masks::ADCControl3_DS);
+
+		// new
+		//  Left/Right data, Left/Right justified mode, Bits length, I2S format
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCFORMAT_01, ES8388Control::Masks::ADCControl4_ADCFORMAT);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_011, ES8388Control::Masks::ADCControl4_ADCWL);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCLRP_0, ES8388Control::Masks::ADCControl4_ADCLRP);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_DATSEL_00, ES8388Control::Masks::ADCControl4_DATSEL);
+
+		// new
+		//  ADCFsMode,singel SPEED,RATIO=256
+		ES8388Control::Write(ES8388Control::Registers::ADCControl5, ES8388Control::Values::ADCControl5_ADCFsRatio_00010, ES8388Control::Masks::ADCControl5_ADCFsRatio);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl5, ES8388Control::Values::ADCControl5_ADCFsMode_0, ES8388Control::Masks::ADCControl5_ADCFsMode);
 
 		// ALC for Microphone
 		SetADCVolume(0);
 
-		ES8388Control::Write(ES8388Control::Registers::ADCPower, 0x09); // Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
+		// new
+		//  Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_int1LP_1, ES8388Control::Masks::ADCPower_int1LP);
+		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnMICB_1, ES8388Control::Masks::ADCPower_PdnMICB);
 
 		Log::WriteInfo(TAG, "Setting I2S ADC Format");
 		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCFORMAT_00, ES8388Control::Masks::ADCControl4_ADCFORMAT);
@@ -91,13 +165,11 @@ public:
 			ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_RMIXSEL_001, ES8388Control::Masks::DACControl16_RMIXSEL);
 			ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_LMIXSEL_001, ES8388Control::Masks::DACControl16_LMIXSEL);
 
-			// left DAC to left mixer enable  and  LIN signal to left mixer enable 0db  : bupass enable
+			// left DAC to left mixer enable  and  LIN signal to left mixer enable 0db  : bypass enable
 			ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LI2LO_1, ES8388Control::Masks::DACControl17_LI2LO);
-			ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LI2LOVOL_010, ES8388Control::Masks::DACControl17_LI2LOVOL);
-
-			// right DAC to right mixer enable  and  LIN signal to right mixer enable 0db : bupass enable
+			// right DAC to right mixer enable  and  LIN signal to right mixer enable 0db : bypass enable
 			ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RI2RO_1, ES8388Control::Masks::DACControl20_RI2RO);
-			ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RI2ROVOL_010, ES8388Control::Masks::DACControl20_RI2ROVOL);
+			SetInputToMixerGain(0);
 
 			// enable adc
 			ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_lrck_sel_1, ES8388Control::Masks::DACControl21_lrck_sel);
@@ -177,6 +249,52 @@ public:
 	static bool SetDACBitsPerSample()
 	{
 	}
+
+	static bool SetMidcrophoneGain(float dB)
+	{
+		dB = Math::Clamp(dB, 0, 34);
+
+		Log::WriteInfo(TAG, "Setting the ADC volume: %fdB", dB);
+
+		uint8 value = (uint8)(dB / 3);
+
+		ES8388Control::Write(ES8388Control::Registers::ADCControl1, (ES8388Control::Values)(value & (uint8)ES8388Control::Masks::ADCControl1_MicAmpR), ES8388Control::Masks::ADCControl1_MicAmpR);
+		ES8388Control::Write(ES8388Control::Registers::ADCControl1, (ES8388Control::Values)((value << 4) & (uint8)ES8388Control::Masks::ADCControl1_MicAmpL), ES8388Control::Masks::ADCControl1_MicAmpL);
+	}
+
+	static float GetMicrophoneGain(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::ADCControl1, ES8388Control::Masks::ADCControl1_MicAmpR);
+
+		return (uint8)value * 3.0F;
+	}
+
+	static bool SetInputToMixerGain(float dB)
+	{
+		dB = Math::Clamp(dB, -15, 6);
+
+		Log::WriteInfo(TAG, "Setting the ADC volume: %fdB", dB);
+
+		uint8 value = 7 - (uint8)((dB + 15) / 3.0F);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl17, (ES8388Control::Values)(value << 3), ES8388Control::Masks::DACControl17_LI2LOVOL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl20, (ES8388Control::Values)(value << 3), ES8388Control::Masks::DACControl20_RI2ROVOL);
+	}
+
+	static float GetInputToMixerGain(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::DACControl17, ES8388Control::Masks::DACControl17_LI2LOVOL);
+
+		return ((7 - (uint8)value) * 3.0F) - 15;
+	}
+
+	// 	static void SetMicrophoneGain(float dB)
+	// {
+	// }
+
+	// static float GetMicrophoneGain(void)
+	// {
+	// }
 
 	//[-96dB, 0dB]
 	static bool SetADCVolume(float dB)
@@ -261,14 +379,6 @@ public:
 	static bool GetOutputMute(void)
 	{
 		return (ES8388Control::Read(ES8388Control::Registers::DACControl3, ES8388Control::Masks::DACControl3_DACMute) == ES8388Control::Values::DACControl3_DACMute_1);
-	}
-
-	static void SetMicrophoneGain(float dB)
-	{
-	}
-
-	static float GetMicrophoneGain(void)
-	{
 	}
 
 private:
