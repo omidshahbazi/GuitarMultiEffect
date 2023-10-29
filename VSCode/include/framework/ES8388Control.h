@@ -596,8 +596,8 @@ public:
 		ADCControl14_NGG_01 = 0b00000010, // Noise gate type, mute ADC output
 		ADCControl14_NGG_11 = 0b00000110, // Noise gate type, reserved
 
-		ADCControl14_NGTH_00000 = 0b00000000, // Noise gate threshold, -76.5dBFS, Floor(((Expected dBFS between [-76.5dBFS, -30dBFS]) + 76.5dBFS) / -1.5dBFS) << 3 would be the interpolated value between these two
-		ADCControl14_NGTH_11111 = 0b11111000, // Noise gate threshold, -30dBFS, Floor(((Expected dBFS between [-76.5dBFS, -30dBFS]) + 76.5dBFS) / -1.5dBFS) << 3 would be the interpolated value between these two
+		ADCControl14_NGTH_00000 = 0b00000000, // Noise gate threshold, -76.5dBFS, Floor(((Expected dBFS between [-76.5dBFS, -30dBFS]) + 76.5dBFS) / 1.5dBFS) << 3 would be the interpolated value between these two
+		ADCControl14_NGTH_11111 = 0b11111000, // Noise gate threshold, -30dBFS, Floor(((Expected dBFS between [-76.5dBFS, -30dBFS]) + 76.5dBFS) / 1.5dBFS) << 3 would be the interpolated value between these two
 
 		DACControl1_DACFORMAT_00 = 0b00000000, // I2S serial audio data format
 		DACControl1_DACFORMAT_01 = 0b00000010, // left justify serial audio data format

@@ -307,6 +307,27 @@ public:
 		return (uint8)value * 3.0F;
 	}
 
+	//[-76.5dBFS, -30dBFS]
+	bool SetMicrophoneNoiseGate(float dbFS)
+	{
+		dbFS = Math::Clamp(dbFS, -76.5, -30);
+
+		Log::WriteInfo(TAG, "Setting Microphone Noise gate: %fdBFS", dbFS);
+
+		uint8 value = (dbFS + 76.5) / -1.5;
+
+		ES8388Control::Write(ES8388Control::Registers::ADCControl14, (ES8388Control::Values)(value << 3), ES8388Control::Masks::ADCControl14_NGTH);
+
+		return true;
+	}
+
+	uint8 GetMicrophoneNoiseGate(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::DACControl17, ES8388Control::Masks::DACControl17_LI2LOVOL);
+
+		return (7 - ((uint8)value >> 3) * 3.0F) - 15;
+	}
+
 	//[-15dB, 6dB]
 	static bool SetInputToMixerGain(float dB)
 	{
@@ -326,7 +347,7 @@ public:
 	{
 		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::DACControl17, ES8388Control::Masks::DACControl17_LI2LOVOL);
 
-		return ((7 - (uint8)value) * 3.0F) - 15;
+		return ((7 - ((uint8)value >> 3)) * 3.0F) - 15;
 	}
 
 	// 	static void SetMicrophoneGain(float dB)
@@ -420,6 +441,22 @@ public:
 	static bool GetOutputMute(void)
 	{
 		return (ES8388Control::Read(ES8388Control::Registers::DACControl3, ES8388Control::Masks::DACControl3_DACMute) == ES8388Control::Values::DACControl3_DACMute_1);
+	}
+
+	// Optimize the analog to digital conversion range
+	//[0, 4]
+	//(1Vrms/2.83Vpp, 0.5Vrms/1.41Vpp, 0.25Vrms/707mVpp, 0.125Vrms/354mVpp, 0.625Vrms/177mVpp)
+	static void OptimizeConversion(uint8 Range = 2)
+	{
+		static float INPUT_GAIN[] = {0, 6, 12, 18, 24};
+		static float OUTPUT_VOLUME[] = {0, -6, -12, -18, -24};
+
+		Range = Math::Clamp(Range, 0, 4);
+
+		Log::WriteInfo(TAG, "Optimizing Conversion: %i, InputGain: %idb, Output Volume: %idb", Range, INPUT_GAIN[Range], OUTPUT_VOLUME[Range]);
+
+		SetMicrophoneGain(INPUT_GAIN[Range]);
+		SetOutputVolume(OUTPUT_VOLUME[Range]);
 	}
 
 private:
