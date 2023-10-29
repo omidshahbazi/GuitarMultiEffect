@@ -85,7 +85,6 @@ public:
 		ChipControl2_PdnAna = 0b00001000,
 		ChipControl2_LPVrefBuf = 0b00010000,
 		ChipControl2_LPVcmMod = 0b00100000,
-		ChipControl2_UNKNOWN = 0b01000000,
 
 		ChipPower_dacVref_PDN = 0b00000001,
 		ChipPower_adcVref_PDN = 0b00000010,
@@ -308,8 +307,6 @@ public:
 
 		ChipControl2_LPVcmMod_0 = 0b00000000, // normal (default)
 		ChipControl2_LPVcmMod_1 = 0b00100000, // low power
-
-		ChipControl2_UNKNOWN_1 = 0b01000000, // Not specified in the document, but all of the other libraries are setting this to 1
 
 		ChipPower_dacVref_PDN_0 = 0b00000000, // DAC analog reference power up
 		ChipPower_dacVref_PDN_1 = 0b00000001, // DAC analog reference power down (default)
