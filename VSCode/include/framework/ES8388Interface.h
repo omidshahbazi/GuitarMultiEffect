@@ -8,7 +8,26 @@
 class ES8388Interface
 {
 public:
-	static bool Initialize(void)
+	enum class Formats
+	{
+		I2S = 0,
+		LeftJustify,
+		RightJustify,
+		DSP_PCM
+	};
+
+	enum class BitsPerSamples
+	{
+		BPS16 = 16,
+		BPS18 = 18,
+		BPS20 = 20,
+		BPS24 = 24,
+		BPS32 = 32
+	};
+
+public:
+	static bool
+	Initialize(void)
 	{
 		Log::WriteInfo(TAG, "Setting the Registers");
 
@@ -52,8 +71,6 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SCPReset_0, ES8388Control::Masks::ChipControl1_SCPReset);
 
 		//  1a 0x18:16bit iis , 0x00:24
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACFORMAT_00, ES8388Control::Masks::DACControl1_DACFORMAT);
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_011, ES8388Control::Masks::DACControl1_DACWL);
 		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRP_0, ES8388Control::Masks::DACControl1_DACLRP);
 		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRSWAP_0, ES8388Control::Masks::DACControl1_DACLRSWAP);
 
@@ -122,8 +139,6 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ADCControl3, ES8388Control::Values::ADCControl3_DS_0, ES8388Control::Masks::ADCControl3_DS);
 
 		//  Left/Right data, Left/Right justified mode, Bits length, I2S format
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCFORMAT_01, ES8388Control::Masks::ADCControl4_ADCFORMAT);
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_011, ES8388Control::Masks::ADCControl4_ADCWL);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCLRP_0, ES8388Control::Masks::ADCControl4_ADCLRP);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_DATSEL_00, ES8388Control::Masks::ADCControl4_DATSEL);
 
@@ -144,17 +159,11 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnAINR_0, ES8388Control::Masks::ADCPower_PdnAINR);
 		ES8388Control::Write(ES8388Control::Registers::ADCPower, ES8388Control::Values::ADCPower_PdnAINL_0, ES8388Control::Masks::ADCPower_PdnAINL);
 
-		Log::WriteInfo(TAG, "Setting I2S ADC Format");
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCFORMAT_00, ES8388Control::Masks::ADCControl4_ADCFORMAT);
+		SetADCFormat(Formats::I2S);
+		SetDACFormat(Formats::I2S);
 
-		Log::WriteInfo(TAG, "Setting I2S DAC Format");
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACFORMAT_00, ES8388Control::Masks::DACControl1_DACFORMAT);
-
-		Log::WriteInfo(TAG, "Setting I2S ADC Bits");
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_ADCWL_001, ES8388Control::Masks::ADCControl4_ADCWL);
-
-		Log::WriteInfo(TAG, "Setting I2S DAC Bits");
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACWL_011, ES8388Control::Masks::DACControl1_DACWL);
+		SetADCBitsPerSample(BitsPerSamples::BPS16);
+		SetDACBitsPerSample(BitsPerSamples::BPS16);
 
 		SetOutputVolume(4.5F);
 
@@ -275,14 +284,195 @@ public:
 	// return true;
 	// }
 
-	static bool SetADCBitsPerSample()
+	static bool SetADCFormat(Formats Format)
 	{
+		ES8388Control::Values value;
+		switch (Format)
+		{
+		case Formats::I2S:
+			value = ES8388Control::Values::ADCControl4_ADCFORMAT_00;
+			Log::WriteInfo(TAG, "Setting ADC Format: I2S");
+			break;
+
+		case Formats::LeftJustify:
+			value = ES8388Control::Values::ADCControl4_ADCFORMAT_01;
+			Log::WriteInfo(TAG, "Setting ADC Format: LeftJustify");
+			break;
+
+		case Formats::RightJustify:
+			value = ES8388Control::Values::ADCControl4_ADCFORMAT_10;
+			Log::WriteInfo(TAG, "Setting ADC Format: RightJustify");
+			break;
+
+		case Formats::DSP_PCM:
+			value = ES8388Control::Values::ADCControl4_ADCFORMAT_11;
+			Log::WriteInfo(TAG, "Setting ADC Format: DSP_PCM");
+			break;
+
+		default:
+			return false;
+		}
+
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, value, ES8388Control::Masks::ADCControl4_ADCFORMAT);
+
 		return true;
 	}
 
-	static bool SetDACBitsPerSample()
+	static bool SetDACFormat(Formats Format)
 	{
+		ES8388Control::Values value;
+		switch (Format)
+		{
+		case Formats::I2S:
+			value = ES8388Control::Values::DACControl1_DACFORMAT_00;
+			Log::WriteInfo(TAG, "Setting DAC Format: I2S");
+			break;
+
+		case Formats::LeftJustify:
+			value = ES8388Control::Values::DACControl1_DACFORMAT_01;
+			Log::WriteInfo(TAG, "Setting DAC Format: LeftJustify");
+			break;
+
+		case Formats::RightJustify:
+			value = ES8388Control::Values::DACControl1_DACFORMAT_10;
+			Log::WriteInfo(TAG, "Setting DAC Format: RightJustify");
+			break;
+
+		case Formats::DSP_PCM:
+			value = ES8388Control::Values::DACControl1_DACFORMAT_11;
+			Log::WriteInfo(TAG, "Setting DAC Format: DSP_PCM");
+			break;
+
+		default:
+			return false;
+		}
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, value, ES8388Control::Masks::DACControl1_DACFORMAT);
+
 		return true;
+	}
+
+	static bool SetADCBitsPerSample(BitsPerSamples BPS)
+	{
+		ES8388Control::Values value;
+		switch (BPS)
+		{
+		case BitsPerSamples::BPS16:
+			value = ES8388Control::Values::ADCControl4_ADCWL_011;
+			break;
+
+		case BitsPerSamples::BPS18:
+			value = ES8388Control::Values::ADCControl4_ADCWL_010;
+			break;
+
+		case BitsPerSamples::BPS20:
+			value = ES8388Control::Values::ADCControl4_ADCWL_001;
+			break;
+
+		case BitsPerSamples::BPS24:
+			value = ES8388Control::Values::ADCControl4_ADCWL_000;
+			break;
+
+		case BitsPerSamples::BPS32:
+			value = ES8388Control::Values::ADCControl4_ADCWL_100;
+			break;
+
+		default:
+			return false;
+		}
+
+		Log::WriteInfo(TAG, "Setting I2S ADC Bits Per Sample: %i", BPS);
+
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, value, ES8388Control::Masks::ADCControl4_ADCWL);
+
+		return true;
+	}
+
+	static BitsPerSamples GetADCBitsPerSample(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::ADCControl4, ES8388Control::Masks::ADCControl4_ADCWL);
+
+		switch (value)
+		{
+		case ES8388Control::Values::ADCControl4_ADCWL_011:
+			return BitsPerSamples::BPS16;
+
+		case ES8388Control::Values::ADCControl4_ADCWL_010:
+			return BitsPerSamples::BPS18;
+
+		case ES8388Control::Values::ADCControl4_ADCWL_001:
+			return BitsPerSamples::BPS20;
+
+		case ES8388Control::Values::ADCControl4_ADCWL_000:
+			return BitsPerSamples::BPS24;
+
+		case ES8388Control::Values::ADCControl4_ADCWL_100:
+			return BitsPerSamples::BPS32;
+
+		default:
+			return (BitsPerSamples)0;
+		}
+	}
+
+	static bool SetDACBitsPerSample(BitsPerSamples BPS)
+	{
+		ES8388Control::Values value;
+		switch (BPS)
+		{
+		case BitsPerSamples::BPS16:
+			value = ES8388Control::Values::DACControl1_DACWL_011;
+			break;
+
+		case BitsPerSamples::BPS18:
+			value = ES8388Control::Values::DACControl1_DACWL_010;
+			break;
+
+		case BitsPerSamples::BPS20:
+			value = ES8388Control::Values::DACControl1_DACWL_001;
+			break;
+
+		case BitsPerSamples::BPS24:
+			value = ES8388Control::Values::DACControl1_DACWL_000;
+			break;
+
+		case BitsPerSamples::BPS32:
+			value = ES8388Control::Values::DACControl1_DACWL_100;
+			break;
+
+		default:
+			return false;
+		}
+
+		Log::WriteInfo(TAG, "Setting I2S DAC Bits Per Sample: %i", BPS);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, value, ES8388Control::Masks::DACControl1_DACWL);
+
+		return true;
+	}
+
+	static BitsPerSamples GetDACBitsPerSample(void)
+	{
+		ES8388Control::Values value = ES8388Control::Read(ES8388Control::Registers::ADCControl1, ES8388Control::Masks::DACControl1_DACWL);
+
+		switch (value)
+		{
+		case ES8388Control::Values::DACControl1_DACWL_011:
+			return BitsPerSamples::BPS16;
+
+		case ES8388Control::Values::DACControl1_DACWL_010:
+			return BitsPerSamples::BPS18;
+
+		case ES8388Control::Values::DACControl1_DACWL_001:
+			return BitsPerSamples::BPS20;
+
+		case ES8388Control::Values::DACControl1_DACWL_000:
+			return BitsPerSamples::BPS24;
+
+		case ES8388Control::Values::DACControl1_DACWL_100:
+			return BitsPerSamples::BPS32;
+		}
+
+		return (BitsPerSamples)0;
 	}
 
 	//[0dB, 24dB]
