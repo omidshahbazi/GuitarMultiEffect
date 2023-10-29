@@ -127,7 +127,7 @@ public:
 	{
 		Log::WriteInfo(TAG, "Intializing");
 
-#if 1
+#if 0
 		ES8388Interface::Initialize();
 		// ES8388InterfaceWorks::Initialize();
 #else

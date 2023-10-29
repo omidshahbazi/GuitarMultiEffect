@@ -68,7 +68,7 @@ void Application::Initialize(void)
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLegth = 300;
-	configs.InputMode = ES8388::InputModes::LeftAndRightInput2;
+	configs.InputMode = ES8388::InputModes::LeftAndRightInput1;
 	configs.OutputMode = ES8388::OutputModes::AllLineOutputs;
 	configs.Format = ES8388::Formats::Normal;
 
@@ -94,7 +94,7 @@ void Application::Update(void)
 
 void Application::I2SRoutine(void)
 {
-#if 0
+#if 1
 	while (true)
 	{
 		ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
