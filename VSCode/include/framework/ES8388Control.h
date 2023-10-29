@@ -348,7 +348,7 @@ public:
 		ADCPower_PdnADCR_1 = 0b00010000, // right ADC power down (default)
 
 		ADCPower_PdnADCL_0 = 0b00000000, // left ADC power up
-		ADCPower_PdnADCL_1 = 0b00100000, // left ADC power down (default
+		ADCPower_PdnADCL_1 = 0b00100000, // left ADC power down (default)
 
 		ADCPower_PdnAINR_0 = 0b00000000, // normal
 		ADCPower_PdnAINR_1 = 0b01000000, // right analog input power down (default)
