@@ -127,8 +127,9 @@ public:
 	{
 		Log::WriteInfo(TAG, "Intializing");
 
-#if 0
+#if 1
 		ES8388Interface::Initialize();
+		ES8388Interface::SetOutputMute(false);
 		// ES8388InterfaceWorks::Initialize();
 #else
 		CHECK_CALL(SetRegisters(InputMode, OutputMode));

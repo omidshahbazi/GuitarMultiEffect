@@ -94,7 +94,7 @@ void Application::Update(void)
 
 void Application::I2SRoutine(void)
 {
-#if 1
+#if 0
 	while (true)
 	{
 		ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
