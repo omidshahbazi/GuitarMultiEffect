@@ -51,7 +51,6 @@ public:
 		uint16 BufferLegth;
 		ES8388::InputModes InputMode;
 		ES8388::OutputModes OutputMode;
-		ES8388::Formats Format;
 	};
 
 public:
@@ -67,57 +66,72 @@ public:
 		if (Bitwise::IsEnabled(Configs->TransmissionMode, TransmissionModes::Transmit))
 			modules |= ES8388::Modules::DAC;
 
-		m_Codec = new ES8388(modules, Configs->BitsPerSample, Configs->InputMode, Configs->OutputMode, Configs->Format);
+		m_Codec = new ES8388(modules, Configs->InputMode, Configs->OutputMode);
 
 		CHECK_CALL(InitializeI2S(Configs));
 
 		return true;
 	}
 
-	static bool SetOutputVolume(uint8 Value)
+	void SetBitsPerSample(ES8388::BitsPerSamples BitsPerSample)
 	{
-		// return m_Codec->SetOutputVolume(Value);
-	}
-	static uint8 GetOutputVolume(void)
-	{
-		// return m_Codec->GetOutputVolume();
+		CHECK_CALL(m_Codec->SetBitsPerSample(BitsPerSample));
 	}
 
-	static bool SetMute(bool Enabled)
+	ES8388::BitsPerSamples GetBitsPerSample(void)
 	{
-		// return m_Codec->SetMute(Enabled);
+		return m_Codec->GetBitsPerSample();
 	}
 
-	static bool SetInputGain(uint8 Value)
+	//[0dB, 24dB]
+	void SetMicrophoneGain(float dB)
 	{
-		// return m_Codec->SetInputGain(Value);
-	}
-	static uint8 GetInputGain(void)
-	{
-		// return m_Codec->GetInputGain();
+		CHECK_CALL(m_Codec->SetMicrophoneGain(dB));
 	}
 
-	static bool SetMicrophoneGain(uint8 Value)
+	float GetMicrophoneGain(void)
 	{
-		// return m_Codec->SetMicrophoneGain(Value);
-	}
-	static uint8 GetMicrophoneGain(void)
-	{
-		// return m_Codec->GetMicrophoneGain();
+		return m_Codec->GetMicrophoneGain();
 	}
 
-	static bool SetMicrophoneNoiseGate(uint8 Value)
+	//[-96dB, 0dB]
+	void SetInputVolume(float dB)
 	{
-		// 	return m_Codec->SetMicrophoneNoiseGate(Value);
-	}
-	static uint8 GetMicrophoneNoiseGate(void)
-	{
-		// return m_Codec->GetMicrophoneNoiseGate();
+		CHECK_CALL(m_Codec->SetInputVolume(dB));
 	}
 
-	static void OptimizeConversion(uint8 Range = 2)
+	float GetInputVolume(void)
 	{
-		// return m_Codec->OptimizeConversion(Range);
+		return m_Codec->GetInputVolume();
+	}
+
+	//[-45dB, 4.5dB]
+	void SetOutputVolume(float dB)
+	{
+		CHECK_CALL(m_Codec->SetOutputVolume(dB));
+	}
+
+	float GetOutputVolume(void)
+	{
+		return m_Codec->GetOutputVolume();
+	}
+
+	void SetMute(bool Mute)
+	{
+		CHECK_CALL(m_Codec->SetMute(Mute));
+	}
+
+	bool GetMute(void)
+	{
+		return m_Codec->GetMute();
+	}
+
+	// Optimize the analog to digital conversion range
+	//[0, 4]
+	//(1Vrms/2.83Vpp, 0.5Vrms/1.41Vpp, 0.25Vrms/707mVpp, 0.125Vrms/354mVpp, 0.625Vrms/177mVpp)
+	void OptimizeConversion(uint Range = 2)
+	{
+		CHECK_CALL(m_Codec->OptimizeConversion(Range));
 	}
 
 	template <typename T>
@@ -338,6 +352,7 @@ private:
 };
 
 ES8388 *ESP32A1SCodec::m_Codec = nullptr;
+
 const char *ESP32A1SCodec::TAG = "ESP32A1SCodec";
 const i2c_port_t ESP32A1SCodec::I2C_PORT = I2C_NUM_0;
 const i2s_port_t ESP32A1SCodec::I2S_PORT = I2S_NUM_0;
