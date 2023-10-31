@@ -52,47 +52,6 @@ public:
 	};
 
 public:
-	static bool Initialize(void)
-	{
-		CHECK_CALL(TurnOn(false, MiddleVoltageResistances::R500K));
-
-		CHECK_CALL(SetDACPowered(false, IOModes::All, OutputResistances::R1K5));
-
-		CHECK_CALL(SetInputToMixerGain(6));
-
-		CHECK_CALL(SetDigitalVolume(0));
-
-		CHECK_CALL(SetDACPowered(true, IOModes::All, OutputResistances::R1K5));
-
-		CHECK_CALL(SetADCPowered(false, false, IOModes::All));
-
-		CHECK_CALL(SetMicrophoneGain(24));
-
-		CHECK_CALL(SetInputVolume(0));
-
-		CHECK_CALL(SetADCPowered(true, false, IOModes::All));
-
-		CHECK_CALL(SetADCFormat(Formats::I2S));
-		CHECK_CALL(SetDACFormat(Formats::I2S));
-
-		CHECK_CALL(SetADCBitsPerSample(BitsPerSamples::BPS16));
-		CHECK_CALL(SetDACBitsPerSample(BitsPerSamples::BPS16));
-
-		CHECK_CALL(SetOutputVolume(4.5F));
-
-		// if (Bitwise::IsEnabled(Module, Modules::ADC) || Bitwise::IsEnabled(Module, Modules::Line))
-		{
-			CHECK_CALL(SetADCPowered(true, true, IOModes::All));
-		}
-
-		// if (Bitwise::IsEnabled(Module, Modules::DAC) || Bitwise::IsEnabled(Module, Modules::Line))
-		{
-			CHECK_CALL(SetDACPowered(true, IOModes::All, OutputResistances::R1K5));
-		}
-
-		return true;
-	}
-
 	static bool TurnOn(bool MasterMode, MiddleVoltageResistances MiddleVoltageResistance)
 	{
 		Log::WriteInfo(TAG, "Turning On");
@@ -160,6 +119,99 @@ public:
 
 		CHECK_CALL(SetADCEnabled(false));
 		CHECK_CALL(SetDACEnabled(false));
+
+		return true;
+	}
+
+	static bool SetADCPowered(bool Powered, bool MicrophoneBiasPowered, IOModes IOModes)
+	{
+		Log::WriteInfo(TAG, "Setting ADC Powered: %i, Microphone Bias Powered: %i, R: %i, L: %i", Powered, (Powered && MicrophoneBiasPowered),
+					   Bitwise::IsEnabled(IOModes, IOModes::Right1 | IOModes::Right2),
+					   Bitwise::IsEnabled(IOModes, IOModes::Left1 | IOModes::Left2));
+
+		ES8388Control::Write(
+			ES8388Control::Registers::ADCPower,
+			(Powered ? ES8388Control::Values::ADCPower_int1LP_0 : ES8388Control::Values::ADCPower_int1LP_1), ES8388Control::Masks::ADCPower_int1LP);
+
+		ES8388Control::Write(
+			ES8388Control::Registers::ADCPower,
+			(Powered ? ES8388Control::Values::ADCPower_flashLP_0 : ES8388Control::Values::ADCPower_flashLP_1), ES8388Control::Masks::ADCPower_flashLP);
+
+		ES8388Control::Write(
+			ES8388Control::Registers::ADCPower,
+			(Powered ? ES8388Control::Values::ADCPower_PdnADCBiasgen_0 : ES8388Control::Values::ADCPower_PdnADCBiasgen_1), ES8388Control::Masks::ADCPower_PdnADCBiasgen);
+
+		ES8388Control::Write(
+			ES8388Control::Registers::ADCPower,
+			(Powered && MicrophoneBiasPowered ? ES8388Control::Values::ADCPower_PdnMICB_0 : ES8388Control::Values::ADCPower_PdnMICB_1), ES8388Control::Masks::ADCPower_PdnMICB);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Right1 | IOModes::Right2))
+		{
+			ES8388Control::Write(
+				ES8388Control::Registers::ADCPower,
+				(Powered ? ES8388Control::Values::ADCPower_PdnADCR_0 : ES8388Control::Values::ADCPower_PdnADCR_1), ES8388Control::Masks::ADCPower_PdnADCR);
+
+			ES8388Control::Write(
+				ES8388Control::Registers::ADCPower,
+				(Powered ? ES8388Control::Values::ADCPower_PdnAINR_0 : ES8388Control::Values::ADCPower_PdnAINR_1), ES8388Control::Masks::ADCPower_PdnAINR);
+		}
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Left1 | IOModes::Left2))
+		{
+			ES8388Control::Write(
+				ES8388Control::Registers::ADCPower,
+				(Powered ? ES8388Control::Values::ADCPower_PdnADCL_0 : ES8388Control::Values::ADCPower_PdnADCL_1), ES8388Control::Masks::ADCPower_PdnADCL);
+
+			ES8388Control::Write(
+				ES8388Control::Registers::ADCPower,
+				(Powered ? ES8388Control::Values::ADCPower_PdnAINL_0 : ES8388Control::Values::ADCPower_PdnAINL_1), ES8388Control::Masks::ADCPower_PdnAINL);
+		}
+
+		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_DATSEL_00, ES8388Control::Masks::ADCControl4_DATSEL);
+
+		return true;
+	}
+
+	static bool SetDACPowered(bool Powered, IOModes IOModes, OutputResistances OutputResistance)
+	{
+		Log::WriteInfo(TAG, "Setting DAC Powered: %i, R1: %i, L1: %i, R2: %i, L2: %i, Output Resistance: %i", Powered,
+					   Bitwise::IsEnabled(IOModes, IOModes::Right1),
+					   Bitwise::IsEnabled(IOModes, IOModes::Left1),
+					   Bitwise::IsEnabled(IOModes, IOModes::Right2),
+					   Bitwise::IsEnabled(IOModes, IOModes::Left2),
+					   OutputResistance);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Right2))
+			ES8388Control::Write(
+				ES8388Control::Registers::DACPower,
+				(Powered ? ES8388Control::Values::DACPower_ROUT2_1 : ES8388Control::Values::DACPower_ROUT2_0), ES8388Control::Masks::DACPower_ROUT2);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Left2))
+			ES8388Control::Write(
+				ES8388Control::Registers::DACPower,
+				(Powered ? ES8388Control::Values::DACPower_LOUT2_1 : ES8388Control::Values::DACPower_LOUT2_0), ES8388Control::Masks::DACPower_LOUT2);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Right1))
+			ES8388Control::Write(
+				ES8388Control::Registers::DACPower,
+				(Powered ? ES8388Control::Values::DACPower_ROUT1_1 : ES8388Control::Values::DACPower_ROUT1_0), ES8388Control::Masks::DACPower_ROUT1);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Left1))
+			ES8388Control::Write(
+				ES8388Control::Registers::DACPower,
+				(Powered ? ES8388Control::Values::DACPower_LOUT1_1 : ES8388Control::Values::DACPower_LOUT1_0), ES8388Control::Masks::DACPower_LOUT1);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Right1 | IOModes::Right2))
+			ES8388Control::Write(
+				ES8388Control::Registers::DACPower,
+				(Powered ? ES8388Control::Values::DACPower_PdnDACR_0 : ES8388Control::Values::DACPower_PdnDACR_1), ES8388Control::Masks::DACPower_PdnDACR);
+
+		if (Bitwise::IsEnabled(IOModes, IOModes::Left1 | IOModes::Left2))
+			ES8388Control::Write(
+				ES8388Control::Registers::DACPower,
+				(Powered ? ES8388Control::Values::DACPower_PdnDACL_0 : ES8388Control::Values::DACPower_PdnDACL_1), ES8388Control::Masks::DACPower_PdnDACL);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl23, (ES8388Control::Values)OutputResistance, ES8388Control::Masks::DACControl23_VROI);
 
 		return true;
 	}
@@ -579,99 +631,6 @@ private:
 			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
 			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVcmMod_1, ES8388Control::Masks::ChipControl2_LPVcmMod);
 		}
-
-		return true;
-	}
-
-	static bool SetADCPowered(bool Powered, bool MicrophoneBiasPowered, IOModes IOModes)
-	{
-		Log::WriteInfo(TAG, "Setting ADC Powered: %i, Microphone Bias Powered: %i, R: %i, L: %i", Powered, (Powered && MicrophoneBiasPowered),
-					   Bitwise::IsEnabled(IOModes, IOModes::Right1 | IOModes::Right2),
-					   Bitwise::IsEnabled(IOModes, IOModes::Left1 | IOModes::Left2));
-
-		ES8388Control::Write(
-			ES8388Control::Registers::ADCPower,
-			(Powered ? ES8388Control::Values::ADCPower_int1LP_0 : ES8388Control::Values::ADCPower_int1LP_1), ES8388Control::Masks::ADCPower_int1LP);
-
-		ES8388Control::Write(
-			ES8388Control::Registers::ADCPower,
-			(Powered ? ES8388Control::Values::ADCPower_flashLP_0 : ES8388Control::Values::ADCPower_flashLP_1), ES8388Control::Masks::ADCPower_flashLP);
-
-		ES8388Control::Write(
-			ES8388Control::Registers::ADCPower,
-			(Powered ? ES8388Control::Values::ADCPower_PdnADCBiasgen_0 : ES8388Control::Values::ADCPower_PdnADCBiasgen_1), ES8388Control::Masks::ADCPower_PdnADCBiasgen);
-
-		ES8388Control::Write(
-			ES8388Control::Registers::ADCPower,
-			(Powered && MicrophoneBiasPowered ? ES8388Control::Values::ADCPower_PdnMICB_0 : ES8388Control::Values::ADCPower_PdnMICB_1), ES8388Control::Masks::ADCPower_PdnMICB);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Right1 | IOModes::Right2))
-		{
-			ES8388Control::Write(
-				ES8388Control::Registers::ADCPower,
-				(Powered ? ES8388Control::Values::ADCPower_PdnADCR_0 : ES8388Control::Values::ADCPower_PdnADCR_1), ES8388Control::Masks::ADCPower_PdnADCR);
-
-			ES8388Control::Write(
-				ES8388Control::Registers::ADCPower,
-				(Powered ? ES8388Control::Values::ADCPower_PdnAINR_0 : ES8388Control::Values::ADCPower_PdnAINR_1), ES8388Control::Masks::ADCPower_PdnAINR);
-		}
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Left1 | IOModes::Left2))
-		{
-			ES8388Control::Write(
-				ES8388Control::Registers::ADCPower,
-				(Powered ? ES8388Control::Values::ADCPower_PdnADCL_0 : ES8388Control::Values::ADCPower_PdnADCL_1), ES8388Control::Masks::ADCPower_PdnADCL);
-
-			ES8388Control::Write(
-				ES8388Control::Registers::ADCPower,
-				(Powered ? ES8388Control::Values::ADCPower_PdnAINL_0 : ES8388Control::Values::ADCPower_PdnAINL_1), ES8388Control::Masks::ADCPower_PdnAINL);
-		}
-
-		ES8388Control::Write(ES8388Control::Registers::ADCControl4, ES8388Control::Values::ADCControl4_DATSEL_00, ES8388Control::Masks::ADCControl4_DATSEL);
-
-		return true;
-	}
-
-	static bool SetDACPowered(bool Powered, IOModes IOModes, OutputResistances OutputResistance)
-	{
-		Log::WriteInfo(TAG, "Setting DAC Powered: %i, R1: %i, L1: %i, R2: %i, L2: %i, Output Resistance: %i", Powered,
-					   Bitwise::IsEnabled(IOModes, IOModes::Right1),
-					   Bitwise::IsEnabled(IOModes, IOModes::Left1),
-					   Bitwise::IsEnabled(IOModes, IOModes::Right2),
-					   Bitwise::IsEnabled(IOModes, IOModes::Left2),
-					   OutputResistance);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Right2))
-			ES8388Control::Write(
-				ES8388Control::Registers::DACPower,
-				(Powered ? ES8388Control::Values::DACPower_ROUT2_1 : ES8388Control::Values::DACPower_ROUT2_0), ES8388Control::Masks::DACPower_ROUT2);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Left2))
-			ES8388Control::Write(
-				ES8388Control::Registers::DACPower,
-				(Powered ? ES8388Control::Values::DACPower_LOUT2_1 : ES8388Control::Values::DACPower_LOUT2_0), ES8388Control::Masks::DACPower_LOUT2);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Right1))
-			ES8388Control::Write(
-				ES8388Control::Registers::DACPower,
-				(Powered ? ES8388Control::Values::DACPower_ROUT1_1 : ES8388Control::Values::DACPower_ROUT1_0), ES8388Control::Masks::DACPower_ROUT1);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Left1))
-			ES8388Control::Write(
-				ES8388Control::Registers::DACPower,
-				(Powered ? ES8388Control::Values::DACPower_LOUT1_1 : ES8388Control::Values::DACPower_LOUT1_0), ES8388Control::Masks::DACPower_LOUT1);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Right1 | IOModes::Right2))
-			ES8388Control::Write(
-				ES8388Control::Registers::DACPower,
-				(Powered ? ES8388Control::Values::DACPower_PdnDACR_0 : ES8388Control::Values::DACPower_PdnDACR_1), ES8388Control::Masks::DACPower_PdnDACR);
-
-		if (Bitwise::IsEnabled(IOModes, IOModes::Left1 | IOModes::Left2))
-			ES8388Control::Write(
-				ES8388Control::Registers::DACPower,
-				(Powered ? ES8388Control::Values::DACPower_PdnDACL_0 : ES8388Control::Values::DACPower_PdnDACL_1), ES8388Control::Masks::DACPower_PdnDACL);
-
-		ES8388Control::Write(ES8388Control::Registers::DACControl23, (ES8388Control::Values)OutputResistance, ES8388Control::Masks::DACControl23_VROI);
 
 		return true;
 	}

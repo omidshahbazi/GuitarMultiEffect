@@ -76,48 +76,48 @@ public:
 
 	static bool SetOutputVolume(uint8 Value)
 	{
-		return m_Codec->SetOutputVolume(Value);
+		// return m_Codec->SetOutputVolume(Value);
 	}
 	static uint8 GetOutputVolume(void)
 	{
-		return m_Codec->GetOutputVolume();
+		// return m_Codec->GetOutputVolume();
 	}
 
 	static bool SetMute(bool Enabled)
 	{
-		return m_Codec->SetMute(Enabled);
+		// return m_Codec->SetMute(Enabled);
 	}
 
 	static bool SetInputGain(uint8 Value)
 	{
-		return m_Codec->SetInputGain(Value);
+		// return m_Codec->SetInputGain(Value);
 	}
 	static uint8 GetInputGain(void)
 	{
-		return m_Codec->GetInputGain();
+		// return m_Codec->GetInputGain();
 	}
 
 	static bool SetMicrophoneGain(uint8 Value)
 	{
-		return m_Codec->SetMicrophoneGain(Value);
+		// return m_Codec->SetMicrophoneGain(Value);
 	}
 	static uint8 GetMicrophoneGain(void)
 	{
-		return m_Codec->GetMicrophoneGain();
+		// return m_Codec->GetMicrophoneGain();
 	}
 
 	static bool SetMicrophoneNoiseGate(uint8 Value)
 	{
-		return m_Codec->SetMicrophoneNoiseGate(Value);
+		// 	return m_Codec->SetMicrophoneNoiseGate(Value);
 	}
 	static uint8 GetMicrophoneNoiseGate(void)
 	{
-		return m_Codec->GetMicrophoneNoiseGate();
+		// return m_Codec->GetMicrophoneNoiseGate();
 	}
 
 	static void OptimizeConversion(uint8 Range = 2)
 	{
-		return m_Codec->OptimizeConversion(Range);
+		// return m_Codec->OptimizeConversion(Range);
 	}
 
 	template <typename T>
@@ -338,7 +338,7 @@ private:
 };
 
 ES8388 *ESP32A1SCodec::m_Codec = nullptr;
-const char *ESP32A1SCodec::TAG = "ESP32";
+const char *ESP32A1SCodec::TAG = "ESP32A1SCodec";
 const i2c_port_t ESP32A1SCodec::I2C_PORT = I2C_NUM_0;
 const i2s_port_t ESP32A1SCodec::I2S_PORT = I2S_NUM_0;
 
