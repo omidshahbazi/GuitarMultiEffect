@@ -8,6 +8,20 @@
 class ES8388Interface
 {
 public:
+	enum class MiddleVoltageResistances
+	{
+		Disabled = (uint8)ES8388Control::Values::ChipControl1_VMIDSEL_00,
+		R5K = (uint8)ES8388Control::Values::ChipControl1_VMIDSEL_11,
+		R50K = (uint8)ES8388Control::Values::ChipControl1_VMIDSEL_01,
+		R500K = (uint8)ES8388Control::Values::ChipControl1_VMIDSEL_10
+	};
+
+	enum class OutputResistances
+	{
+		R1K5 = (uint8)ES8388Control::Values::DACControl23_VROI_0,
+		R40K = (uint8)ES8388Control::Values::DACControl23_VROI_1,
+	};
+
 	enum class IOModes
 	{
 		Left1 = 0b00000001,
@@ -40,62 +54,18 @@ public:
 public:
 	static bool Initialize(void)
 	{
-		Log::WriteInfo(TAG, "Setting the Registers");
+		CHECK_CALL(TurnOn(false, MiddleVoltageResistances::R500K));
 
-		CHECK_CALL(TurnOn(false, true, true));
-
-		CHECK_CALL(SetDACPowered(false, IOModes::All));
-
-		//  Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_VMIDSEL_10, ES8388Control::Masks::ChipControl1_VMIDSEL);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_EnRef_0, ES8388Control::Masks::ChipControl1_EnRef);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SeqEn_0, ES8388Control::Masks::ChipControl1_SeqEn);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SameFs_1, ES8388Control::Masks::ChipControl1_SameFs);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_DACMCLK_0, ES8388Control::Masks::ChipControl1_DACMCLK);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_LRCM_0, ES8388Control::Masks::ChipControl1_LRCM);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SCPReset_0, ES8388Control::Masks::ChipControl1_SCPReset);
-
-		//  1a 0x18:16bit iis , 0x00:24
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRP_0, ES8388Control::Masks::DACControl1_DACLRP);
-		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRSWAP_0, ES8388Control::Masks::DACControl1_DACLRSWAP);
-
-		//  DACFsMode,SINGLE SPEED; DACFsRatio,256
-		ES8388Control::Write(ES8388Control::Registers::DACControl2, ES8388Control::Values::DACCOntrol2_DACFsRatio_00010, ES8388Control::Masks::DACCOntrol2_DACFsRatio);
-		ES8388Control::Write(ES8388Control::Registers::DACControl2, ES8388Control::Values::DACCOntrol2_DACFsMode_0, ES8388Control::Masks::DACCOntrol2_DACFsMode);
-
-		//  0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2
-		ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_RMIXSEL_000, ES8388Control::Masks::DACControl16_RMIXSEL);
-		ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_LMIXSEL_000, ES8388Control::Masks::DACControl16_LMIXSEL);
-
-		//  only left DAC to left mixer enable 0db
-		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LI2LO_0, ES8388Control::Masks::DACControl17_LI2LO);
-		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LD2LO_1, ES8388Control::Masks::DACControl17_LD2LO);
-
-		//  only right DAC to right mixer enable 0db
-		// ES8388Control::Write(ES8388Control::Registers::DACControl20, 0x90);
-		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RI2RO_0, ES8388Control::Masks::DACControl20_RI2RO);
-		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RD2RO_1, ES8388Control::Masks::DACControl20_RD2RO);
+		CHECK_CALL(SetDACPowered(false, IOModes::All, OutputResistances::R1K5));
 
 		CHECK_CALL(SetInputToMixerGain(6));
 
-		//  set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_dac_dll_pwd_0, ES8388Control::Masks::DACControl21_dac_dll_pwd);
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_adc_dll_pwd_0, ES8388Control::Masks::DACControl21_adc_dll_pwd);
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_mclk_dis_0, ES8388Control::Masks::DACControl21_mclk_dis);
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_offset_dis_0, ES8388Control::Masks::DACControl21_offset_dis);
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_lrck_sel_0, ES8388Control::Masks::DACControl21_lrck_sel);
-		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_slrck_1, ES8388Control::Masks::DACControl21_slrck);
-
-		//  vroi=0
-		ES8388Control::Write(ES8388Control::Registers::DACControl23, ES8388Control::Values::DACControl23_VROI_0, ES8388Control::Masks::DACControl23_VROI);
-
 		CHECK_CALL(SetDigitalVolume(0));
 
-		CHECK_CALL(SetDACPowered(true, IOModes::All));
+		CHECK_CALL(SetDACPowered(true, IOModes::All, OutputResistances::R1K5));
 
 		CHECK_CALL(SetADCPowered(false, false, IOModes::All));
 
-		//  MIC Left and Right channel PGA gain
 		CHECK_CALL(SetMicrophoneGain(24));
 
 		ES8388Control::Write(ES8388Control::Registers::ADCControl2, ES8388Control::Values::ADCControl2_DSR_0, ES8388Control::Masks::ADCControl2_DSR);
@@ -116,7 +86,6 @@ public:
 		ES8388Control::Write(ES8388Control::Registers::ADCControl5, ES8388Control::Values::ADCControl5_ADCFsRatio_00010, ES8388Control::Masks::ADCControl5_ADCFsRatio);
 		ES8388Control::Write(ES8388Control::Registers::ADCControl5, ES8388Control::Values::ADCControl5_ADCFsMode_0, ES8388Control::Masks::ADCControl5_ADCFsMode);
 
-		// ALC for Microphone
 		CHECK_CALL(SetInputVolume(0));
 
 		CHECK_CALL(SetADCPowered(true, false, IOModes::All));
@@ -196,34 +165,20 @@ public:
 
 		// if (Bitwise::IsEnabled(Module, Modules::DAC) || Bitwise::IsEnabled(Module, Modules::Line))
 		{
-			CHECK_CALL(SetDACPowered(true, IOModes::All));
+			CHECK_CALL(SetDACPowered(true, IOModes::All, OutputResistances::R1K5));
 		}
 
 		return true;
 	}
 
-	static bool TurnOn(bool MasterMode, bool EnableADC, bool EnableDAC)
+	static bool TurnOn(bool MasterMode, MiddleVoltageResistances MiddleVoltageResistance)
 	{
 		Log::WriteInfo(TAG, "Turning On");
 
 		CHECK_CALL(SetADCEnabled(true));
 		CHECK_CALL(SetDACEnabled(true));
 
-		//  Enfr=0,Play&Record Mode,(0x17-both of mic&paly)
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_VMIDSEL_10, ES8388Control::Masks::ChipControl1_VMIDSEL);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_EnRef_0, ES8388Control::Masks::ChipControl1_EnRef);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SeqEn_0, ES8388Control::Masks::ChipControl1_SeqEn);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SameFs_1, ES8388Control::Masks::ChipControl1_SameFs);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_DACMCLK_0, ES8388Control::Masks::ChipControl1_DACMCLK);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_LRCM_0, ES8388Control::Masks::ChipControl1_LRCM);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SCPReset_0, ES8388Control::Masks::ChipControl1_SCPReset);
-
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnVrefbuf_0, ES8388Control::Masks::ChipControl2_PdnVrefbuf);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_VrefLo_0, ES8388Control::Masks::ChipControl2_VrefLo);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnIbiasgen_0, ES8388Control::Masks::ChipControl2_PdnIbiasgen);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnAna_0, ES8388Control::Masks::ChipControl2_PdnAna);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVcmMod_0, ES8388Control::Masks::ChipControl2_LPVcmMod);
+		CHECK_CALL(SetChipControls(MiddleVoltageResistance, false, true));
 
 		ES8388Control::Write(ES8388Control::Registers::MasterMode, ES8388Control::Values::MasterMode_BCLKDIV_00000, ES8388Control::Masks::MasterMode_BCLKDIV);
 		ES8388Control::Write(ES8388Control::Registers::MasterMode, ES8388Control::Values::MasterMode_BCLK_INV_0, ES8388Control::Masks::MasterMode_BCLK_INV);
@@ -233,7 +188,12 @@ public:
 			(MasterMode ? ES8388Control::Values::MasterMode_MSC_1 : ES8388Control::Values::MasterMode_MSC_0),
 			ES8388Control::Masks::MasterMode_MSC);
 
-		// Resume();
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_dac_dll_pwd_0, ES8388Control::Masks::DACControl21_dac_dll_pwd);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_adc_dll_pwd_0, ES8388Control::Masks::DACControl21_adc_dll_pwd);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_mclk_dis_0, ES8388Control::Masks::DACControl21_mclk_dis);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_offset_dis_0, ES8388Control::Masks::DACControl21_offset_dis);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_lrck_sel_0, ES8388Control::Masks::DACControl21_lrck_sel);
+		ES8388Control::Write(ES8388Control::Registers::DACControl21, ES8388Control::Values::DACControl21_slrck_1, ES8388Control::Masks::DACControl21_slrck);
 
 		return true;
 	}
@@ -245,12 +205,7 @@ public:
 		SetADCEnabled(false);
 		SetDACEnabled(false);
 
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnVrefbuf_1, ES8388Control::Masks::ChipControl2_PdnVrefbuf);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_VrefLo_1, ES8388Control::Masks::ChipControl2_VrefLo);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnIbiasgen_1, ES8388Control::Masks::ChipControl2_PdnIbiasgen);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnAna_1, ES8388Control::Masks::ChipControl2_PdnAna);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
-		ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVcmMod_1, ES8388Control::Masks::ChipControl2_LPVcmMod);
+		CHECK_CALL(SetChipControls(MiddleVoltageResistances::Disabled, false, false));
 
 		return true;
 	}
@@ -266,7 +221,7 @@ public:
 		CHECK_CALL(SetDACEnabled(false, false));
 
 		CHECK_CALL(SetADCPowered(false, false, IOModes::All));
-		CHECK_CALL(SetDACPowered(false, IOModes::All));
+		CHECK_CALL(SetDACPowered(false, IOModes::All, OutputResistances::R1K5));
 
 		return true;
 	}
@@ -276,7 +231,7 @@ public:
 		Log::WriteInfo(TAG, "Resuming");
 
 		CHECK_CALL(SetADCPowered(true, true, IOModes::All));
-		CHECK_CALL(SetDACPowered(true, IOModes::All));
+		CHECK_CALL(SetDACPowered(true, IOModes::All, OutputResistances::R1K5));
 
 		CHECK_CALL(SetInputMute(false));
 		CHECK_CALL(SetOutputMute(false));
@@ -351,6 +306,8 @@ public:
 		}
 
 		ES8388Control::Write(ES8388Control::Registers::DACControl1, value, ES8388Control::Masks::DACControl1_DACFORMAT);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRP_0, ES8388Control::Masks::DACControl1_DACLRP);
 
 		return true;
 	}
@@ -664,6 +621,43 @@ public:
 	}
 
 private:
+	static bool SetChipControls(MiddleVoltageResistances MiddleVoltageResistance, bool ResetControlPort, bool PoweredOn)
+	{
+		Log::WriteInfo(TAG, "Setting Chip Control Middle Voltage Resistance: %i, Reset Control Port: %i, Powered On: %i", MiddleVoltageResistance, ResetControlPort, PoweredOn);
+
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, (ES8388Control::Values)MiddleVoltageResistance, ES8388Control::Masks::ChipControl1_VMIDSEL);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_EnRef_0, ES8388Control::Masks::ChipControl1_EnRef);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SeqEn_0, ES8388Control::Masks::ChipControl1_SeqEn);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_SameFs_1, ES8388Control::Masks::ChipControl1_SameFs);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_DACMCLK_0, ES8388Control::Masks::ChipControl1_DACMCLK);
+		ES8388Control::Write(ES8388Control::Registers::ChipControl1, ES8388Control::Values::ChipControl1_LRCM_0, ES8388Control::Masks::ChipControl1_LRCM);
+		ES8388Control::Write(
+			ES8388Control::Registers::ChipControl1,
+			(ResetControlPort ? ES8388Control::Values::ChipControl1_SCPReset_1 : ES8388Control::Values::ChipControl1_SCPReset_0),
+			ES8388Control::Masks::ChipControl1_SCPReset);
+
+		if (PoweredOn)
+		{
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnVrefbuf_0, ES8388Control::Masks::ChipControl2_PdnVrefbuf);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_VrefLo_0, ES8388Control::Masks::ChipControl2_VrefLo);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnIbiasgen_0, ES8388Control::Masks::ChipControl2_PdnIbiasgen);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnAna_0, ES8388Control::Masks::ChipControl2_PdnAna);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVcmMod_0, ES8388Control::Masks::ChipControl2_LPVcmMod);
+		}
+		else
+		{
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnVrefbuf_1, ES8388Control::Masks::ChipControl2_PdnVrefbuf);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_VrefLo_1, ES8388Control::Masks::ChipControl2_VrefLo);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnIbiasgen_1, ES8388Control::Masks::ChipControl2_PdnIbiasgen);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_PdnAna_1, ES8388Control::Masks::ChipControl2_PdnAna);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVrefBuf_1, ES8388Control::Masks::ChipControl2_LPVrefBuf);
+			ES8388Control::Write(ES8388Control::Registers::ChipControl2, ES8388Control::Values::ChipControl2_LPVcmMod_1, ES8388Control::Masks::ChipControl2_LPVcmMod);
+		}
+
+		return true;
+	}
+
 	static bool SetADCPowered(bool Powered, bool MicrophoneBiasPowered, IOModes IOModes)
 	{
 		Log::WriteInfo(TAG, "Setting ADC Powered: %i, Microphone Bias Powered: %i, R: %i, L: %i", Powered, (Powered && MicrophoneBiasPowered),
@@ -711,13 +705,14 @@ private:
 		return true;
 	}
 
-	static bool SetDACPowered(bool Powered, IOModes IOModes)
+	static bool SetDACPowered(bool Powered, IOModes IOModes, OutputResistances OutputResistance)
 	{
-		Log::WriteInfo(TAG, "Setting DAC Powered: %i, R1: %i, L1: %i, R2: %i, L2: %i", Powered,
+		Log::WriteInfo(TAG, "Setting DAC Powered: %i, R1: %i, L1: %i, R2: %i, L2: %i, Output Resistance: %i", Powered,
 					   Bitwise::IsEnabled(IOModes, IOModes::Right1),
 					   Bitwise::IsEnabled(IOModes, IOModes::Left1),
 					   Bitwise::IsEnabled(IOModes, IOModes::Right2),
-					   Bitwise::IsEnabled(IOModes, IOModes::Left2));
+					   Bitwise::IsEnabled(IOModes, IOModes::Left2),
+					   OutputResistance);
 
 		if (Bitwise::IsEnabled(IOModes, IOModes::Right2))
 			ES8388Control::Write(
@@ -748,6 +743,8 @@ private:
 			ES8388Control::Write(
 				ES8388Control::Registers::DACPower,
 				(Powered ? ES8388Control::Values::DACPower_PdnDACL_0 : ES8388Control::Values::DACPower_PdnDACL_1), ES8388Control::Masks::DACPower_PdnDACL);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl23, (ES8388Control::Values)OutputResistance, ES8388Control::Masks::DACControl23_VROI);
 
 		return true;
 	}
@@ -804,6 +801,20 @@ private:
 			ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_dac_stm_rst_1, ES8388Control::Masks::ChipPower_dac_stm_rst);
 			ES8388Control::Write(ES8388Control::Registers::ChipPower, ES8388Control::Values::ChipPower_dac_DigPDN_1, ES8388Control::Masks::ChipPower_dac_DigPDN);
 		}
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl1, ES8388Control::Values::DACControl1_DACLRSWAP_0, ES8388Control::Masks::DACControl1_DACLRSWAP);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl2, ES8388Control::Values::DACCOntrol2_DACFsRatio_00010, ES8388Control::Masks::DACCOntrol2_DACFsRatio);
+		ES8388Control::Write(ES8388Control::Registers::DACControl2, ES8388Control::Values::DACCOntrol2_DACFsMode_0, ES8388Control::Masks::DACCOntrol2_DACFsMode);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_RMIXSEL_000, ES8388Control::Masks::DACControl16_RMIXSEL);
+		ES8388Control::Write(ES8388Control::Registers::DACControl16, ES8388Control::Values::DACControl16_LMIXSEL_000, ES8388Control::Masks::DACControl16_LMIXSEL);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LI2LO_0, ES8388Control::Masks::DACControl17_LI2LO);
+		ES8388Control::Write(ES8388Control::Registers::DACControl17, ES8388Control::Values::DACControl17_LD2LO_1, ES8388Control::Masks::DACControl17_LD2LO);
+
+		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RI2RO_0, ES8388Control::Masks::DACControl20_RI2RO);
+		ES8388Control::Write(ES8388Control::Registers::DACControl20, ES8388Control::Values::DACControl20_RD2RO_1, ES8388Control::Masks::DACControl20_RD2RO);
 
 		return true;
 	}
