@@ -1,7 +1,7 @@
 #include "Application.h"
-#include "framework/Debug.h"
-#include "framework/Memory.h"
-#include "framework/ESP32A1SCodec.h"
+#include "framework/include/Debug.h"
+#include "framework/include/Memory.h"
+#include "framework/include/ESP32A1SCodec.h"
 #include <math.h>
 #include <esp_bt.h>
 #include <esp_adc_cal.h>

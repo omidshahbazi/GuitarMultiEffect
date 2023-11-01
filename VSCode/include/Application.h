@@ -2,7 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "framework/Common.h"
+#include "framework/include/Common.h"
 
 class Application
 {
