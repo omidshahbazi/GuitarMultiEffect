@@ -64,7 +64,7 @@ void Application::Initialize(void)
 	configs.Mode = ESP32A1SCodec::Modes::Master;
 	configs.TransmissionMode = ESP32A1SCodec::TransmissionModes::Both;
 	configs.SampleRate = SAMPLE_RATE;
-	configs.BitsPerSample = ES8388::BitsPerSamples::BPS24;
+	configs.BitsPerSample = ES8388::BitsPerSamples::BPS16;
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLegth = 300;
