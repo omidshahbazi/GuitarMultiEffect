@@ -417,7 +417,7 @@ public:
 	{
 		dB = Math::Clamp(dB, 0, 24);
 
-		Log::WriteInfo(TAG, "Setting the Microphone gain: %.1fdB", dB);
+		Log::WriteInfo(TAG, "Setting Microphone Gain: %.1fdB", dB);
 
 		uint8 value = (uint8)(dB / 3);
 
@@ -526,7 +526,7 @@ public:
 	{
 		dB = Math::Clamp(dB, -45, 4.5F);
 
-		Log::WriteInfo(TAG, "Setting Output volume: %.1fdB", dB);
+		Log::WriteInfo(TAG, "Setting Output Volume: %.1fdB", dB);
 
 		ES8388Control::Values value = (ES8388Control::Values)((uint8)((dB + 45) / 1.5F) & (uint8)ES8388Control::Masks::DACControl24_LOUT1VOL);
 

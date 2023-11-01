@@ -56,8 +56,6 @@ public:
 public:
 	static bool Initialize(Configs *Configs)
 	{
-		Log::WriteInfo(TAG, "Initializing");
-
 		CHECK_CALL(InitializeI2C(Configs));
 
 		ES8388::Modules modules = (ES8388::Modules)0;
@@ -67,7 +65,7 @@ public:
 			modules |= ES8388::Modules::DAC;
 
 		m_Codec = new ES8388(modules, Configs->InputMode, Configs->OutputMode);
-		SetBitsPerSample(Config->BitsPerSample);
+		m_Codec->SetBitsPerSample(Configs->BitsPerSample);
 
 		CHECK_CALL(InitializeI2S(Configs));
 
