@@ -1,5 +1,5 @@
 
-#if 0
+#if 1
 
 #include "Application.h"
 #include "framework/include/Debug.h"
@@ -63,6 +63,7 @@ void Application::I2SRoutine(void)
 
 #include "Application.h"
 #include "framework/examples/SineWavePlayer.h"
+// #include "framework/examples/BluetoothPlayer.h"
 
 Application::Application(void)
 {
@@ -71,6 +72,7 @@ Application::Application(void)
 void Application::Initialize(void)
 {
 	SineWavePlayer::EntryPoint();
+	// BluetoothPlayer::EntryPoint();
 }
 
 void Application::Update(void)
