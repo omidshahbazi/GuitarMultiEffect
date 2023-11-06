@@ -22,6 +22,9 @@ private:
 	}
 
 private:
+	bool m_Mute;
+	float m_OutCorrectionGain;
+
 	int32 *m_InBufferInt;
 	float *m_InBuffer;
 
