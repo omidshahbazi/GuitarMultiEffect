@@ -26,6 +26,7 @@ private:
 	bool m_Mute;
 	float m_OutCorrectionGain;
 	IEffect *m_Effects[8];
+	? ? ? ?
 };
 
 #endif
