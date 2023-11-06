@@ -2,6 +2,7 @@
 #if 1
 
 #include "Application.h"
+#include "Delay.h"
 #include "framework/include/Debug.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
@@ -11,18 +12,9 @@
 
 Application::Application(void)
 	: m_Mute(false),
-	  m_OutCorrectionGain(1),
-	  m_InBufferInt(nullptr),
-	  m_InBuffer(nullptr),
-	  m_OutBufferInt(nullptr),
-	  m_OutBuffer(nullptr)
+	  m_OutCorrectionGain(1)
 {
 	Log::SetMask(Log::Types::General);
-
-	m_InBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
-	m_InBuffer = Memory::Allocate<float>(FRAME_LENGTH);
-	m_OutBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
-	m_OutBuffer = Memory::Allocate<float>(FRAME_LENGTH);
 }
 
 void Application::Initialize(void)
@@ -42,50 +34,62 @@ void Application::Initialize(void)
 	// CHECK_CALL(ESP32A1SCodec::SetOutputVolume(70));
 	// CHECK_CALL(ESP32A1SCodec::SetMicrophoneGain(8));
 
-	xTaskCreatePinnedToCore(I2SRoutine, "I2SRoutine", 4096, this, 10, nullptr, 1);
+	xTaskCreatePinnedToCore(PassthroughTask, "PassthroughTask", 4096, this, 10, nullptr, 1);
 }
 
 void Application::Update(void)
 {
 }
 
-void Application::I2SRoutine(void)
+void Application::PassthroughTask(void)
 {
+	int32 *inBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
+	float *inBuffer = Memory::Allocate<float>(FRAME_LENGTH);
+	float *processedBuffer = Memory::Allocate<float>(FRAME_LENGTH);
+	int32 *outBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
+
+	Delay delay;
+
 	while (true)
 	{
-		ESP32A1SCodec::Read(m_InBufferInt, FRAME_LENGTH, 20);
+		ESP32A1SCodec::Read(inBufferInt, FRAME_LENGTH, 20);
 
 		if (m_Mute)
-			Memory::Set(m_InBuffer, 0.0F, FRAME_LENGTH);
+			Memory::Set(inBuffer, 0.0F, FRAME_LENGTH);
 		else
 			for (int i = 0; i < FRAME_LENGTH; ++i)
 			{
 				// convert to 24 bit int then to float
-				m_InBuffer[i] = (float)(m_InBufferInt[i] >> 8);
+				inBuffer[i] = (float)(inBufferInt[i] >> 8);
 
 				// scale to 1.0
-				m_InBuffer[i] = m_InBuffer[i] / FULL_24_BITS;
+				inBuffer[i] = inBuffer[i] / FULL_24_BITS;
 			}
 
-		for (int i = 0; i < FRAME_LENGTH; ++i)
-		{
-			m_OutBuffer[i] = m_InBuffer[i];
-		}
+		Memory::Copy(inBuffer, processedBuffer, FRAME_LENGTH);
+
+		// Effects
+		delay.Process(inBuffer, processedBuffer, FRAME_LENGTH);
 
 		// convert back float to int
 		for (int i = 0; i < FRAME_LENGTH; ++i)
 		{
 			// scale the left output to 24 bit range
-			m_OutBuffer[i] = m_OutCorrectionGain * m_OutBuffer[i] * FULL_24_BITS;
+			processedBuffer[i] = m_OutCorrectionGain * processedBuffer[i] * FULL_24_BITS;
 
 			// saturate to signed 24bit range
-			m_OutBuffer[i] = Math::Clamp(m_OutBuffer[i], -FULL_24_BITS, FULL_24_BITS);
+			processedBuffer[i] = Math::Clamp(processedBuffer[i], -FULL_24_BITS, FULL_24_BITS);
 
-			m_OutBufferInt[i] = ((int32)m_OutBuffer[i]) << 8;
+			outBufferInt[i] = ((int32)processedBuffer[i]) << 8;
 		}
 
-		ESP32A1SCodec::Write(m_OutBufferInt, FRAME_LENGTH);
+		ESP32A1SCodec::Write(outBufferInt, FRAME_LENGTH);
 	}
+
+	Memory::Deallocate(outBufferInt);
+	Memory::Deallocate(processedBuffer);
+	Memory::Deallocate(inBuffer);
+	Memory::Deallocate(inBufferInt);
 
 	vTaskDelete(nullptr);
 }

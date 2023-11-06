@@ -2,6 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "IEffect.h"
 #include "framework/include/Common.h"
 
 class Application
@@ -14,22 +15,17 @@ public:
 	void Update(void);
 
 private:
-	void I2SRoutine(void);
+	void PassthroughTask(void);
 
-	static void I2SRoutine(void *arg)
+	static void PassthroughTask(void *arg)
 	{
-		reinterpret_cast<Application *>(arg)->I2SRoutine();
+		reinterpret_cast<Application *>(arg)->PassthroughTask();
 	}
 
 private:
 	bool m_Mute;
 	float m_OutCorrectionGain;
-
-	int32 *m_InBufferInt;
-	float *m_InBuffer;
-
-	int32 *m_OutBufferInt;
-	float *m_OutBuffer;
+	IEffect *m_Effects[8];
 };
 
 #endif
