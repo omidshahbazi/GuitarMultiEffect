@@ -7,10 +7,11 @@
 class Delay : public IEffect
 {
 public:
-	void Process(const float *InBuffer, float *ProcessedBuffer, uint8 Count) override
+	void Process(float *Buffer, uint16 Count) override
 	{
-		? ? ? ? ?
 	}
+
+private:
 };
 
 #endif

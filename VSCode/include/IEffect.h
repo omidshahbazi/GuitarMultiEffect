@@ -7,7 +7,7 @@
 class IEffect
 {
 public:
-	virtual void Process(const float *InBuffer, float *ProcessedBuffer, uint8 Count) = 0;
+	virtual void Process(float *Buffer, uint16 Count) = 0;
 };
 
 #endif

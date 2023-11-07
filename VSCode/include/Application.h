@@ -4,9 +4,13 @@
 
 #include "IEffect.h"
 #include "framework/include/Common.h"
+#include <vector>
 
 class Application
 {
+private:
+	typedef std::vector<IEffect *> EffectList;
+
 public:
 	Application(void);
 
@@ -25,8 +29,7 @@ private:
 private:
 	bool m_Mute;
 	float m_OutCorrectionGain;
-	IEffect *m_Effects[8];
-	? ? ? ?
+	EffectList m_Effects;
 };
 
 #endif

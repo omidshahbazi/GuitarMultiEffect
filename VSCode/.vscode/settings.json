@@ -49,6 +49,7 @@
 		"streambuf": "cpp",
 		"cinttypes": "cpp",
 		"typeinfo": "cpp",
-		"common.h": "c"
+		"common.h": "c",
+		"iwave": "c"
 	}
 }
