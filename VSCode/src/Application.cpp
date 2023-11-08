@@ -5,7 +5,6 @@
 #include "WahWahEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
-#include <Arduino.h>
 
 #define FRAME_LENGTH 64
 // #define FULL_24_BITS 0xFFFFFF
@@ -48,8 +47,6 @@ void Application::Initialize(void)
 
 	// CreateEffect<DelayEffect>(m_Effects);
 	// CreateEffect<WahWahEffect>(m_Effects);
-
-	Serial.begin(115200);
 
 	xTaskCreatePinnedToCore(PassthroughTask, "PassthroughTask", 4096, this, 10, nullptr, 1);
 }
