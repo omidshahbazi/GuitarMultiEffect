@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "DelayEffect.h"
 #include "WahWahEffect.h"
+#include "OverdriveEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 
@@ -47,6 +48,7 @@ void Application::Initialize(void)
 
 	// CreateEffect<DelayEffect>(m_Effects);
 	// CreateEffect<WahWahEffect>(m_Effects);
+	CreateEffect<OverdriveEffect>(m_Effects);
 
 	xTaskCreatePinnedToCore(PassthroughTask, "PassthroughTask", 4096, this, 10, nullptr, 1);
 }

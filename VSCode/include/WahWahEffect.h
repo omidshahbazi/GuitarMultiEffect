@@ -3,6 +3,7 @@
 #define WAH_WAH_EFFECT_H
 
 #include "IEffect.h"
+#include "framework/include/Wave/LowPassFilter.h"
 #include "framework/include/Wave/Tables.h"
 
 class WahWahEffect : public IEffect
@@ -14,7 +15,7 @@ public:
 		m_Step = (int32)(m_Frequency * TABLE_SIZE / 44100); // Assuming 44100 Hz sample rate
 	}
 
-	void Process(float *Buffer, uint16 Count) override
+	void Process(float *Buffer, uint16 Count) override ? ? ? ?
 	{
 		for (uint16 i = 0; i < Count; ++i)
 		{
@@ -25,6 +26,8 @@ public:
 			m_Position += m_Step;
 			if (m_Position >= TABLE_SIZE)
 				m_Position -= TABLE_SIZE;
+
+			Buffer[i] = m_LowPassFilter.Process(Buffer[i]);
 		}
 	}
 
@@ -35,6 +38,7 @@ private:
 	}
 
 private:
+	LowPassFilter m_LowPassFilter;
 	int m_Position;
 	int m_Frequency;
 	int m_Step;
