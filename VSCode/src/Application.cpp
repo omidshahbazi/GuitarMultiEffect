@@ -1,4 +1,3 @@
-
 #if 1
 
 #include "Application.h"
@@ -31,6 +30,8 @@ Application::Application(void)
 
 void Application::Initialize(void)
 {
+	Log::WriteInfo("Initializing");
+
 	ESP32A1SCodec::Configs configs;
 	configs.Version = ESP32A1SCodec::Versions::V2974;
 	configs.TransmissionMode = ESP32A1SCodec::TransmissionModes::Both;
@@ -42,12 +43,11 @@ void Application::Initialize(void)
 	configs.InputMode = ES8388::InputModes::LeftAndRightInput1;
 	configs.OutputMode = ES8388::OutputModes::AllLineOutputs;
 
-	CHECK_CALL(ESP32A1SCodec::Initialize(&configs));
-	// CHECK_CALL(ESP32A1SCodec::SetOutputVolume(70));
-	// CHECK_CALL(ESP32A1SCodec::SetMicrophoneGain(8));
+	ESP32A1SCodec::Initialize(&configs);
+	ESP32A1SCodec::OptimizeConversion(2);
 
-	CreateEffect<DelayEffect>(m_Effects);
-	CreateEffect<WahWahEffect>(m_Effects);
+	// CreateEffect<DelayEffect>(m_Effects);
+	// CreateEffect<WahWahEffect>(m_Effects);
 
 	Serial.begin(115200);
 
@@ -60,6 +60,8 @@ void Application::Update(void)
 
 void Application::PassthroughTask(void)
 {
+	Log::WriteInfo("Starting Passthrough Task");
+
 	int32 *inBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
 	float *processedBuffer = Memory::Allocate<float>(FRAME_LENGTH);
 	int32 *outBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
@@ -140,7 +142,7 @@ void Application::Update(void)
 {
 }
 
-void Application::I2SRoutine(void)
+void Application::PassthroughTask(void)
 {
 }
 
