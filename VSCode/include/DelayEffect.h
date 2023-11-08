@@ -1,10 +1,10 @@
 #pragma once
-#ifndef DELAY_H
-#define DELAY_H
+#ifndef DELAY_EFFECT_H
+#define DELAY_EFFECT_H
 
 #include "IEffect.h"
 
-class Delay : public IEffect
+class DelayEffect : public IEffect
 {
 public:
 	void Process(float *Buffer, uint16 Count) override

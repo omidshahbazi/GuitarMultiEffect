@@ -2,7 +2,8 @@
 #if 1
 
 #include "Application.h"
-#include "Delay.h"
+#include "DelayEffect.h"
+#include "WahWahEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include <Arduino.h>
@@ -45,7 +46,8 @@ void Application::Initialize(void)
 	// CHECK_CALL(ESP32A1SCodec::SetOutputVolume(70));
 	// CHECK_CALL(ESP32A1SCodec::SetMicrophoneGain(8));
 
-	CreateEffect<Delay>(m_Effects);
+	CreateEffect<DelayEffect>(m_Effects);
+	CreateEffect<WahWahEffect>(m_Effects);
 
 	Serial.begin(115200);
 
