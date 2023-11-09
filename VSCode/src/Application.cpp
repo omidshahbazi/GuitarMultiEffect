@@ -8,7 +8,7 @@
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/Task.h"
 
-#include <Arduino.h>
+#include <sstream>
 
 #define FRAME_LENGTH 32
 #define FULL_24_BITS 0x7FFFFF
@@ -24,7 +24,7 @@ void CreateEffect(Application::EffectList &Effects)
 }
 
 Application::Application(void)
-	: m_Mute(true),
+	: m_Mute(false),
 	  m_OutCorrectionGain(1)
 {
 	Log::SetMask(Log::Types::General);
@@ -50,7 +50,7 @@ void Application::Initialize(void)
 
 	// CreateEffect<DelayEffect>(m_Effects);
 	// CreateEffect<WahWahEffect>(m_Effects);
-	// CreateEffect<OverdriveEffect>(m_Effects);
+	CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
 		[this]()
@@ -79,7 +79,7 @@ void Application::PassthroughTask(void)
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 			{
 				// convert to 24 bit int then to float
-				processBuffer[i] = (float)(ioBuffer[i] >> 8);
+				processBuffer[i] = (double)(ioBuffer[i] >> 8);
 
 				// scale to 1.0
 				processBuffer[i] /= FULL_24_BITS;
@@ -91,20 +91,20 @@ void Application::PassthroughTask(void)
 		// convert back float to int
 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 		{
-			int32 input = ioBuffer[i];
+			double process = processBuffer[i];
 
 			// scale the left output to 24 bit range
-			double multiplied = processBuffer[i] = m_OutCorrectionGain * processBuffer[i] * FULL_24_BITS;
+			process = m_OutCorrectionGain * process * FULL_24_BITS;
 
 			// saturate to signed 24bit range
-			double clamped = processBuffer[i] = Math::Clamp(processBuffer[i], -FULL_24_BITS, FULL_24_BITS);
+			process = Math::Clamp(process, -FULL_24_BITS, FULL_24_BITS);
 
-			ioBuffer[i] = ((int32)processBuffer[i]) << 8;
+			ioBuffer[i] = ((int32)process) << 8;
 
-			// printf("{%i,%f,%f,%f,%i}\n", input, multiplied, clamped, processBuffer[i], ioBuffer[i]);
+			// std::stringstream st;
+			// st << "{" << processBuffer[i] << "," << ioBuffer[i] << "}";
+			// Log::WriteInfo(st.str().c_str());
 		}
-
-		// printf("End\n");
 
 		ESP32A1SCodec::Write(ioBuffer, FRAME_LENGTH);
 	}
