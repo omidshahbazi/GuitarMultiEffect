@@ -2,12 +2,12 @@
 #ifndef DELAY_EFFECT_H
 #define DELAY_EFFECT_H
 
-#include "IEffect.h"
+#include "Effect.h"
 
-class DelayEffect : public IEffect
+class DelayEffect : public Effect
 {
-public:
-	void Process(float *Buffer, uint16 Count) override
+protected:
+	void ProcessBuffer(double *Buffer, uint16 Count) override
 	{
 	}
 

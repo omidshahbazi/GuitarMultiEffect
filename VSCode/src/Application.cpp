@@ -6,10 +6,12 @@
 #include "OverdriveEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
+#include "framework/include/Task.h"
 
-#define FRAME_LENGTH 64
-// #define FULL_24_BITS 0xFFFFFF
-#define FULL_24_BITS 8388607
+#include <Arduino.h>
+
+#define FRAME_LENGTH 32
+#define FULL_24_BITS 0x7FFFFF
 
 template <typename T>
 void CreateEffect(Application::EffectList &Effects)
@@ -22,7 +24,7 @@ void CreateEffect(Application::EffectList &Effects)
 }
 
 Application::Application(void)
-	: m_Mute(false),
+	: m_Mute(true),
 	  m_OutCorrectionGain(1)
 {
 	Log::SetMask(Log::Types::General);
@@ -48,77 +50,69 @@ void Application::Initialize(void)
 
 	// CreateEffect<DelayEffect>(m_Effects);
 	// CreateEffect<WahWahEffect>(m_Effects);
-	CreateEffect<OverdriveEffect>(m_Effects);
+	// CreateEffect<OverdriveEffect>(m_Effects);
 
-	xTaskCreatePinnedToCore(PassthroughTask, "PassthroughTask", 4096, this, 10, nullptr, 1);
-}
-
-void Application::Update(void)
-{
+	Task::Create(
+		[this]()
+		{
+			this->PassthroughTask();
+		},
+		1, 10);
 }
 
 void Application::PassthroughTask(void)
 {
+	Task::Delay(1000);
+
 	Log::WriteInfo("Starting Passthrough Task");
 
-	int32 *inBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
-	float *processedBuffer = Memory::Allocate<float>(FRAME_LENGTH);
-	int32 *outBufferInt = Memory::Allocate<int32>(FRAME_LENGTH);
+	int32 *ioBuffer = Memory::Allocate<int32>(FRAME_LENGTH);
+	double *processBuffer = Memory::Allocate<double>(FRAME_LENGTH);
 
 	while (true)
 	{
-		ESP32A1SCodec::Read(inBufferInt, FRAME_LENGTH, 20);
+		ESP32A1SCodec::Read(ioBuffer, FRAME_LENGTH, 20);
 
 		if (m_Mute)
-			Memory::Set(processedBuffer, 0.0F, FRAME_LENGTH);
+			Memory::Set(processBuffer, 0, FRAME_LENGTH);
 		else
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 			{
 				// convert to 24 bit int then to float
-				processedBuffer[i] = (float)(inBufferInt[i] >> 8);
+				processBuffer[i] = (float)(ioBuffer[i] >> 8);
 
 				// scale to 1.0
-				processedBuffer[i] /= FULL_24_BITS;
+				processBuffer[i] /= FULL_24_BITS;
 			}
 
-		for (IEffect *effect : m_Effects)
-			effect->Process(processedBuffer, FRAME_LENGTH);
-
-		// Serial.print("\n Input");
-		// for (int i = 0; i < FRAME_LENGTH; ++i)
-		// 	Serial.printf("%f, ", inBuffer[i]);
-		// Serial.print("\n");
-		// Serial.print("\n Processed");
-		// for (int i = 0; i < FRAME_LENGTH; ++i)
-		// 	Serial.printf("%f, ", processedBuffer[i]);
-		// Serial.print("\n");
-
-		// Serial.print("\n Output");
+		for (Effect *effect : m_Effects)
+			effect->Apply(processBuffer, FRAME_LENGTH);
 
 		// convert back float to int
 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 		{
+			int32 input = ioBuffer[i];
+
 			// scale the left output to 24 bit range
-			processedBuffer[i] = m_OutCorrectionGain * processedBuffer[i] * FULL_24_BITS;
+			double multiplied = processBuffer[i] = m_OutCorrectionGain * processBuffer[i] * FULL_24_BITS;
 
 			// saturate to signed 24bit range
-			processedBuffer[i] = Math::Clamp(processedBuffer[i], -FULL_24_BITS, FULL_24_BITS);
+			double clamped = processBuffer[i] = Math::Clamp(processBuffer[i], -FULL_24_BITS, FULL_24_BITS);
 
-			outBufferInt[i] = ((int32)processedBuffer[i]) << 8;
+			ioBuffer[i] = ((int32)processBuffer[i]) << 8;
 
-			// Serial.printf("{%i,%i} ", inBufferInt[i], outBufferInt[i]);
+			// printf("{%i,%f,%f,%f,%i}\n", input, multiplied, clamped, processBuffer[i], ioBuffer[i]);
 		}
 
-		// Serial.print("\n");
+		// printf("End\n");
 
-		ESP32A1SCodec::Write(outBufferInt, FRAME_LENGTH);
+		ESP32A1SCodec::Write(ioBuffer, FRAME_LENGTH);
 	}
 
-	Memory::Deallocate(outBufferInt);
-	Memory::Deallocate(processedBuffer);
-	Memory::Deallocate(inBufferInt);
+	Memory::Deallocate(processBuffer);
+	Memory::Deallocate(ioBuffer);
 
-	vTaskDelete(nullptr);
+	Task::Delete();
 }
 
 #else
@@ -135,10 +129,6 @@ void Application::Initialize(void)
 {
 	SineWavePlayer::EntryPoint();
 	// BluetoothPlayer::EntryPoint();
-}
-
-void Application::Update(void)
-{
 }
 
 void Application::PassthroughTask(void)

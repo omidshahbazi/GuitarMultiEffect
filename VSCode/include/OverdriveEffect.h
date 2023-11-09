@@ -2,14 +2,14 @@
 #ifndef OVERDRIVE_EFFECT_H
 #define OVERDRIVE_EFFECT_H
 
-#include "IEffect.h"
+#include "Effect.h"
 #include "framework/include/Math.h"
 
-class OverdriveEffect : public IEffect
+class OverdriveEffect : public Effect
 {
 public:
 	OverdriveEffect(void)
-		: m_Drive(1)
+		: m_Drive(0.5)
 	{
 	}
 
@@ -24,10 +24,15 @@ public:
 		return m_Drive;
 	}
 
-	void Process(float *Buffer, uint16 Count) override
+protected:
+	void ProcessBuffer(double *Buffer, uint16 Count) override
 	{
 		for (uint16 i = 0; i < Count; ++i)
+		{
+			float input = Buffer[i];
+
 			Buffer[i] = tanh(Buffer[i] * m_Drive);
+		}
 	}
 
 private:

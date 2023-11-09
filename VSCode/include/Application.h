@@ -2,29 +2,22 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "IEffect.h"
+#include "Effect.h"
 #include "framework/include/Common.h"
 #include <vector>
 
 class Application
 {
 private:
-	typedef std::vector<IEffect *> EffectList;
+	typedef std::vector<Effect *> EffectList;
 
 public:
 	Application(void);
 
 	void Initialize(void);
 
-	void Update(void);
-
 private:
 	void PassthroughTask(void);
-
-	static void PassthroughTask(void *arg)
-	{
-		reinterpret_cast<Application *>(arg)->PassthroughTask();
-	}
 
 private:
 	bool m_Mute;
