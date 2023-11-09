@@ -10,11 +10,11 @@
 
 #include <sstream>
 
-#define FRAME_LENGTH 32
+const uint8 FRAME_LENGTH 32
 #define FULL_24_BITS 0x7FFFFF
 
-template <typename T>
-void CreateEffect(Application::EffectList &Effects)
+	template <typename T>
+	void CreateEffect(Application::EffectList &Effects)
 {
 	T *effect = Memory::Allocate<T>();
 
