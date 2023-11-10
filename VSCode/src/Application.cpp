@@ -7,8 +7,7 @@
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/Task.h"
-
-#include <sstream>
+#include "framework/include/Time.h"
 
 const uint32 SAMPLE_RATE = 44100;
 const uint16 FRAME_LENGTH = 32;
@@ -52,7 +51,7 @@ void Application::Initialize(void)
 	ESP32A1SCodec::OptimizeConversion(2);
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
-	CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
+	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
 	//  CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
@@ -108,6 +107,9 @@ void Application::PassthroughTask(void)
 		}
 
 		ESP32A1SCodec::Write(ioBuffer, FRAME_LENGTH);
+
+		double now = Time::Now();
+		Log::WriteInfo("Now %f", now);
 	}
 
 	Memory::Deallocate(processBuffer);

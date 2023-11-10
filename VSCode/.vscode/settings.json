@@ -50,7 +50,9 @@
 		"cinttypes": "cpp",
 		"typeinfo": "cpp",
 		"common.h": "c",
-		"iwave": "c"
+		"iwave": "c",
+		"chrono": "cpp",
+		"ratio": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "disabled"
 }
