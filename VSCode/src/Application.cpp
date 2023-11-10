@@ -10,15 +10,16 @@
 
 #include <sstream>
 
-const uint8 FRAME_LENGTH 32
-#define FULL_24_BITS 0x7FFFFF
+const uint32 SAMPLE_RATE = 44100;
+const uint16 FRAME_LENGTH = 32;
+const int32 FULL_24_BITS = 0x7FFFFF;
 
-	template <typename T>
-	void CreateEffect(Application::EffectList &Effects)
+template <typename T, typename... ArgsT>
+void CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 {
-	T *effect = Memory::Allocate<T>();
+	T *effect = Memory::Allocate<T>(Args...);
 
-	new (effect) T();
+	new (effect) T(Args...);
 
 	Effects.push_back(effect);
 }
@@ -37,7 +38,7 @@ void Application::Initialize(void)
 	ESP32A1SCodec::Configs configs;
 	configs.Version = ESP32A1SCodec::Versions::V2974;
 	configs.TransmissionMode = ESP32A1SCodec::TransmissionModes::Both;
-	configs.SampleRate = 44100;
+	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ES8388::BitsPerSamples::BPS32;
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
@@ -48,9 +49,9 @@ void Application::Initialize(void)
 	ESP32A1SCodec::Initialize(&configs);
 	ESP32A1SCodec::OptimizeConversion(2);
 
-	// CreateEffect<DelayEffect>(m_Effects);
-	// CreateEffect<WahWahEffect>(m_Effects);
-	CreateEffect<OverdriveEffect>(m_Effects);
+	CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH);
+	CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
+	// CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
 		[this]()

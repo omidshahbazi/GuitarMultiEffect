@@ -28,20 +28,12 @@ public:
 protected:
 	void ProcessBuffer(double *Buffer, uint16 Count) override
 	{
-		// for (uint16 i = 0; i < Count; ++i)
-		// {
-		// 	Buffer[i] = tanh(Buffer[i] * m_Drive);
-		// }
 		for (uint16 i = 0; i < Count; ++i)
-		{
-			Buffer[i] = m_ToneControl.Process(Buffer[i]);
-		}
+			Buffer[i] = tanh(Buffer[i] * m_Drive);
 	}
 
 private:
 	float m_Drive;
-
-	ToneControl m_ToneControl;
 };
 
 #endif

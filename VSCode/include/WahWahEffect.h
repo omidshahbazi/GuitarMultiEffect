@@ -18,18 +18,18 @@ public:
 protected:
 	void ProcessBuffer(double *Buffer, uint16 Count) override
 	{
-		// for (uint16 i = 0; i < Count; ++i)
-		// {
-		// 	float modulator = SINE_TABLE[m_Position];
+		for (uint16 i = 0; i < Count; ++i)
+		{
+			float modulator = SINE_TABLE[m_Position];
 
-		// 	Buffer[i] = fixed_mul(Buffer[i], modulator);
+			Buffer[i] *= modulator;
 
-		// 	m_Position += m_Step;
-		// 	if (m_Position >= TABLE_SIZE)
-		// 		m_Position -= TABLE_SIZE;
+			m_Position += m_Step;
+			if (m_Position >= TABLE_SIZE)
+				m_Position -= TABLE_SIZE;
 
-		// 	Buffer[i] = m_LowPassFilter.Process(Buffer[i]);
-		// }
+			Buffer[i] = m_LowPassFilter.Process(Buffer[i]);
+		}
 	}
 
 private:
