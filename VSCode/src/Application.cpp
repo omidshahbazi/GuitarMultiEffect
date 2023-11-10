@@ -15,13 +15,15 @@ const uint16 FRAME_LENGTH = 32;
 const int32 FULL_24_BITS = 0x7FFFFF;
 
 template <typename T, typename... ArgsT>
-void CreateEffect(Application::EffectList &Effects, ArgsT... Args)
+T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 {
-	T *effect = Memory::Allocate<T>(Args...);
+	T *effect = Memory::Allocate<T>();
 
 	new (effect) T(Args...);
 
 	Effects.push_back(effect);
+
+	return effect;
 }
 
 Application::Application(void)
@@ -49,9 +51,9 @@ void Application::Initialize(void)
 	ESP32A1SCodec::Initialize(&configs);
 	ESP32A1SCodec::OptimizeConversion(2);
 
-	CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH);
+	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
 	CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
-	// CreateEffect<OverdriveEffect>(m_Effects);
+	//  CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
 		[this]()
@@ -102,9 +104,7 @@ void Application::PassthroughTask(void)
 
 			ioBuffer[i] = ((int32)process) << 8;
 
-			// std::stringstream st;
-			// st << "{" << processBuffer[i] << "," << ioBuffer[i] << "}";
-			// Log::WriteInfo(st.str().c_str());
+			// Log::WriteInfo("Output %f,%i", processBuffer[i], ioBuffer[i]);
 		}
 
 		ESP32A1SCodec::Write(ioBuffer, FRAME_LENGTH);

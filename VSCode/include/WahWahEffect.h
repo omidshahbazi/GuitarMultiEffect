@@ -9,10 +9,27 @@
 class WahWahEffect : public Effect
 {
 public:
-	WahWahEffect(void)
-		: m_Position(0)
+	WahWahEffect(uint32 SampleRate)
+		: m_Frequency(0),
+		  m_SampleRate(SampleRate),
+		  m_Step(0),
+		  m_Position(0)
 	{
-		m_Step = (int32)(m_Frequency * TABLE_SIZE / 44100); // Assuming 44100 Hz sample rate
+		SetFrequency(5000);
+	}
+
+	void SetFrequency(float Value)
+	{
+		m_Frequency = Value;
+
+		m_LowPassFilter.SetCutoffFrequencye(m_Frequency);
+
+		m_Step = (int32)(m_Frequency * TABLE_SIZE / m_SampleRate);
+	}
+
+	float GetDelayTime(void) const
+	{
+		return m_Frequency;
 	}
 
 protected:
@@ -22,27 +39,22 @@ protected:
 		{
 			float modulator = SINE_TABLE[m_Position];
 
-			Buffer[i] *= modulator;
+			// Log::WriteInfo("Output %f,%f,%f", Buffer[i], modulator, Buffer[i] * modulator);
+
+			Buffer[i] = m_LowPassFilter.Process(Buffer[i] * modulator);
 
 			m_Position += m_Step;
 			if (m_Position >= TABLE_SIZE)
 				m_Position -= TABLE_SIZE;
-
-			Buffer[i] = m_LowPassFilter.Process(Buffer[i]);
 		}
 	}
 
 private:
-	int16 fixed_mul(int16 a, int16 b)
-	{
-		return (a * b) >> 15;
-	}
-
-private:
 	LowPassFilter m_LowPassFilter;
-	int m_Position;
-	int m_Frequency;
-	int m_Step;
+	float m_Frequency;
+	uint32 m_SampleRate;
+	int32 m_Step;
+	int32 m_Position;
 };
 
 #endif
