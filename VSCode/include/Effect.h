@@ -4,8 +4,6 @@
 
 #include "framework/include/Common.h"
 
-#include <stdio.h>
-
 class Effect
 {
 public:
@@ -25,8 +23,6 @@ public:
 	virtual void ToggleEnabled(void)
 	{
 		m_Enabled = !m_Enabled;
-
-		printf("Enabled: %i\n", m_Enabled);
 	}
 
 protected:

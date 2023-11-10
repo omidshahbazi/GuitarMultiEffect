@@ -1,5 +1,7 @@
 #if 1
 
+// #define PRINT_SAMPLES_AVERAGE
+
 #include "Application.h"
 #include "DelayEffect.h"
 #include "WahWahEffect.h"
@@ -8,10 +10,13 @@
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/Task.h"
 #include "framework/include/Time.h"
+#include "framework/include/LED.h"
 
 const uint32 SAMPLE_RATE = 44100;
 const uint16 FRAME_LENGTH = 32;
 const int32 FULL_24_BITS = 0x7FFFFF;
+
+LED test(GPIOPins::Pin14);
 
 template <typename T, typename... ArgsT>
 T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
@@ -38,7 +43,6 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Configs configs;
 	configs.Version = ESP32A1SCodec::Versions::V2974;
-	configs.TransmissionMode = ESP32A1SCodec::TransmissionModes::Both;
 	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ES8388::BitsPerSamples::BPS32;
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
@@ -52,7 +56,7 @@ void Application::Initialize(void)
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
 	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
-	//  CreateEffect<OverdriveEffect>(m_Effects);
+	// CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
 		[this]()
@@ -60,16 +64,26 @@ void Application::Initialize(void)
 			this->PassthroughTask();
 		},
 		1, 10);
+
+	test.SetBlinking(1);
 }
 
 void Application::PassthroughTask(void)
 {
+	test.Update();
+
 	Task::Delay(1000);
 
 	Log::WriteInfo("Starting Passthrough Task");
 
 	int32 *ioBuffer = Memory::Allocate<int32>(FRAME_LENGTH);
 	double *processBuffer = Memory::Allocate<double>(FRAME_LENGTH);
+
+#ifdef PRINT_SAMPLES_AVERAGE
+	double sum = 0;
+	uint16 count = 0;
+	double nextTime = Time::Now();
+#endif
 
 	while (true)
 	{
@@ -95,6 +109,11 @@ void Application::PassthroughTask(void)
 		{
 			double process = processBuffer[i];
 
+#ifdef PRINT_SAMPLES_AVERAGE
+			sum += process;
+			++count;
+#endif
+
 			// scale the left output to 24 bit range
 			process = m_OutCorrectionGain * process * FULL_24_BITS;
 
@@ -108,8 +127,16 @@ void Application::PassthroughTask(void)
 
 		ESP32A1SCodec::Write(ioBuffer, FRAME_LENGTH);
 
-		double now = Time::Now();
-		Log::WriteInfo("Now %f", now);
+#ifdef PRINT_SAMPLES_AVERAGE
+		if (nextTime < Time::Now())
+		{
+			Log::WriteInfo("Sample Average %f,%f,%i", sum / count, sum, count);
+
+			sum = 0;
+			count = 0;
+			nextTime += 1;
+		}
+#endif
 	}
 
 	Memory::Deallocate(processBuffer);
@@ -139,3 +166,9 @@ void Application::PassthroughTask(void)
 }
 
 #endif
+
+// test amp with tl071 board
+// Guitar test with the small cap circuit and amp
+// run the second mic
+// run in single mode
+// order the pcb for dev and amp
