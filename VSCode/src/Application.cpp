@@ -10,13 +10,10 @@
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/Task.h"
 #include "framework/include/Time.h"
-#include "framework/include/LED.h"
 
 const uint32 SAMPLE_RATE = 44100;
 const uint16 FRAME_LENGTH = 32;
 const int32 FULL_24_BITS = 0x7FFFFF;
-
-LED test(GPIOPins::Pin14);
 
 template <typename T, typename... ArgsT>
 T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
@@ -64,14 +61,10 @@ void Application::Initialize(void)
 			this->PassthroughTask();
 		},
 		1, 10);
-
-	test.SetBlinking(1);
 }
 
 void Application::PassthroughTask(void)
 {
-	test.Update();
-
 	Task::Delay(1000);
 
 	Log::WriteInfo("Starting Passthrough Task");
@@ -87,6 +80,8 @@ void Application::PassthroughTask(void)
 
 	while (true)
 	{
+		test.Update();
+
 		ESP32A1SCodec::Read(ioBuffer, FRAME_LENGTH, 20);
 
 		if (m_Mute)
