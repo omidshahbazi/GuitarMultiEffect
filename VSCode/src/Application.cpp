@@ -10,10 +10,13 @@
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/Task.h"
 #include "framework/include/Time.h"
+#include "framework/include/PushButtonArray.h"
 
 const uint32 SAMPLE_RATE = 44100;
 const uint16 FRAME_LENGTH = 32;
 const int32 FULL_24_BITS = 0x7FFFFF;
+
+PushButtonArray buttons(GPIOPins::Pin14, 2);
 
 template <typename T, typename... ArgsT>
 T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
@@ -61,6 +64,23 @@ void Application::Initialize(void)
 			this->PassthroughTask();
 		},
 		1, 10);
+
+	buttons.Bind(
+		1,
+		[]()
+		{
+			Log::WriteError("1 Pressed");
+		},
+		nullptr, nullptr);
+
+	buttons.Bind(
+		0,
+		nullptr,
+		[]()
+		{
+			Log::WriteError("0 Hold");
+		},
+		nullptr);
 }
 
 void Application::PassthroughTask(void)
@@ -80,7 +100,7 @@ void Application::PassthroughTask(void)
 
 	while (true)
 	{
-		test.Update();
+		buttons.Update();
 
 		ESP32A1SCodec::Read(ioBuffer, FRAME_LENGTH, 20);
 
