@@ -52,7 +52,9 @@ void Application::Initialize(void)
 	configs.OutputMode = ES8388::OutputModes::AllLineOutputs;
 
 	ESP32A1SCodec::Initialize(&configs);
-	ESP32A1SCodec::OptimizeConversion(2);
+	// ESP32A1SCodec::OptimizeConversion(4);
+	ESP32A1SCodec::SetMicrophoneGain(24);
+	ESP32A1SCodec::SetOutputVolume(0);
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
 	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
@@ -100,7 +102,7 @@ void Application::PassthroughTask(void)
 
 	while (true)
 	{
-		buttons.Update();
+		// buttons.Update();
 
 		ESP32A1SCodec::Read(ioBuffer, FRAME_LENGTH, 20);
 
@@ -181,9 +183,3 @@ void Application::PassthroughTask(void)
 }
 
 #endif
-
-// test amp with tl071 board
-// Guitar test with the small cap circuit and amp
-// run the second mic
-// run in single mode
-// order the pcb for dev and amp
