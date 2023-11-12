@@ -1,7 +1,5 @@
 #if 1
 
-// #define PRINT_SAMPLES_AVERAGE
-
 #include "Application.h"
 #include "DelayEffect.h"
 #include "WahWahEffect.h"
@@ -11,10 +9,11 @@
 #include "framework/include/Task.h"
 #include "framework/include/Time.h"
 #include "framework/include/PushButtonArray.h"
+#include "framework/include/BufferUtils.h"
 
 const uint32 SAMPLE_RATE = 44100;
-const uint16 FRAME_LENGTH = 32;
-const int32 FULL_24_BITS = 0x7FFFFF;
+const uint16 SAMPLE_COUNT = 64;
+const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
 PushButtonArray buttons(GPIOPins::Pin14, 2);
 
@@ -57,7 +56,7 @@ void Application::Initialize(void)
 	ESP32A1SCodec::SetOutputVolume(0);
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
-	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
+	CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
 	// CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
@@ -91,72 +90,44 @@ void Application::PassthroughTask(void)
 
 	Log::WriteInfo("Starting Passthrough Task");
 
-	int32 *ioBuffer = Memory::Allocate<int32>(FRAME_LENGTH);
-	double *processBuffer = Memory::Allocate<double>(FRAME_LENGTH);
-
-#ifdef PRINT_SAMPLES_AVERAGE
-	double sum = 0;
-	uint16 count = 0;
-	double nextTime = Time::Now();
-#endif
+	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
+	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
+	// double *processBufferR = Memory::Allocate<double>(FRAME_LENGTH);
 
 	while (true)
 	{
 		// buttons.Update();
 
-		ESP32A1SCodec::Read(ioBuffer, FRAME_LENGTH, 20);
+		ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
 
 		if (m_Mute)
-			Memory::Set(processBuffer, 0, FRAME_LENGTH);
+		{
+			Memory::Set(processBufferL, 0, FRAME_LENGTH);
+			// Memory::Set(processBufferR, 0, FRAME_LENGTH);
+		}
 		else
+		{
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-			{
-				// convert to 24 bit int then to float
-				processBuffer[i] = (double)(ioBuffer[i] >> 8);
+				CONVERT_TO_24_AND_NORMALIZED_DOUBLE(processBufferL, i, ioBuffer, 0);
 
-				// scale to 1.0
-				processBuffer[i] /= FULL_24_BITS;
-			}
+			// for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+			// 	CONVERT_TO_24_AND_NORMALIZED_DOUBLE(processBufferR, i, ioBuffer, 1);
+		}
 
 		for (Effect *effect : m_Effects)
-			effect->Apply(processBuffer, FRAME_LENGTH);
+			effect->Apply(processBufferL, FRAME_LENGTH);
 
-		// convert back float to int
 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-		{
-			double process = processBuffer[i];
+			SCALE_TO_24_AND_SATURATED_32(processBufferL, i, ioBuffer, 0);
 
-#ifdef PRINT_SAMPLES_AVERAGE
-			sum += process;
-			++count;
-#endif
+		// for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+		// 	SCALE_TO_24_AND_SATURATED_32(processBufferR, i, ioBuffer, 1);
 
-			// scale the left output to 24 bit range
-			process = m_OutCorrectionGain * process * FULL_24_BITS;
-
-			// saturate to signed 24bit range
-			process = Math::Clamp(process, -FULL_24_BITS, FULL_24_BITS);
-
-			ioBuffer[i] = ((int32)process) << 8;
-
-			// Log::WriteInfo("Output %f,%i", processBuffer[i], ioBuffer[i]);
-		}
-
-		ESP32A1SCodec::Write(ioBuffer, FRAME_LENGTH);
-
-#ifdef PRINT_SAMPLES_AVERAGE
-		if (nextTime < Time::Now())
-		{
-			Log::WriteInfo("Sample Average %f,%f,%i", sum / count, sum, count);
-
-			sum = 0;
-			count = 0;
-			nextTime += 1;
-		}
-#endif
+		ESP32A1SCodec::Write(ioBuffer, SAMPLE_COUNT);
 	}
 
-	Memory::Deallocate(processBuffer);
+	Memory::Deallocate(processBufferL);
+	// Memory::Deallocate(processBufferR);
 	Memory::Deallocate(ioBuffer);
 
 	Task::Delete();

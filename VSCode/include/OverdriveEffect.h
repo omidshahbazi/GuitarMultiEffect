@@ -10,7 +10,7 @@ class OverdriveEffect : public Effect
 {
 public:
 	OverdriveEffect(void)
-		: m_Drive(0.5)
+		: m_Drive(1)
 	{
 	}
 
