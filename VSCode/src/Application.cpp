@@ -43,12 +43,12 @@ void Application::Initialize(void)
 	ESP32A1SCodec::Configs configs;
 	configs.Version = ESP32A1SCodec::Versions::V2974;
 	configs.SampleRate = SAMPLE_RATE;
-	configs.BitsPerSample = ES8388::BitsPerSamples::BPS32;
+	configs.BitsPerSample = ESP32A1SCodec::BitsPerSamples::BPS32;
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLegth = 300;
-	configs.InputMode = ES8388::InputModes::LeftAndRightInput1;
-	configs.OutputMode = ES8388::OutputModes::AllLineOutputs;
+	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
+	configs.OutputMode = ESP32A1SCodec::OutputModes::SpeakerL;
 
 	ESP32A1SCodec::Initialize(&configs);
 	// ESP32A1SCodec::OptimizeConversion(4);
@@ -56,7 +56,7 @@ void Application::Initialize(void)
 	ESP32A1SCodec::SetOutputVolume(0);
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
-	CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
+	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
 	// CreateEffect<OverdriveEffect>(m_Effects);
 
 	Task::Create(
