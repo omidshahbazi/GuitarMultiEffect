@@ -44,9 +44,11 @@ void Application::Initialize(void)
 	configs.Version = ESP32A1SCodec::Versions::V2974;
 	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ESP32A1SCodec::BitsPerSamples::BPS32;
-	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::SeparatedLeftAndRight;
+	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::LeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLength = 300;
+
+	// TODO: Test with the table in the pdf P/N
 	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
 	configs.OutputMode = ESP32A1SCodec::OutputModes::SpeakerL;
 
