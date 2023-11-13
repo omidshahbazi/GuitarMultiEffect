@@ -21,7 +21,6 @@ private:
 
 private:
 	bool m_Mute;
-	float m_OutCorrectionGain;
 	EffectList m_Effects;
 };
 

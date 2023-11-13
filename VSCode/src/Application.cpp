@@ -30,8 +30,7 @@ T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 }
 
 Application::Application(void)
-	: m_Mute(false),
-	  m_OutCorrectionGain(1)
+	: m_Mute(false)
 {
 	Log::SetMask(Log::Types::General);
 }
@@ -48,13 +47,14 @@ void Application::Initialize(void)
 	configs.BufferCount = 3;
 	configs.BufferLength = 300;
 
-	// TODO: Test with the table in the pdf P/N
-	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
-	configs.OutputMode = ESP32A1SCodec::OutputModes::All;
+	// Worked -> Microphone1, Microphone2, LineL, LineR
+	configs.InputMode = ESP32A1SCodec::InputModes::LineLAndLineR; // TODO: Test with the table in the pdf P/N
+	configs.OutputMode = ESP32A1SCodec::OutputModes::SpeakerLAndSpeakerR;
+	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None; // TODO: Test
 
 	ESP32A1SCodec::Initialize(&configs);
 	// ESP32A1SCodec::OptimizeConversion(4);
-	ESP32A1SCodec::SetMicrophoneGain(24);
+	// ESP32A1SCodec::SetMicrophoneGain(24);
 	ESP32A1SCodec::SetOutputVolume(0);
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
