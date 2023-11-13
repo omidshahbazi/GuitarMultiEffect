@@ -49,7 +49,7 @@ void Application::Initialize(void)
 	configs.BufferLength = 300;
 
 	// TODO: Test with the table in the pdf P/N
-	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1 | ESP32A1SCodec::InputModes::Microphone2;
+	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
 	configs.OutputMode = ESP32A1SCodec::OutputModes::All;
 
 	ESP32A1SCodec::Initialize(&configs);
