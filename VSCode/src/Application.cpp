@@ -46,11 +46,11 @@ void Application::Initialize(void)
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::LeftAndRight;
 	configs.BufferCount = 3;
 	configs.BufferLength = 300;
-
-	// Worked -> Microphone1, Microphone2, LineL, LineR
-	configs.InputMode = ESP32A1SCodec::InputModes::LineLAndLineR; // TODO: Test with the table in the pdf P/N
-	configs.OutputMode = ESP32A1SCodec::OutputModes::SpeakerLAndSpeakerR;
-	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None; // TODO: Test
+	configs.InputMode = ESP32A1SCodec::InputModes::LineL;
+	configs.OutputMode = ESP32A1SCodec::OutputModes::SpeakerL;
+	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
+	configs.EnableNoiseGate = true;
+	configs.EnableAutomaticLevelControl = false;
 
 	ESP32A1SCodec::Initialize(&configs);
 	// ESP32A1SCodec::OptimizeConversion(4);
@@ -100,7 +100,7 @@ void Application::PassthroughTask(void)
 
 	while (true)
 	{
-		// buttons.Update();
+		buttons.Update();
 
 		ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
 
