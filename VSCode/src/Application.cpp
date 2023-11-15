@@ -72,18 +72,31 @@ void Application::Initialize(void)
 		1,
 		[]()
 		{
-			Log::WriteError("1 Pressed");
+			Log::WriteError("1 Down");
 		},
-		nullptr, nullptr);
+		[]()
+		{
+			Log::WriteError("1 Hold");
+		},
+		[]()
+		{
+			Log::WriteError("1 Up");
+		});
 
 	buttons.Bind(
 		0,
-		nullptr,
+		[]()
+		{
+			Log::WriteError("0 Down");
+		},
 		[]()
 		{
 			Log::WriteError("0 Hold");
 		},
-		nullptr);
+		[]()
+		{
+			Log::WriteError("0 Up");
+		});
 }
 
 void Application::PassthroughTask(void)
@@ -137,7 +150,7 @@ void Application::PassthroughTask(void)
 			{
 				nextTime += 1;
 
-				Log::WriteError("Avg L: %f, R: %f", sumL / count, sumR / count);
+				// Log::WriteError("Avg L: %f, R: %f", sumL / count, sumR / count);
 
 				sumL = sumR = 0;
 				count = 0;
