@@ -40,7 +40,6 @@ void Application::Initialize(void)
 	configs.Version = ESP32A1SCodec::Versions::V2974;
 	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ESP32A1SCodec::BitsPerSamples::BPS32;
-	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::OnlyLeft;
 	configs.BufferCount = 3;
 	configs.BufferLength = 300;
 	configs.InputMode = ESP32A1SCodec::InputModes::LineL;
