@@ -3,6 +3,7 @@
 #define APPLICATION_H
 
 #include "Effect.h"
+#include "ControlManager.h"
 #include "framework/include/Common.h"
 #include <vector>
 
@@ -21,6 +22,7 @@ private:
 
 private:
 	bool m_Mute;
+	ControlManager m_ControlManager;
 	EffectList m_Effects;
 };
 

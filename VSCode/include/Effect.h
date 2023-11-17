@@ -4,29 +4,21 @@
 
 #include "framework/include/Common.h"
 
+class IDSP;
+
 class Effect
 {
 public:
-	Effect(void)
-		: m_Enabled(true)
-	{
-	}
+	Effect(void);
 
-	void Apply(double *Buffer, uint16 Count)
-	{
-		if (!m_Enabled)
-			return;
+	void Apply(double *Buffer, uint16 Count);
 
-		ProcessBuffer(Buffer, Count);
-	}
-
-	virtual void ToggleEnabled(void)
-	{
-		m_Enabled = !m_Enabled;
-	}
+	virtual void ToggleEnabled(void);
 
 protected:
-	virtual void ProcessBuffer(double *Buffer, uint16 Count) = 0;
+	virtual IDSP *GetDSP(void) = 0;
+
+	virtual void ProcessBuffer(double *Buffer, uint16 Count);
 
 private:
 	bool m_Enabled;

@@ -1,8 +1,8 @@
 #if 1
 
 #include "Application.h"
-#include "DelayEffect.h"
-#include "WahWahEffect.h"
+// #include "DelayEffect.h"
+// #include "WahEffect.h"
 #include "OverdriveEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
@@ -27,8 +27,10 @@ T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 }
 
 Application::Application(void)
-	: m_Mute(false)
+	: m_Mute(false),
+	  m_ControlManager(GPIOPins::Pin13)
 {
+	Time::Initialize();
 	Log::SetMask(Log::Types::General);
 }
 
@@ -55,7 +57,7 @@ void Application::Initialize(void)
 
 	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
 	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
-	// CreateEffect<OverdriveEffect>(m_Effects);
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
 	Task::Create(
 		[&]()

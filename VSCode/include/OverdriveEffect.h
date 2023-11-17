@@ -3,37 +3,22 @@
 #define OVERDRIVE_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/Math.h"
-#include "framework/include/Wave/ToneControl.h"
+#include "framework/include/DSP/Overdrive.h"
+
+class ControlManager;
+class Potentiometer;
 
 class OverdriveEffect : public Effect
 {
 public:
-	OverdriveEffect(void)
-		: m_Drive(1)
-	{
-	}
-
-	void SetDrive(float Value)
-	{
-		Value = Math::Clamp01(Value);
-
-		m_Drive = Value;
-	}
-	float GetDrive(void)
-	{
-		return m_Drive;
-	}
+	OverdriveEffect(ControlManager *ControlManager);
 
 protected:
-	void ProcessBuffer(double *Buffer, uint16 Count) override
-	{
-		for (uint16 i = 0; i < Count; ++i)
-			Buffer[i] = tanh(Buffer[i] * m_Drive);
-	}
+	IDSP *GetDSP(void);
 
 private:
-	float m_Drive;
+	Overdrive m_Overdrive;
+	Potentiometer *m_DrivePot;
 };
 
 #endif
