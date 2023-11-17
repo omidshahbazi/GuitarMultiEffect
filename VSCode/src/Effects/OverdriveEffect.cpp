@@ -1,6 +1,6 @@
-#include "OverdriveEffect.h"
+#include "Effects/OverdriveEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Potentiometer.h"
+#include "framework/include/Controls/Potentiometer.h"
 
 OverdriveEffect::OverdriveEffect(ControlManager *ControlManager)
 {

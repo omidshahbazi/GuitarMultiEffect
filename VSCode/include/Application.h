@@ -2,7 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "Effect.h"
+#include "Effects/Effect.h"
 #include "ControlManager.h"
 #include "framework/include/Common.h"
 #include <vector>

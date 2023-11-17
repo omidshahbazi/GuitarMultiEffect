@@ -1,6 +1,6 @@
-#include "TestEffect.h"
+#include "Effects/TestEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Potentiometer.h"
+#include "framework/include/Controls/Potentiometer.h"
 
 TestEffect::TestEffect(ControlManager *ControlManager)
 {

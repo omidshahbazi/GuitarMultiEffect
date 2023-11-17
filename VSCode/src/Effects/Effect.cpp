@@ -1,4 +1,4 @@
-#include "Effect.h"
+#include "Effects/Effect.h"
 #include "framework/include/DSP/IDSP.h"
 
 Effect::Effect(void)

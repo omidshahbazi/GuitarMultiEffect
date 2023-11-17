@@ -1,8 +1,8 @@
 #if 1
 
 #include "Application.h"
-#include "TestEffect.h"
-#include "OverdriveEffect.h"
+#include "Effects/TestEffect.h"
+#include "Effects/OverdriveEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/Task.h"

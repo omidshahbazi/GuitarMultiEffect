@@ -2,7 +2,7 @@
 #ifndef CONTROL_MANAGER_H
 #define CONTROL_MANAGER_H
 
-#include "framework/include/ControlFactory.h"
+#include "framework/include/Controls/ControlFactory.h"
 #include <functional>
 
 class LED;
