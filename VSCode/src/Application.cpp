@@ -1,12 +1,13 @@
 #if 1
 
 #include "Application.h"
+#include "framework/include/Time.h"
+#include "framework/include/Save.h"
+#include "framework/include/Task.h"
 #include "Effects/TestEffect.h"
 #include "Effects/OverdriveEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
-#include "framework/include/Task.h"
-#include "framework/include/Time.h"
 #include "framework/include/BufferUtils.h"
 
 const uint32 SAMPLE_RATE = 44100;
@@ -30,7 +31,16 @@ Application::Application(void)
 	  m_ControlManager(GPIOPins::Pin13)
 {
 	Time::Initialize();
+	Save::Initialize();
 	Log::SetMask(Log::Types::General);
+
+	int32 value = 981256;
+	Save::Write(0, &value);
+
+	int32 valueFetch;
+	Save::Read(0, &valueFetch);
+
+	Log::WriteError("%i %i", value, valueFetch);
 }
 
 void Application::Initialize(void)
