@@ -1,8 +1,7 @@
 #if 1
 
 #include "Application.h"
-// #include "DelayEffect.h"
-// #include "WahEffect.h"
+#include "TestEffect.h"
 #include "OverdriveEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
@@ -55,9 +54,8 @@ void Application::Initialize(void)
 	// ESP32A1SCodec::SetMicrophoneGain(24);
 	ESP32A1SCodec::SetOutputVolume(0);
 
-	// CreateEffect<DelayEffect>(m_Effects, FRAME_LENGTH, SAMPLE_RATE);
-	// CreateEffect<WahWahEffect>(m_Effects, SAMPLE_RATE);
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
+	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
 	Task::Create(
 		[&]()
