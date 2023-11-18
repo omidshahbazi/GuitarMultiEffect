@@ -73,6 +73,8 @@ void Application::Initialize(void)
 			PassthroughTask();
 		},
 		1, 10);
+
+	All the volume settings in Codec
 }
 
 void Application::PassthroughTask(void)
