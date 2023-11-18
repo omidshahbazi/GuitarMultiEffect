@@ -24,8 +24,13 @@ public:
 	Potentiometer *CreatePotentiometer(GPIOPins Pin);
 
 private:
+	void CheckIfGPIOIsUsed(GPIOPins Pin);
+	void MarkGPIOAsUsed(GPIOPins Pin);
+
+private:
 	ControlFactory m_Factory;
 	PushButtonArray *m_PushButtonArray1;
+	bool m_UsedGPIOs[GPIO_NUM_MAX];
 };
 
 #endif

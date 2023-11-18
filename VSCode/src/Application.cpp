@@ -5,11 +5,12 @@
 #include "framework/include/Task.h"
 #include "Effects/TestEffect.h"
 #include "Effects/OverdriveEffect.h"
+#include "Effects/WahEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/BufferUtils.h"
 
-const uint32 SAMPLE_RATE = 44100;
+const uint16 SAMPLE_RATE = 44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -55,7 +56,8 @@ void Application::Initialize(void)
 	// ESP32A1SCodec::SetMicrophoneGain(24);
 	ESP32A1SCodec::SetOutputVolume(0);
 
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
+	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
 	Task::Create(

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef OVERDRIVE_EFFECT_H
-#define OVERDRIVE_EFFECT_H
+#ifndef TEST_EFFECT_H
+#define TEST_EFFECT_H
 
 #include "Effect.h"
 #include "framework/include/DSP/Test.h"
