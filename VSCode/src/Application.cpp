@@ -30,17 +30,10 @@ Application::Application(void)
 	: m_Mute(false),
 	  m_ControlManager(GPIOPins::Pin13)
 {
-	Time::Initialize();
-	Save::Initialize();
 	Log::SetMask(Log::Types::General);
 
-	int32 value = 981256;
-	Save::Write(0, &value);
-
-	int32 valueFetch;
-	Save::Read(0, &valueFetch);
-
-	Log::WriteError("%i %i", value, valueFetch);
+	Time::Initialize();
+	Save::Initialize();
 }
 
 void Application::Initialize(void)
@@ -74,7 +67,7 @@ void Application::Initialize(void)
 		},
 		1, 10);
 
-	All the volume settings in Codec
+	// All the volume settings in Codec
 }
 
 void Application::PassthroughTask(void)
