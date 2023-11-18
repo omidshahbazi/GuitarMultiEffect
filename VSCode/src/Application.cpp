@@ -2,7 +2,6 @@
 
 #include "Application.h"
 #include "framework/include/Time.h"
-#include "framework/include/Save.h"
 #include "framework/include/Task.h"
 #include "Effects/TestEffect.h"
 #include "Effects/OverdriveEffect.h"
@@ -33,7 +32,6 @@ Application::Application(void)
 	Log::SetMask(Log::Types::General);
 
 	Time::Initialize();
-	Save::Initialize();
 }
 
 void Application::Initialize(void)
