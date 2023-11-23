@@ -9,6 +9,7 @@
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/BufferUtils.h"
+#include "framework/include/Controls/Potentiometer.h"
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
@@ -45,19 +46,16 @@ void Application::Initialize(void)
 	configs.BitsPerSample = ESP32A1SCodec::BitsPerSamples::BPS32;
 	configs.BufferCount = 3;
 	configs.BufferLength = 300;
-	configs.InputMode = ESP32A1SCodec::InputModes::LineL;
+	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
 	configs.OutputMode = ESP32A1SCodec::OutputModes::SpeakerL;
 	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
 	configs.EnableNoiseGate = true;
 	configs.EnableAutomaticLevelControl = false;
 
 	ESP32A1SCodec::Initialize(&configs);
-	// ESP32A1SCodec::OptimizeConversion(4);
-	// ESP32A1SCodec::SetMicrophoneGain(24);
-	ESP32A1SCodec::SetOutputVolume(0);
 
 	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
 	Task::Create(
@@ -67,8 +65,17 @@ void Application::Initialize(void)
 		},
 		1, 10);
 
-	// TODO: All the volume settings in Codec
-	//TODO: build and run on the device with the changes, then push
+	// TODO: Tune the values
+	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
+	// volumePot->SetOnChangedListener(
+	// 	[&](float value)
+	// 	{
+	// 		ESP32A1SCodec::SetMicrophoneGain(Math::Lerp(0.0F, 24, value));
+	// 		ESP32A1SCodec::SetInputToMixerGain(Math::Lerp(-15.0F, 6, value));
+	// 		ESP32A1SCodec::SetInputVolume(Math::Lerp(-96.0F, 0, value));
+	// 		ESP32A1SCodec::SetDigitalVolume(Math::Lerp(-96.0F, 0, value));
+	// 		ESP32A1SCodec::SetOutputVolume(Math::Lerp(-45.0F, 4.5F, value));
+	// 	});
 }
 
 void Application::PassthroughTask(void)
