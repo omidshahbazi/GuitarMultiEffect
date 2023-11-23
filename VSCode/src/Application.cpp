@@ -68,7 +68,7 @@ void Application::Initialize(void)
 		1, 10);
 
 	// TODO: All the volume settings in Codec
-	build and run on the device with the changes, then push
+	//TODO: build and run on the device with the changes, then push
 }
 
 void Application::PassthroughTask(void)
