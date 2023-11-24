@@ -31,9 +31,13 @@ Application::Application(void)
 	: m_Mute(false),
 	  m_ControlManager(GPIOPins::Pin13)
 {
+#if __PLATFORMIO_BUILD_DEBUG__
 	Log::SetMask(Log::Types::General);
+#endif
 
 	Time::Initialize();
+
+	Debug::Initialize();
 }
 
 void Application::Initialize(void)
@@ -54,9 +58,9 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	//  CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
 	Task::Create(
 		[&]()
@@ -85,9 +89,11 @@ void Application::PassthroughTask(void)
 	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
 	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
 
-	// double sumL = 0;
-	// uint16 count = 0;
-	// float nextTime = 0;
+	double sumL = 0;
+	uint16 count = 0;
+	float nextTime = 0;
+
+	Debug::AddGraph("Test", 500, "test Label", sumL);
 
 	while (true)
 	{
@@ -103,20 +109,20 @@ void Application::PassthroughTask(void)
 			{
 				CONVERT_TO_24_AND_NORMALIZED_DOUBLE(processBufferL, i, ioBuffer, 0);
 
-				// sumL += processBufferL[i];
+				sumL += processBufferL[i];
 			}
 
-			// count += FRAME_LENGTH;
+			count += FRAME_LENGTH;
 
-			// if (nextTime < Time::Now())
-			// {
-			// 	nextTime += 1;
+			if (nextTime < Time::Now())
+			{
+				nextTime += 1;
 
-			// 	Log::WriteError("Avg: %f", sumL / count);
+				Log::WriteError("Avg: %f", sumL / count);
 
-			// 	sumL = 0;
-			// 	count = 0;
-			// }
+				sumL = 0;
+				count = 0;
+			}
 		}
 
 		for (Effect *effect : m_Effects)
@@ -126,6 +132,8 @@ void Application::PassthroughTask(void)
 			SCALE_TO_24_AND_SATURATED_32(processBufferL, i, ioBuffer, 0);
 
 		ESP32A1SCodec::Write(ioBuffer, SAMPLE_COUNT, 20);
+
+		Debug::Plot();
 	}
 
 	Memory::Deallocate(processBufferL);
