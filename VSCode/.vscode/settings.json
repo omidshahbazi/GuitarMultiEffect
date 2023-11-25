@@ -52,7 +52,10 @@
 		"common.h": "c",
 		"iwave": "c",
 		"chrono": "cpp",
-		"ratio": "cpp"
+		"ratio": "cpp",
+		"condition_variable": "cpp",
+		"mutex": "cpp",
+		"thread": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "disabled"
 }
