@@ -56,7 +56,7 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 

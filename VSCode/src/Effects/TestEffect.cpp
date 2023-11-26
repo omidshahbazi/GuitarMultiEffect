@@ -2,7 +2,8 @@
 #include "ControlManager.h"
 #include "framework/include/Controls/Potentiometer.h"
 
-TestEffect::TestEffect(ControlManager *ControlManager)
+TestEffect::TestEffect(ControlManager *ControlManager, uint32 SampleRate)
+	: m_Test(SampleRate)
 {
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DrivePot->SetOnChangedListener(
