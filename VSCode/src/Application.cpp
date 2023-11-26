@@ -9,7 +9,6 @@
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/BufferUtils.h"
-#include "framework/include/Controls/Potentiometer.h"
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
@@ -56,20 +55,20 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
-	Sustain
-		Reverb
-			Delya(blackstomp)
+	// TODO: Sustain
+	// TODO: Reverb
+	// TODO: Delya(blackstomp)
 
-				Task::Create(
-					[&]()
-					{
-						PassthroughTask();
-					},
-					1, 10);
+	Task::Create(
+		[&]()
+		{
+			PassthroughTask();
+		},
+		1, 10);
 
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
