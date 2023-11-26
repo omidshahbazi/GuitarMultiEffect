@@ -60,12 +60,16 @@ void Application::Initialize(void)
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
-	Task::Create(
-		[&]()
-		{
-			PassthroughTask();
-		},
-		1, 10);
+	Sustain
+		Reverb
+			Delya(blackstomp)
+
+				Task::Create(
+					[&]()
+					{
+						PassthroughTask();
+					},
+					1, 10);
 
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
