@@ -9,6 +9,7 @@
 #include "Effects/OverdriveEffect.h"
 #include "Effects/WahEffect.h"
 #include "Effects/AutoWahEffect.h"
+#include "Effects/TremoloEffect.h"
 #include "Effects/TestEffect.h"
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
@@ -59,6 +60,7 @@ void Application::Initialize(void)
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
 
