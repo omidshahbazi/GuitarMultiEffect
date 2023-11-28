@@ -3,12 +3,13 @@
 #include "Application.h"
 #include "framework/include/Time.h"
 #include "framework/include/Task.h"
-#include "Effects/TestEffect.h"
-#include "Effects/OverdriveEffect.h"
-#include "Effects/WahEffect.h"
 #include "framework/include/Memory.h"
 #include "framework/include/ESP32A1SCodec.h"
 #include "framework/include/BufferUtils.h"
+#include "Effects/OverdriveEffect.h"
+#include "Effects/WahEffect.h"
+#include "Effects/AutoWahEffect.h"
+#include "Effects/TestEffect.h"
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
@@ -55,9 +56,11 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+
 	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	//  CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 
 	// TODO: Sustain
 	// TODO: Reverb
