@@ -56,11 +56,11 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
 
 	// TODO: Sustain
 	// TODO: Reverb
