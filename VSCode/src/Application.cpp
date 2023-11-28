@@ -61,7 +61,7 @@ void Application::Initialize(void)
 
 	// TODO: Sustain
 	// TODO: Reverb
-	// TODO: Delya(blackstomp)
+	// TODO: Delay(blackstomp)
 
 	Task::Create(
 		[&]()
