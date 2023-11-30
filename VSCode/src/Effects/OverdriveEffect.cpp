@@ -14,7 +14,7 @@ OverdriveEffect::OverdriveEffect(ControlManager *ControlManager)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Overdrive.SetDrive(Math::Lerp(0, 100, value));
+			m_Overdrive.SetDrive(value);
 		});
 }
 
