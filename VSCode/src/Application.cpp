@@ -59,15 +59,20 @@ void Application::Initialize(void)
 	ESP32A1SCodec::Initialize(&configs);
 
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
 
+	// TODO: Fix NoiseGate and add NoiseGateEfect
+	// TODO: Test NoiseGate with Overdrive
+	// TODO: Add ToneControl Effect
+	// TODO: Test Reverb
 	// TODO: Sustain
-	// TODO: Reverb
-	// TODO: Delay(blackstomp)
+	// TODO: Fix Wah and AutoWah
+	// TODO: Look for other effects
 
 	Task::Create(
 		[&]()
