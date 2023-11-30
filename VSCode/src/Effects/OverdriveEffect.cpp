@@ -4,12 +4,6 @@
 
 OverdriveEffect::OverdriveEffect(ControlManager *ControlManager)
 {
-	ControlManager->BindToPushButton(0,
-									 [&]()
-									 {
-										 ToggleEnabled();
-									 });
-
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
