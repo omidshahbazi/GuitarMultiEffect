@@ -64,7 +64,7 @@ void Application::Initialize(void)
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// TODO: Fix NoiseGate and add NoiseGateEfect
 	// TODO: Test NoiseGate with Overdrive

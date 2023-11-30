@@ -11,7 +11,7 @@ class Potentiometer;
 class TestEffect : public Effect
 {
 public:
-	TestEffect(ControlManager *ControlManager);
+	TestEffect(ControlManager *ControlManager, uint32 SampleRate);
 
 protected:
 	IDSP *GetDSP(void);
