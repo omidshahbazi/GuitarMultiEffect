@@ -11,6 +11,7 @@
 #include "Effects/AutoWahEffect.h"
 #include "Effects/TremoloEffect.h"
 #include "Effects/NoiseGateEffect.h"
+#include "Effects/ReverbEffect.h"
 #include "Effects/TestEffect.h"
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
@@ -40,8 +41,14 @@ Application::Application(void)
 	Time::Initialize();
 }
 
+int32 *ioBuffer;
+double *processBufferL;
+
 void Application::Initialize(void)
 {
+	ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
+	processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
+
 	Log::WriteInfo("Initializing");
 
 	ESP32A1SCodec::Configs configs;
@@ -62,27 +69,28 @@ void Application::Initialize(void)
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	//  CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	//  CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	//  CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
-	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
+	// TODO: Test Reverb
 	// TODO: Tune NoiseGateEfect Attack and Release
 	// TODO: Test NoiseGate with Overdrive
-	// TODO: Add ToneControl Effect
-	// TODO: Test Reverb
-	// TODO: Sustain
+	// TODO: Sustain????
 	// TODO: Fix Wah and AutoWah
 	// TODO: Look for other effects
+
+	Task::Delay(10);
 
 	Task::Create(
 		[&]()
 		{
 			PassthroughTask();
 		},
-		1, 10);
+		"PassthroughTask", 1, 10, 102400);
 
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
@@ -95,14 +103,13 @@ void Application::Initialize(void)
 	// 		ESP32A1SCodec::SetDigitalVolume(Math::Lerp(-96.0F, 0, value));
 	// 		ESP32A1SCodec::SetOutputVolume(Math::Lerp(-45.0F, 4.5F, value));
 	// 	});
+
+	ESP32A1SCodec::PrintSystemStatistics();
 }
 
 void Application::PassthroughTask(void)
 {
 	Log::WriteInfo("Starting Passthrough Task");
-
-	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
-	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
 
 	// double sumL = 0;
 	// uint16 count = 0;
