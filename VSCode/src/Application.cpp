@@ -14,7 +14,7 @@
 #include "Effects/ReverbEffect.h"
 #include "Effects/TestEffect.h"
 
-const uint16 SAMPLE_RATE = SAMPLE_RATE_15750;
+const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -62,19 +62,19 @@ void Application::Initialize(void)
 
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+
 	//  CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// TODO: Test Reverb
 	// TODO: Tune NoiseGateEfect Attack and Release
 	// TODO: Test NoiseGate with Overdrive
-	// TODO: Sustain????
+	// TODO: Sustain
 	// TODO: Fix Wah and AutoWah
+	// TODO: Phaser
 	// TODO: Look for other effects
 
 	ESP32A1SCodec::PrintSystemStatistics();
