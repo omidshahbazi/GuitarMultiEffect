@@ -14,7 +14,7 @@
 #include "Effects/ReverbEffect.h"
 #include "Effects/TestEffect.h"
 
-const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
+const uint16 SAMPLE_RATE = SAMPLE_RATE_15750;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -41,14 +41,8 @@ Application::Application(void)
 	Time::Initialize();
 }
 
-int32 *ioBuffer;
-double *processBufferL;
-
 void Application::Initialize(void)
 {
-	ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
-	processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
-
 	Log::WriteInfo("Initializing");
 
 	ESP32A1SCodec::Configs configs;
@@ -83,6 +77,8 @@ void Application::Initialize(void)
 	// TODO: Fix Wah and AutoWah
 	// TODO: Look for other effects
 
+	ESP32A1SCodec::PrintSystemStatistics();
+
 	Task::Delay(10);
 
 	Task::Create(
@@ -103,13 +99,14 @@ void Application::Initialize(void)
 	// 		ESP32A1SCodec::SetDigitalVolume(Math::Lerp(-96.0F, 0, value));
 	// 		ESP32A1SCodec::SetOutputVolume(Math::Lerp(-45.0F, 4.5F, value));
 	// 	});
-
-	ESP32A1SCodec::PrintSystemStatistics();
 }
 
 void Application::PassthroughTask(void)
 {
 	Log::WriteInfo("Starting Passthrough Task");
+
+	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
+	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
 
 	// double sumL = 0;
 	// uint16 count = 0;
