@@ -12,6 +12,7 @@
 #include "Effects/TremoloEffect.h"
 #include "Effects/NoiseGateEffect.h"
 #include "Effects/ReverbEffect.h"
+#include "Effects/ChorusEffect.h"
 #include "Effects/TestEffect.h"
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
@@ -21,7 +22,7 @@ const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 template <typename T, typename... ArgsT>
 T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 {
-	T *effect = Memory::Allocate<T>();
+	T *effect = Memory::Allocate<T>(1, true);
 
 	new (effect) T(Args...);
 
@@ -60,11 +61,12 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	//  CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	//  CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
@@ -72,10 +74,12 @@ void Application::Initialize(void)
 
 	// TODO: Tune NoiseGateEfect Attack and Release
 	// TODO: Test NoiseGate with Overdrive
-	// TODO: Sustain
 	// TODO: Fix Wah and AutoWah
-	// TODO: Phaser
 	// TODO: Look for other effects
+	// 	Sustain
+	//	Chorus
+	//	Phaser
+	//	Compressor
 
 	ESP32A1SCodec::PrintSystemStatistics();
 
@@ -86,7 +90,7 @@ void Application::Initialize(void)
 		{
 			PassthroughTask();
 		},
-		"PassthroughTask", 1, 10, 102400);
+		24576, "PassthroughTask", 1, 10);
 
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
