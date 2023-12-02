@@ -61,14 +61,14 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE / 2);
 	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	//  CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	//  CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
@@ -86,11 +86,11 @@ void Application::Initialize(void)
 	Task::Delay(10);
 
 	Task::Create(
-		[&]()
+		[this]()
 		{
 			PassthroughTask();
 		},
-		24576, "PassthroughTask", 1, 10);
+		4096, "PassthroughTask", 1, 10);
 
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
@@ -111,6 +111,8 @@ void Application::PassthroughTask(void)
 
 	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
 	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
+
+	Task::Delay(10);
 
 	// double sumL = 0;
 	// uint16 count = 0;

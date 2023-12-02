@@ -8,7 +8,7 @@ ControlManager::ControlManager(GPIOPins PushButtonArray1Pin)
 	  m_UsedGPIOs()
 {
 	CheckIfGPIOIsUsed(PushButtonArray1Pin);
-	//m_PushButtonArray1 = m_Factory.Create<PushButtonArray>(PushButtonArray1Pin, 1);
+	 m_PushButtonArray1 = m_Factory.Create<PushButtonArray>(PushButtonArray1Pin, 1);
 }
 
 LED *ControlManager::CreateLED(GPIOPins Pin)
