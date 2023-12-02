@@ -9,7 +9,7 @@ ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			// m_Chorus.SetFrequency(Math::Lerp(200, 20000, value));
+			m_Chorus.SetDelayTime(value);
 		});
 }
 

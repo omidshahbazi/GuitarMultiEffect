@@ -15,7 +15,7 @@
 #include "Effects/ChorusEffect.h"
 #include "Effects/TestEffect.h"
 
-const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
+const uint16 SAMPLE_RATE = SAMPLE_RATE_15750;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -63,7 +63,7 @@ void Application::Initialize(void)
 
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE / 2);
+	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -72,14 +72,15 @@ void Application::Initialize(void)
 
 	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// TODO: Tune NoiseGateEfect Attack and Release
-	// TODO: Test NoiseGate with Overdrive
-	// TODO: Fix Wah and AutoWah
 	// TODO: Look for other effects
-	// 	Sustain
-	//	Chorus
-	//	Phaser
-	//	Compressor
+	// TODO: Tune NoiseGateEfect Attack and Release
+	// TODO: Test NoiseGateEfect with Overdrive
+	// TODO: Tune ChorusEffect
+	// TODO: Fix Wah and AutoWah
+	// Sustain
+	// Phaser
+	// Compressor
+	// Distortion
 
 	ESP32A1SCodec::PrintSystemStatistics();
 
