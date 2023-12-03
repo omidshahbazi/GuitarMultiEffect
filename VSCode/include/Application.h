@@ -1,3 +1,5 @@
+#define SINE_WAVE_PLAYER
+
 #pragma once
 #ifndef APPLICATION_H
 #define APPLICATION_H
@@ -18,7 +20,11 @@ public:
 	void Initialize(void);
 
 private:
+#ifdef SINE_WAVE_PLAYER
+	void SineWavePlayerTask(void);
+#else
 	void PassthroughTask(void);
+#endif
 
 private:
 	bool m_Mute;
