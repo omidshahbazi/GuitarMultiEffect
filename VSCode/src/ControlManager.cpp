@@ -8,7 +8,7 @@ ControlManager::ControlManager(GPIOPins PushButtonArray1Pin)
 	  m_UsedGPIOs()
 {
 	CheckIfGPIOIsUsed(PushButtonArray1Pin);
-	 m_PushButtonArray1 = m_Factory.Create<PushButtonArray>(PushButtonArray1Pin, 1);
+	m_PushButtonArray1 = m_Factory.Create<PushButtonArray>(PushButtonArray1Pin, 1);
 }
 
 LED *ControlManager::CreateLED(GPIOPins Pin)
@@ -37,7 +37,7 @@ Potentiometer *ControlManager::CreatePotentiometer(GPIOPins Pin)
 
 void ControlManager::CheckIfGPIOIsUsed(GPIOPins Pin)
 {
-	ASSERT(!m_UsedGPIOs[(uint32)Pin], "ControlManager", "GPIOPin%i is already in use", (uint32)Pin);
+	ASSERT(!m_UsedGPIOs[(uint32)Pin], "GPIOPin%i is already in use", (uint32)Pin);
 }
 
 void ControlManager::MarkGPIOAsUsed(GPIOPins Pin)

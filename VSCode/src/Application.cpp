@@ -72,7 +72,7 @@ void Application::Initialize(void)
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// TODO: Test NoiseGateEfect with Overdrive
 	// TODO: Tune ChorusEffect
@@ -125,7 +125,7 @@ void Application::SineWavePlayerTask(void)
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
 	sineWave.SetAmplitude(8000);
-	sineWave.SetFrequency(NOTE_G5);
+	sineWave.SetFrequency(700);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
 	uint32 sampleCount = bufferLen * 2;
