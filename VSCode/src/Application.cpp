@@ -124,7 +124,7 @@ void Application::SineWavePlayerTask(void)
 	SineWaveGenerator<int32> sineWave;
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
-	sineWave.SetAmplitude(8000);
+	sineWave.SetAmplitude(1);
 	sineWave.SetFrequency(700);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
@@ -133,16 +133,33 @@ void Application::SineWavePlayerTask(void)
 	int32 *outBuffer = Memory::Allocate<int32>(sampleCount);
 	double *processBufferL = Memory::Allocate<double>(bufferLen);
 
-	while (true)
 	{
+		double *inputBufferL = Memory::Allocate<double>(bufferLen);
+
 		for (uint16 i = 0; i < bufferLen; ++i)
-			CONVERT_TO_24_AND_NORMALIZED_DOUBLE(processBufferL, i, sineWave.GetBuffer(), 0);
+			CONVERT_INT32_TO_NORMALIZED_DOUBLE(sineWave.GetBuffer(), false, 0, inputBufferL, i);
+
+		Memory::Copy(inputBufferL, processBufferL, bufferLen);
 
 		for (Effect *effect : m_Effects)
 			effect->Apply(processBufferL, bufferLen);
 
 		for (uint16 i = 0; i < bufferLen; ++i)
-			SCALE_TO_24_AND_SATURATED_32(processBufferL, i, outBuffer, 0);
+			printf("%0.10f#%0.10f\n", inputBufferL[i], processBufferL[i]);
+
+		Memory::Deallocate(inputBufferL);
+	}
+
+	while (true)
+	{
+		for (uint16 i = 0; i < bufferLen; ++i)
+			CONVERT_INT32_TO_NORMALIZED_DOUBLE(sineWave.GetBuffer(), false, 0, processBufferL, i);
+
+		for (Effect *effect : m_Effects)
+			effect->Apply(processBufferL, bufferLen);
+
+		for (uint16 i = 0; i < bufferLen; ++i)
+			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 0);
 
 		ESP32A1SCodec::Write(outBuffer, sampleCount, 20);
 	}
@@ -178,7 +195,7 @@ void Application::PassthroughTask(void)
 		{
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				CONVERT_TO_24_AND_NORMALIZED_DOUBLE(processBufferL, i, ioBuffer, 0);
+				CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
 
 				// sumL += processBufferL[i];
 			}
@@ -200,7 +217,7 @@ void Application::PassthroughTask(void)
 			effect->Apply(processBufferL, FRAME_LENGTH);
 
 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-			SCALE_TO_24_AND_SATURATED_32(processBufferL, i, ioBuffer, 0);
+			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 0);
 
 		ESP32A1SCodec::Write(ioBuffer, SAMPLE_COUNT, 20);
 	}

@@ -1,4 +1,4 @@
-#define SINE_WAVE_PLAYER
+// #define SINE_WAVE_PLAYER
 
 #pragma once
 #ifndef APPLICATION_H
