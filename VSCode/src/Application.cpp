@@ -72,7 +72,7 @@ void Application::Initialize(void)
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// TODO: Test NoiseGateEfect with Overdrive
 	// TODO: Tune ChorusEffect

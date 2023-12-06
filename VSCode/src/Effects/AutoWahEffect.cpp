@@ -3,6 +3,7 @@
 #include "framework/include/Controls/Potentiometer.h"
 
 AutoWahEffect::AutoWahEffect(ControlManager *ControlManager, uint32 SampleRate)
+	: m_AutoWah(SampleRate)
 {
 }
 
