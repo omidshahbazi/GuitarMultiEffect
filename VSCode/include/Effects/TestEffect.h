@@ -3,7 +3,7 @@
 #define TEST_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/DSP/Test.h"
+#include "framework/include/DSP/Phaser.h"
 
 class ControlManager;
 class Potentiometer;
@@ -17,7 +17,7 @@ protected:
 	IDSP *GetDSP(void);
 
 private:
-	Test m_Test;
+	Phaser m_Test;
 	Potentiometer *m_DrivePot;
 };
 

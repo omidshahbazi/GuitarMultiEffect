@@ -9,7 +9,7 @@ TestEffect::TestEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Test.SetValue(value);
+			// m_Test.SetValue(value);
 		});
 }
 

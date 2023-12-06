@@ -11,13 +11,15 @@
 #include "Effects/NoiseGateEffect.h"
 #include "Effects/ReverbEffect.h"
 #include "Effects/ChorusEffect.h"
+#include "Effects/SustainEffect.h"
+#include "Effects/CompressorEffect.h"
 #include "Effects/TestEffect.h"
 
 #ifdef SINE_WAVE_PLAYER
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
-const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
+const uint16 SAMPLE_RATE = SAMPLE_RATE_22050;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -68,20 +70,19 @@ void Application::Initialize(void)
 	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
+	// CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
 	// TODO: Test NoiseGateEfect with Overdrive
 	// TODO: Tune ChorusEffect
 	// TODO: Fix Wah and AutoWah
 	// TODO: Look for other effects
-	// Sustain
 	// Phaser
-	// Compressor
-	// Distortion
 
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
