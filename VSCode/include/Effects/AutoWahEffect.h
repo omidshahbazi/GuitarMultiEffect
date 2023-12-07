@@ -3,7 +3,7 @@
 #define AUTO_WAH_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/DSP/AutoWah.h"
+#include <framework/include/DSP/AutoWah.h>
 
 class ControlManager;
 

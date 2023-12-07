@@ -55,7 +55,8 @@
 		"ratio": "cpp",
 		"condition_variable": "cpp",
 		"mutex": "cpp",
-		"thread": "cpp"
+		"thread": "cpp",
+		"i2s.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "disabled"
 }

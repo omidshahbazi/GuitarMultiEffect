@@ -1,6 +1,6 @@
 #include "Effects/WahEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/Potentiometer.h>
 
 WahEffect::WahEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Wah(SampleRate)

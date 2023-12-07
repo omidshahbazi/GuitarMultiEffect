@@ -1,6 +1,6 @@
 #include "Effects/ReverbEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/Potentiometer.h>
 
 ReverbEffect::ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Reverb(SampleRate)

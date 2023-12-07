@@ -1,6 +1,6 @@
 #include "Effects/TremoloEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/Potentiometer.h>
 
 TremoloEffect::TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Tremolo(SampleRate)

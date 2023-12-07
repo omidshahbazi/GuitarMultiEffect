@@ -3,7 +3,7 @@
 #define TREMOLO_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/DSP/Tremolo.h"
+#include <framework/include/DSP/Tremolo.h>
 
 class ControlManager;
 class Potentiometer;

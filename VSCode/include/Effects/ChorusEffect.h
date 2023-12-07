@@ -3,7 +3,7 @@
 #define CHORUS_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/DSP/Chorus.h"
+#include <framework/include/DSP/Chorus.h>
 
 class ControlManager;
 class Potentiometer;

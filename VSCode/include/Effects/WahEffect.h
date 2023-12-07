@@ -3,7 +3,7 @@
 #define WAH_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/DSP/Wah.h"
+#include <framework/include/DSP/Wah.h>
 
 class ControlManager;
 class Potentiometer;

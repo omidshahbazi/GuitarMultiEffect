@@ -1,6 +1,6 @@
 #include "Effects/TestEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/Potentiometer.h>
 
 TestEffect::TestEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Test(SampleRate)

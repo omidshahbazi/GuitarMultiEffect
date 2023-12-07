@@ -1,7 +1,7 @@
 #include "ControlManager.h"
-#include "framework/include/Controls/LED.h"
-#include "framework/include/Controls/PushButtonArray.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/LED.h>
+#include <framework/include/Controls/PushButtonArray.h>
+#include <framework/include/Controls/Potentiometer.h>
 
 ControlManager::ControlManager(GPIOPins PushButtonArray1Pin)
 	: m_PushButtonArray1(nullptr),

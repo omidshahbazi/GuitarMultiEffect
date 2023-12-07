@@ -3,7 +3,7 @@
 #define SUSTAIN_EFFECT_H
 
 #include "Effect.h"
-#include "framework/include/DSP/Sustain.h"
+#include <framework/include/DSP/Sustain.h>
 
 class ControlManager;
 class Potentiometer;

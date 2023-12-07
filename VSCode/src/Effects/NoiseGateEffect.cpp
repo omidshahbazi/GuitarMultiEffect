@@ -1,6 +1,6 @@
 #include "Effects/NoiseGateEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/Potentiometer.h>
 
 NoiseGateEffect::NoiseGateEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_NoiseGate(SampleRate)

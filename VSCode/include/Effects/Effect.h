@@ -2,7 +2,7 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
-#include "framework/include/Common.h"
+#include <framework/include/Common.h>
 
 class IDSP;
 

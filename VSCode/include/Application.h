@@ -6,7 +6,7 @@
 
 #include "Effects/Effect.h"
 #include "ControlManager.h"
-#include "framework/include/Common.h"
+#include <framework/include/Common.h>
 #include <vector>
 
 class Application

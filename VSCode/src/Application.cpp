@@ -1,9 +1,9 @@
 #include "Application.h"
-#include "framework/include/Time.h"
-#include "framework/include/Task.h"
-#include "framework/include/Memory.h"
-#include "framework/include/ESP32A1SCodec.h"
-#include "framework/include/BufferUtils.h"
+#include <framework/include/Time.h>
+#include <framework/include/Task.h>
+#include <framework/include/Memory.h>
+#include <framework/include/ESP32A1SCodec.h>
+#include <framework/include/BufferUtils.h>
 #include "Effects/OverdriveEffect.h"
 #include "Effects/WahEffect.h"
 #include "Effects/AutoWahEffect.h"
@@ -18,6 +18,9 @@
 #ifdef SINE_WAVE_PLAYER
 #include <framework/include/SineWaveGenerator.h>
 #endif
+
+#include "Bluetooth.h"
+#include <BluetoothSerial.h>
 
 const uint16 SAMPLE_RATE = SAMPLE_RATE_22050;
 const uint16 SAMPLE_COUNT = 64;
@@ -64,6 +67,8 @@ void Application::Initialize(void)
 	configs.EnableAutomaticLevelControl = false;
 
 	ESP32A1SCodec::Initialize(&configs);
+
+	Bluetooth::Run();
 
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);

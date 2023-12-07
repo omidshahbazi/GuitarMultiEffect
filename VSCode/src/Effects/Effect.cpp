@@ -1,5 +1,5 @@
 #include "Effects/Effect.h"
-#include "framework/include/DSP/IDSP.h"
+#include <framework/include/DSP/IDSP.h>
 
 Effect::Effect(void)
 	: m_Enabled(true)

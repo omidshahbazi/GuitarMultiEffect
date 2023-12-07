@@ -1,6 +1,6 @@
 #include "Effects/ChorusEffect.h"
 #include "ControlManager.h"
-#include "framework/include/Controls/Potentiometer.h"
+#include <framework/include/Controls/Potentiometer.h>
 
 ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Chorus(SampleRate)
