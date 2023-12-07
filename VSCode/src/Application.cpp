@@ -19,9 +19,6 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
-#include "Bluetooth.h"
-#include <BluetoothSerial.h>
-
 const uint16 SAMPLE_RATE = SAMPLE_RATE_22050;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
