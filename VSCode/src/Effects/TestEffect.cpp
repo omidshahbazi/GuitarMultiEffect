@@ -1,3 +1,5 @@
+#ifdef TEST_EFFECT
+
 #include "Effects/TestEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -17,3 +19,5 @@ IDSP *TestEffect::GetDSP(void)
 {
 	return &m_Test;
 }
+
+#endif

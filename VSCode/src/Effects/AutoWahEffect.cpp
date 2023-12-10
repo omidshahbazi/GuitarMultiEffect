@@ -1,3 +1,5 @@
+#ifdef AUTO_WAH_EFFECT
+
 #include "Effects/AutoWahEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -11,3 +13,5 @@ IDSP *AutoWahEffect::GetDSP(void)
 {
 	return &m_AutoWah;
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef CHORUS_EFFECT
+
 #pragma once
 #ifndef CHORUS_EFFECT_H
 #define CHORUS_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Chorus m_Chorus;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

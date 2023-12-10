@@ -1,3 +1,5 @@
+#ifdef OVERDRIVE_EFFECT
+
 #include "Effects/OverdriveEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -16,3 +18,5 @@ IDSP *OverdriveEffect::GetDSP(void)
 {
 	return &m_Overdrive;
 }
+
+#endif

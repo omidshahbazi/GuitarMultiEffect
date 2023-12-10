@@ -1,3 +1,5 @@
+#ifdef CHORUS_EFFECT
+
 #include "Effects/ChorusEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -17,3 +19,5 @@ IDSP *ChorusEffect::GetDSP(void)
 {
 	return &m_Chorus;
 }
+
+#endif

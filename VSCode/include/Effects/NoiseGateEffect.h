@@ -1,3 +1,5 @@
+#ifdef NOISE_GATE_EFFECT 
+
 #pragma once
 #ifndef NOISE_GATE_EFFECT_H
 #define NOISE_GATE_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	NoiseGate m_NoiseGate;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

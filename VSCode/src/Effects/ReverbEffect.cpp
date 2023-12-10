@@ -1,3 +1,5 @@
+#ifdef REVERB_EFFECT
+
 #include "Effects/ReverbEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -17,3 +19,5 @@ IDSP *ReverbEffect::GetDSP(void)
 {
 	return &m_Reverb;
 }
+
+#endif

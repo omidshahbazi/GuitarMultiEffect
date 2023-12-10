@@ -1,3 +1,5 @@
+#ifdef WAH_EFFECT
+
 #pragma once
 #ifndef WAH_EFFECT_H
 #define WAH_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Wah m_Wah;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

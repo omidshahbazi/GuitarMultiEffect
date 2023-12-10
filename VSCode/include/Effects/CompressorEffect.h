@@ -1,3 +1,5 @@
+#ifdef COMPRESSOR_EFFECT
+
 #pragma once
 #ifndef COMPRESSOR_EFFECT_H
 #define COMPRESSOR_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Compressor m_Compressor;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

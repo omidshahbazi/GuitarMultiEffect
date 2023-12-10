@@ -65,8 +65,6 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	Bluetooth::Run();
-
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);

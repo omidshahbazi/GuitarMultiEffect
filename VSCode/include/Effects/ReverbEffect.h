@@ -1,3 +1,5 @@
+#ifdef REVERB_EFFECT
+
 #pragma once
 #ifndef REVERB_EFFECT_H
 #define REVERB_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Reverb m_Reverb;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

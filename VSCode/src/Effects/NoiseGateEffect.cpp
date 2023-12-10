@@ -1,3 +1,5 @@
+#ifdef NOISE_GATE_EFFECT
+
 #include "Effects/NoiseGateEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -17,3 +19,5 @@ IDSP *NoiseGateEffect::GetDSP(void)
 {
 	return &m_NoiseGate;
 }
+
+#endif

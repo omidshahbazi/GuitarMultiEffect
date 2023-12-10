@@ -1,3 +1,5 @@
+#ifdef COMPRESSOR_EFFECT
+
 #include "Effects/CompressorEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -18,3 +20,5 @@ IDSP *CompressorEffect::GetDSP(void)
 {
 	return &m_Compressor;
 }
+
+#endif

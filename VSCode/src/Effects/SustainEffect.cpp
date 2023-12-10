@@ -1,3 +1,5 @@
+#ifdef SUSTAIN_EFFECT
+
 #include "Effects/SustainEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -18,3 +20,5 @@ IDSP *SustainEffect::GetDSP(void)
 {
 	return &m_Sustain;
 }
+
+#endif

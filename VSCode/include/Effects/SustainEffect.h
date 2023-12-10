@@ -1,3 +1,5 @@
+#ifdef SUSTAIN_EFFECT 
+
 #pragma once
 #ifndef SUSTAIN_EFFECT_H
 #define SUSTAIN_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Sustain m_Sustain;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

@@ -1,3 +1,5 @@
+#ifdef TREMOLO_EFFECT
+
 #include "Effects/TremoloEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
@@ -24,3 +26,5 @@ IDSP *TremoloEffect::GetDSP(void)
 {
 	return &m_Tremolo;
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef AUTO_WAH_EFFECT
+
 #pragma once
 #ifndef AUTO_WAH_EFFECT_H
 #define AUTO_WAH_EFFECT_H
@@ -18,5 +20,7 @@ protected:
 private:
 	AutoWah m_AutoWah;
 };
+
+#endif
 
 #endif

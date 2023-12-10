@@ -1,3 +1,5 @@
+#ifdef TREMOLO_EFFECT 
+
 #pragma once
 #ifndef TREMOLO_EFFECT_H
 #define TREMOLO_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Tremolo m_Tremolo;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

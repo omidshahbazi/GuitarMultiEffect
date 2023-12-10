@@ -1,3 +1,5 @@
+#ifdef OVERDRIVE_EFFECT 
+
 #pragma once
 #ifndef OVERDRIVE_EFFECT_H
 #define OVERDRIVE_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Overdrive m_Overdrive;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif

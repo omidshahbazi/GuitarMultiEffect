@@ -1,3 +1,5 @@
+#ifdef TEST_EFFECT 
+
 #pragma once
 #ifndef TEST_EFFECT_H
 #define TEST_EFFECT_H
@@ -20,5 +22,7 @@ private:
 	Test m_Test;
 	Potentiometer *m_DrivePot;
 };
+
+#endif
 
 #endif
