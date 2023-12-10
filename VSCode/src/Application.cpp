@@ -69,8 +69,8 @@ void Application::Initialize(void)
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
 	// CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
 	// CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
 	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
