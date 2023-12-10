@@ -65,6 +65,8 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
+	// TODO: To be able to tune values, bind a button to Log enable/disable, so I can tune the values, then turn-on the logs and see the value
+
 	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
