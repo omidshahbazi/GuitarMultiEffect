@@ -70,17 +70,14 @@ void Application::Initialize(void)
 	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
+	// CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
+	// CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
+	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
+	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
 
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 
-	// TODO: Test NoiseGateEfect with Overdrive
-	// TODO: Tune ChorusEffect
-	// TODO: Fix Wah and AutoWah
 	// TODO: Look for other effects
 	// Phaser
 
