@@ -11,7 +11,21 @@ ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Chorus.SetDelayTime(value);
+			m_Chorus.SetDepth(value);
+		});
+
+	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
+	m_DrivePot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Chorus.SetRate(value);
+		});
+
+	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin34);
+	m_DrivePot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Chorus.SetDelayTime(Math::Lerp(0, Chorus::MAX_DELAY_TIME, value));
 		});
 }
 

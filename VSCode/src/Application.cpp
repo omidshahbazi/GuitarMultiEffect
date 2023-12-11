@@ -94,7 +94,7 @@ void Application::Initialize(void)
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
+	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Test
 #endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive

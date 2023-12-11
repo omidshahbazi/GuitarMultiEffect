@@ -11,7 +11,7 @@ TremoloEffect::TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Tremolo.SetRate(Math::Lerp(MIN_FREQUENCY, MAX_SAMPLE_RATE, value));
+			m_Tremolo.SetRate(value);
 		});
 
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
