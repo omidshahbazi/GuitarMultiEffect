@@ -4,17 +4,37 @@
 #include <framework/include/Memory.h>
 #include <framework/include/ESP32A1SCodec.h>
 #include <framework/include/BufferUtils.h>
-#include "Effects/OverdriveEffect.h"
-#include "Effects/WahEffect.h"
-#include "Effects/AutoWahEffect.h"
-#include "Effects/TremoloEffect.h"
-#include "Effects/NoiseGateEffect.h"
-#include "Effects/ReverbEffect.h"
-#include "Effects/ChorusEffect.h"
-#include "Effects/SustainEffect.h"
-#include "Effects/CompressorEffect.h"
-#include "Effects/TestEffect.h"
 
+#ifdef AUTO_WAH_EFFECT
+#include "Effects/AutoWahEffect.h"
+#endif
+#ifdef CHORUS_EFFECT
+#include "Effects/ChorusEffect.h"
+#endif
+#ifdef COMPRESSOR_EFFECT
+#include "Effects/CompressorEffect.h"
+#endif
+#ifdef NOISE_GATE_EFFECT
+#include "Effects/NoiseGateEffect.h"
+#endif
+#ifdef OVERDRIVE_EFFECT
+#include "Effects/OverdriveEffect.h"
+#endif
+#ifdef REVERB_EFFECT
+#include "Effects/ReverbEffect.h"
+#endif
+#ifdef SUSTAIN_EFFECT
+#include "Effects/SustainEffect.h"
+#endif
+#ifdef TREMOLO_EFFECT
+#include "Effects/TremoloEffect.h"
+#endif
+#ifdef WAH_EFFECT
+#include "Effects/WahEffect.h"
+#endif
+#ifdef TEST_EFFECT
+#include "Effects/TestEffect.h"
+#endif
 #ifdef SINE_WAVE_PLAYER
 #include <framework/include/SineWaveGenerator.h>
 #endif
@@ -67,18 +87,36 @@ void Application::Initialize(void)
 
 	// TODO: To be able to tune values, bind a button to Log enable/disable, so I can tune the values, then turn-on the logs and see the value
 
-	// CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
-	// CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-	// CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-
-	// CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
-	// CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
-	// CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
-	// CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
-
-	// CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#ifdef AUTO_WAH_EFFECT
+	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
+#endif
+#ifdef CHORUS_EFFECT
+	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
+#ifdef COMPRESSOR_EFFECT
+	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
+#endif
+#ifdef NOISE_GATE_EFFECT
+	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
+#endif
+#ifdef OVERDRIVE_EFFECT
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+#endif
+#ifdef REVERB_EFFECT
+	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
+#ifdef SUSTAIN_EFFECT
+	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
+#endif
+#ifdef TREMOLO_EFFECT
+	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
+#ifdef WAH_EFFECT
+	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
+#endif
+#ifdef TEST_EFFECT
+	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
 
 	// TODO: Look for other effects
 	// Phaser
