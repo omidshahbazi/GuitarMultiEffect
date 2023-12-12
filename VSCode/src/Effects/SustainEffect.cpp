@@ -11,7 +11,7 @@ SustainEffect::SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			// m_Sustain.(value); ???
+			m_Sustain.SetFeedback(value);
 		});
 }
 
