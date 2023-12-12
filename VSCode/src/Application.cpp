@@ -14,6 +14,9 @@
 #ifdef COMPRESSOR_EFFECT
 #include "Effects/CompressorEffect.h"
 #endif
+#ifdef DISTORTION_EFFECT
+#include "Effects/DistortionEffect.h"
+#endif
 #ifdef NOISE_GATE_EFFECT
 #include "Effects/NoiseGateEffect.h"
 #endif
@@ -95,6 +98,9 @@ void Application::Initialize(void)
 #endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Test
+#endif
+#ifdef DISTORTION_EFFECT
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Test
 #endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
