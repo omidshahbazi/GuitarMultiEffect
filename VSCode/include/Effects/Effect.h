@@ -18,8 +18,6 @@ public:
 protected:
 	virtual IDSP *GetDSP(void) = 0;
 
-	virtual void ProcessBuffer(double *Buffer, uint16 Count);
-
 private:
 	bool m_Enabled;
 };

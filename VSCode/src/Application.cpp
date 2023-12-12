@@ -100,7 +100,7 @@ void Application::Initialize(void)
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Test
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Test
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Modify the algorithm, so it wouldn't gain the noises
 #endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
