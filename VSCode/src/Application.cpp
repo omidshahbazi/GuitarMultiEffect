@@ -124,9 +124,6 @@ void Application::Initialize(void)
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
-	// TODO: Look for other effects
-	// Phaser
-
 	// TODO: Tune the values
 	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
 	// volumePot->SetOnChangedListener(
@@ -169,7 +166,7 @@ void Application::SineWavePlayerTask(void)
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
 	sineWave.SetAmplitude(1);
-	sineWave.SetFrequency(700);
+	sineWave.SetFrequency(NOTE_G5);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
 	uint32 sampleCount = bufferLen * 2;
