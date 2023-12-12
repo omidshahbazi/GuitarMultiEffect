@@ -112,7 +112,7 @@ void Application::Initialize(void)
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Finalize
+	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Test
 #endif
 #ifdef TREMOLO_EFFECT
 	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
