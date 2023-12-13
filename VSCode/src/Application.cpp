@@ -97,7 +97,7 @@ void Application::Initialize(void)
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Test
+	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager);
 #endif
 #ifdef DISTORTION_EFFECT
 	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Modify the algorithm, so it wouldn't gain the noises
@@ -112,13 +112,13 @@ void Application::Initialize(void)
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Test
+	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
 	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
+	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TEST_EFFECT
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);

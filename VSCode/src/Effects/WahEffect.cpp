@@ -11,7 +11,7 @@ WahEffect::WahEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Wah.SetFrequency(value);
+			m_Wah.SetRatio(value);
 		});
 }
 
