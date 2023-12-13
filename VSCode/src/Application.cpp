@@ -91,7 +91,7 @@ void Application::Initialize(void)
 	// TODO: To be able to tune values, bind a button to Log enable/disable, so I can tune the values, then turn-on the logs and see the value
 
 #ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Fix
+	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef CHORUS_EFFECT
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -100,7 +100,7 @@ void Application::Initialize(void)
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager);
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Modify the algorithm, so it wouldn't gain the noises
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Modify the algorithm, so it wouldn't gain the noises probably setting the resonance is the key
 #endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
@@ -118,7 +118,7 @@ void Application::Initialize(void)
 	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune
 #endif
 #ifdef TEST_EFFECT
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);

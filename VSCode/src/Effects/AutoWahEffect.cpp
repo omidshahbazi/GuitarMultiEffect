@@ -11,7 +11,7 @@ AutoWahEffect::AutoWahEffect(ControlManager *ControlManager, uint32 SampleRate)
 
 IDSP *AutoWahEffect::GetDSP(void)
 {
-	return &m_AutoWah;
+	return reinterpret_cast<IDSP *>(&m_AutoWah);
 }
 
 #endif
