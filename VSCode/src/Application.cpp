@@ -42,7 +42,7 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
-const uint16 SAMPLE_RATE = SAMPLE_RATE_22050;
+const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
