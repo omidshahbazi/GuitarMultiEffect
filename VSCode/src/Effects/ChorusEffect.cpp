@@ -25,7 +25,7 @@ ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Chorus.SetDelayTime(Math::Lerp(0, Chorus::MAX_DELAY_TIME, value));
+			m_Chorus.SetDelayTime(Math::Lerp(0.0, Chorus::MAX_DELAY_TIME, value));
 		});
 }
 

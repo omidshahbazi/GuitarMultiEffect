@@ -11,7 +11,7 @@ ReverbEffect::ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Reverb.SetDelayTime(Math::Lerp(0, Reverb::MAX_DELAY_TIME, value));
+			m_Reverb.SetDelayTime(Math::Lerp(0.0, Reverb::MAX_DELAY_TIME, value));
 		});
 
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);

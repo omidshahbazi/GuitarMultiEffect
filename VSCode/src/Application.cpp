@@ -42,7 +42,7 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
-const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
+const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -97,7 +97,7 @@ void Application::Initialize(void)
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Not working properly
 #endif
 #ifdef DISTORTION_EFFECT
 	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Modify the algorithm, so it wouldn't gain the noises probably setting the resonance is the key
@@ -106,16 +106,16 @@ void Application::Initialize(void)
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
 #endif
 #ifdef OVERDRIVE_EFFECT
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager); // TODO: Not sure if it does enough
 #endif
 #ifdef REVERB_EFFECT
-	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: It's distorting the sound
 #endif
 #ifdef SUSTAIN_EFFECT
 	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
-	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Make a sound in high rates
 #endif
 #ifdef WAH_EFFECT
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune
@@ -226,14 +226,14 @@ void Application::PassthroughTask(void)
 
 	while (true)
 	{
-		ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
-
 		if (m_Mute)
 		{
 			Memory::Set(processBufferL, 0, FRAME_LENGTH);
 		}
 		else
 		{
+			ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
+
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 			{
 				CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
@@ -252,10 +252,10 @@ void Application::PassthroughTask(void)
 			// 	sumL = 0;
 			// 	count = 0;
 			// }
-		}
 
-		for (Effect *effect : m_Effects)
-			effect->Apply(processBufferL, FRAME_LENGTH);
+			for (Effect *effect : m_Effects)
+				effect->Apply(processBufferL, FRAME_LENGTH);
+		}
 
 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 0);
