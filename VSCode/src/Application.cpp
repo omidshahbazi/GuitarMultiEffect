@@ -60,7 +60,7 @@ T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 
 Application::Application(void)
 	: m_Mute(false),
-	  m_ControlManager(GPIOPins::Pin13)
+	  m_ControlManager(GPIOPins::Pin34)
 {
 #if __PLATFORMIO_BUILD_DEBUG__
 	Log::SetMask(Log::Types::General);
@@ -88,8 +88,6 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 
-	// TODO: To be able to tune values, bind a button to Log enable/disable, so I can tune the values, then turn-on the logs and see the value
-
 #ifdef AUTO_WAH_EFFECT
 	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
@@ -109,13 +107,13 @@ void Application::Initialize(void)
 	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager); // TODO: Not sure if it does enough
 #endif
 #ifdef REVERB_EFFECT
-	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: It's distorting the sound
+	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef SUSTAIN_EFFECT
 	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
-	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Make a sound in high rates
+	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Make a sound in high gains
 #endif
 #ifdef WAH_EFFECT
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune
@@ -125,7 +123,7 @@ void Application::Initialize(void)
 #endif
 
 	// TODO: Tune the values
-	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin14);
+	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin15);
 	// volumePot->SetOnChangedListener(
 	// 	[&](float value)
 	// 	{
