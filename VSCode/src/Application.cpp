@@ -87,6 +87,11 @@ void Application::Initialize(void)
 	configs.EnableAutomaticLevelControl = false;
 
 	ESP32A1SCodec::Initialize(&configs);
+	ESP32A1SCodec::SetMicrophoneGain(0);
+	ESP32A1SCodec::SetInputToMixerGain(-15);
+	ESP32A1SCodec::SetInputVolume(0);
+	ESP32A1SCodec::SetDigitalVolume(0);
+	ESP32A1SCodec::SetOutputVolume(0);
 
 #ifdef AUTO_WAH_EFFECT
 	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -104,7 +109,7 @@ void Application::Initialize(void)
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
 #endif
 #ifdef OVERDRIVE_EFFECT
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager); // TODO: Not sure if it does enough
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
 #endif
 #ifdef REVERB_EFFECT
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -116,23 +121,11 @@ void Application::Initialize(void)
 	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Make a sound in high gains
 #endif
 #ifdef WAH_EFFECT
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune
+	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TEST_EFFECT
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
-
-	// TODO: Tune the values
-	// Potentiometer *volumePot = m_ControlManager.CreatePotentiometer(GPIOPins::Pin15);
-	// volumePot->SetOnChangedListener(
-	// 	[&](float value)
-	// 	{
-	// 		ESP32A1SCodec::SetMicrophoneGain(Math::Lerp(0.0F, 24, value));
-	// 		ESP32A1SCodec::SetInputToMixerGain(Math::Lerp(-15.0F, 6, value));
-	// 		ESP32A1SCodec::SetInputVolume(Math::Lerp(-96.0F, 0, value));
-	// 		ESP32A1SCodec::SetDigitalVolume(Math::Lerp(-96.0F, 0, value));
-	// 		ESP32A1SCodec::SetOutputVolume(Math::Lerp(-45.0F, 4.5F, value));
-	// 	});
 
 	ESP32A1SCodec::PrintSystemStatistics();
 
