@@ -13,7 +13,7 @@ class Potentiometer;
 class DistortionEffect : public Effect
 {
 public:
-	DistortionEffect(ControlManager *ControlManager);
+	DistortionEffect(ControlManager *ControlManager, uint32 SampleRate);
 
 protected:
 	IDSP *GetDSP(void);

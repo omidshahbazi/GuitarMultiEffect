@@ -20,7 +20,8 @@ protected:
 
 private:
 	Compressor m_Compressor;
-	Potentiometer *m_DrivePot;
+	Potentiometer *m_ThresholdPot;
+	Potentiometer *m_RatioPot;
 };
 
 #endif

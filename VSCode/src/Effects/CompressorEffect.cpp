@@ -7,15 +7,15 @@
 
 CompressorEffect::CompressorEffect(ControlManager *ControlManager)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_DrivePot->SetOnChangedListener(
+	m_ThresholdPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_ThresholdPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Compressor.SetThreshold(Math::Lerp(-1.0, 1, value));
 		});
 
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
-	m_DrivePot->SetOnChangedListener(
+	m_RatioPot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
+	m_RatioPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Compressor.SetRatio(Math::Lerp(0.001, 2, value));

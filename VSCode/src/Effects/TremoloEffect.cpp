@@ -7,15 +7,15 @@
 TremoloEffect::TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Tremolo(SampleRate)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_DrivePot->SetOnChangedListener(
+	m_RatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_RatePot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Tremolo.SetRate(value);
 		});
 
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
-	m_DrivePot->SetOnChangedListener(
+	m_DepthPot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
+	m_DepthPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Tremolo.SetDepth(value);

@@ -1,4 +1,4 @@
-#ifdef TEST_EFFECT 
+#ifdef TEST_EFFECT
 
 #pragma once
 #ifndef TEST_EFFECT_H
@@ -20,7 +20,7 @@ protected:
 
 private:
 	Test m_Test;
-	Potentiometer *m_DrivePot;
+	Potentiometer *m_Pot;
 };
 
 #endif

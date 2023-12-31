@@ -7,8 +7,8 @@
 SustainEffect::SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Sustain(SampleRate)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_DrivePot->SetOnChangedListener(
+	m_FeedbackPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_FeedbackPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Sustain.SetFeedback(value);

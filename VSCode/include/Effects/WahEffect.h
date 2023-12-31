@@ -20,7 +20,7 @@ protected:
 
 private:
 	Wah m_Wah;
-	Potentiometer *m_DrivePot;
+	Potentiometer *m_RatioPot;
 };
 
 #endif

@@ -7,8 +7,8 @@
 WahEffect::WahEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Wah(SampleRate)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_DrivePot->SetOnChangedListener(
+	m_RatioPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_RatioPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Wah.SetRatio(value);

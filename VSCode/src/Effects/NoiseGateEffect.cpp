@@ -7,8 +7,8 @@
 NoiseGateEffect::NoiseGateEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_NoiseGate(SampleRate)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_DrivePot->SetOnChangedListener(
+	m_ThresholdPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_ThresholdPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_NoiseGate.SetThreshold(value);

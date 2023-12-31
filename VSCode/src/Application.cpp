@@ -42,7 +42,14 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
+#include <framework/include/Controls/Potentiometer.h>
+
+#if defined(REVERB_EFFECT) || defined(SUSTAIN_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
+#else
+const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
+#endif
+
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
@@ -88,7 +95,7 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::Initialize(&configs);
 	ESP32A1SCodec::SetMicrophoneGain(0);
-	ESP32A1SCodec::SetInputToMixerGain(-15);
+	ESP32A1SCodec::SetInputToMixerGain(0);
 	ESP32A1SCodec::SetInputVolume(0);
 	ESP32A1SCodec::SetDigitalVolume(0);
 	ESP32A1SCodec::SetOutputVolume(0);
@@ -103,13 +110,13 @@ void Application::Initialize(void)
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Not working properly
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager); // TODO: Modify the algorithm, so it wouldn't gain the noises probably setting the resonance is the key
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Modify the algorithm, so it wouldn't gain the noises probably setting the resonance is the key
 #endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
 #endif
 #ifdef OVERDRIVE_EFFECT
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager);
+	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef REVERB_EFFECT
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -157,7 +164,7 @@ void Application::SineWavePlayerTask(void)
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
 	sineWave.SetAmplitude(1);
-	sineWave.SetFrequency(NOTE_G5);
+	sineWave.SetFrequency(NOTE_A4);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
 	uint32 sampleCount = bufferLen * 2;

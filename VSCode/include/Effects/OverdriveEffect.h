@@ -1,4 +1,4 @@
-#ifdef OVERDRIVE_EFFECT 
+#ifdef OVERDRIVE_EFFECT
 
 #pragma once
 #ifndef OVERDRIVE_EFFECT_H
@@ -13,7 +13,7 @@ class Potentiometer;
 class OverdriveEffect : public Effect
 {
 public:
-	OverdriveEffect(ControlManager *ControlManager);
+	OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate);
 
 protected:
 	IDSP *GetDSP(void);

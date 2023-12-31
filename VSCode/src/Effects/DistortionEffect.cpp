@@ -4,9 +4,10 @@
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
 
-DistortionEffect::DistortionEffect(ControlManager *ControlManager)
+DistortionEffect::DistortionEffect(ControlManager *ControlManager, uint32 SampleRate)
+	: m_Distortion(SampleRate)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{

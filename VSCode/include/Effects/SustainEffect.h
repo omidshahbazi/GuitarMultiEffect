@@ -1,4 +1,4 @@
-#ifdef SUSTAIN_EFFECT 
+#ifdef SUSTAIN_EFFECT
 
 #pragma once
 #ifndef SUSTAIN_EFFECT_H
@@ -20,7 +20,7 @@ protected:
 
 private:
 	Sustain m_Sustain;
-	Potentiometer *m_DrivePot;
+	Potentiometer *m_FeedbackPot;
 };
 
 #endif

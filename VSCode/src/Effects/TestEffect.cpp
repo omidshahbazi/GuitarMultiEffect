@@ -7,8 +7,8 @@
 TestEffect::TestEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: m_Test(SampleRate)
 {
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_DrivePot->SetOnChangedListener(
+	m_Pot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_Pot->SetOnChangedListener(
 		[&](float value)
 		{
 			// m_Test.SetValue(value);
