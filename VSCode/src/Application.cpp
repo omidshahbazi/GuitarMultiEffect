@@ -113,7 +113,7 @@ void Application::Initialize(void)
 	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Modify the algorithm, so it wouldn't gain the noises probably setting the resonance is the key
 #endif
 #ifdef NOISE_GATE_EFFECT
-	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tune the Attack and Release time to help Overdrive
+	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef OVERDRIVE_EFFECT
 	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -125,7 +125,7 @@ void Application::Initialize(void)
 	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
-	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Make a sound in high gains
+	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -133,6 +133,8 @@ void Application::Initialize(void)
 #ifdef TEST_EFFECT
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
+
+	// TODO: Loop effect
 
 	ESP32A1SCodec::PrintSystemStatistics();
 
