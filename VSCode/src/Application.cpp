@@ -44,7 +44,7 @@
 
 #include <framework/include/Controls/Potentiometer.h>
 
-#if defined(REVERB_EFFECT) || defined(SUSTAIN_EFFECT)
+#if defined(REVERB_EFFECT) || defined(SUSTAIN_EFFECT) || defined(CHORUS_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 #else
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
