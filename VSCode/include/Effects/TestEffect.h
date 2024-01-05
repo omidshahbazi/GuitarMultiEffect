@@ -20,7 +20,9 @@ protected:
 
 private:
 	Test m_Test;
-	Potentiometer *m_Pot;
+	Potentiometer *m_Pot1;
+	Potentiometer *m_Pot2;
+	Potentiometer *m_Pot3;
 };
 
 #endif

@@ -88,23 +88,28 @@ void Application::Initialize(void)
 	configs.BufferCount = 3;
 	configs.BufferLength = 300;
 	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
-	configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneL;
+	configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneLAndHeadphoneR;
 	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
 	configs.EnableNoiseGate = true;
 	configs.EnableAutomaticLevelControl = false;
 
 	ESP32A1SCodec::Initialize(&configs);
-	ESP32A1SCodec::SetMicrophoneGain(0);
+
+	if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
+		ESP32A1SCodec::SetMicrophoneGain(0);
+
 	ESP32A1SCodec::SetInputToMixerGain(0);
 	ESP32A1SCodec::SetInputVolume(0);
 	ESP32A1SCodec::SetDigitalVolume(0);
 	ESP32A1SCodec::SetOutputVolume(0);
 
+	// TODO: Check the memory optimization link in the bookmarks
+
 #ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Not working fine I guess
 #endif
 #ifdef CHORUS_EFFECT
-	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Not working fine
 #endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Not working properly
@@ -122,7 +127,7 @@ void Application::Initialize(void)
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
 #endif
 #ifdef TREMOLO_EFFECT
 	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -133,8 +138,6 @@ void Application::Initialize(void)
 #ifdef TEST_EFFECT
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
-
-	// TODO: Loop effect
 
 	ESP32A1SCodec::PrintSystemStatistics();
 
@@ -196,6 +199,9 @@ void Application::SineWavePlayerTask(void)
 		for (uint16 i = 0; i < bufferLen; ++i)
 			CONVERT_INT32_TO_NORMALIZED_DOUBLE(sineWave.GetBuffer(), false, 0, processBufferL, i);
 
+		for (uint16 i = 0; i < bufferLen; ++i)
+			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 1);
+
 		for (Effect *effect : m_Effects)
 			effect->Apply(processBufferL, bufferLen);
 
@@ -220,10 +226,6 @@ void Application::PassthroughTask(void)
 
 	Task::Delay(10);
 
-	// double sumL = 0;
-	// uint16 count = 0;
-	// float nextTime = 0;
-
 	while (true)
 	{
 		if (m_Mute)
@@ -235,23 +237,10 @@ void Application::PassthroughTask(void)
 			ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
 
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-			{
 				CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
 
-				// sumL += processBufferL[i];
-			}
-
-			// count += FRAME_LENGTH;
-
-			// if (nextTime < Time::Now())
-			// {
-			// 	nextTime += 1;
-
-			// 	Log::WriteError("Avg: %f", sumL / count);
-
-			// 	sumL = 0;
-			// 	count = 0;
-			// }
+			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
 
 			for (Effect *effect : m_Effects)
 				effect->Apply(processBufferL, FRAME_LENGTH);
