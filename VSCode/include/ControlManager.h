@@ -6,7 +6,7 @@
 #include <functional>
 
 class LED;
-class PushButtonArray;
+class Switch;
 class Potentiometer;
 
 class ControlManager
@@ -15,11 +15,11 @@ public:
 	typedef std::function<void(void)> ButtonPressedEventHandler;
 
 public:
-	ControlManager(GPIOPins PushButtonArray1Pin);
+	ControlManager(void);
 
 	LED *CreateLED(GPIOPins Pin);
 
-	bool BindToPushButton(uint8 Index, ButtonPressedEventHandler &&OnPressed);
+	Switch *CreateSwitch(GPIOPins Pin);
 
 	Potentiometer *CreatePotentiometer(GPIOPins Pin);
 
@@ -29,7 +29,6 @@ private:
 
 private:
 	ControlFactory m_Factory;
-	PushButtonArray *m_PushButtonArray1;
 	bool m_UsedGPIOs[GPIO_NUM_MAX];
 };
 

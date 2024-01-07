@@ -1,36 +1,36 @@
 #include "ControlManager.h"
 #include <framework/include/Controls/LED.h>
-#include <framework/include/Controls/PushButtonArray.h>
+#include <framework/include/Controls/Switch.h>
 #include <framework/include/Controls/Potentiometer.h>
 
-ControlManager::ControlManager(GPIOPins PushButtonArray1Pin)
-	: m_PushButtonArray1(nullptr),
-	  m_UsedGPIOs()
+ControlManager::ControlManager(void)
+	: m_UsedGPIOs()
 {
-	CheckIfGPIOIsUsed(PushButtonArray1Pin);
-	m_PushButtonArray1 = m_Factory.Create<PushButtonArray>(PushButtonArray1Pin, 1);
 }
 
 LED *ControlManager::CreateLED(GPIOPins Pin)
 {
 	CheckIfGPIOIsUsed(Pin);
 
+	MarkGPIOAsUsed(Pin);
+
 	return m_Factory.Create<LED>(Pin);
 }
 
-bool ControlManager::BindToPushButton(uint8 Index, ButtonPressedEventHandler &&OnPressed)
+Switch *ControlManager::CreateSwitch(GPIOPins Pin)
 {
-	if (OnPressed == nullptr)
-		return false;
+	CheckIfGPIOIsUsed(Pin);
 
-	m_PushButtonArray1->Bind(Index, nullptr, nullptr, std::forward<ButtonPressedEventHandler>(OnPressed));
+	MarkGPIOAsUsed(Pin);
 
-	return true;
+	return m_Factory.Create<Switch>(Pin);
 }
 
 Potentiometer *ControlManager::CreatePotentiometer(GPIOPins Pin)
 {
 	CheckIfGPIOIsUsed(Pin);
+
+	MarkGPIOAsUsed(Pin);
 
 	return m_Factory.Create<Potentiometer>(Pin);
 }

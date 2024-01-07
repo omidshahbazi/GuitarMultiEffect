@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 WahEffect::WahEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Wah(SampleRate)
+	: Effect(ControlManager),
+	  m_Wah(SampleRate)
 {
 	m_RatioPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_RatioPot->SetOnChangedListener(

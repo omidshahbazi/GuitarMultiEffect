@@ -6,6 +6,7 @@
 #include <framework/include/Math.h>
 
 CompressorEffect::CompressorEffect(ControlManager *ControlManager)
+	: Effect(ControlManager)
 {
 	m_ThresholdPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_ThresholdPot->SetOnChangedListener(

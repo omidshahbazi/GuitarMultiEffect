@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Distortion.h>
 
-class ControlManager;
 class Potentiometer;
 
 class DistortionEffect : public Effect

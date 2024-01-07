@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 TremoloEffect::TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Tremolo(SampleRate)
+	: Effect(ControlManager),
+	  m_Tremolo(SampleRate)
 {
 	m_RatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_RatePot->SetOnChangedListener(

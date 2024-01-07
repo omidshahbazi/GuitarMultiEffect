@@ -5,21 +5,24 @@
 #include <framework/include/Common.h>
 
 class IDSP;
+class ControlManager;
+class Switch;
+class LED;
 
 class Effect
 {
 public:
-	Effect(void);
+	Effect(ControlManager *ControlManager);
 
 	void Apply(double *Buffer, uint16 Count);
-
-	virtual void ToggleEnabled(void);
 
 protected:
 	virtual IDSP *GetDSP(void) = 0;
 
 private:
 	bool m_Enabled;
+	Switch *m_EnabledSwitch;
+	LED *m_EnabledLED;
 };
 
 #endif

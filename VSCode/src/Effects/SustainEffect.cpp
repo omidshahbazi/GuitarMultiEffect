@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 SustainEffect::SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Sustain(SampleRate)
+	: Effect(ControlManager),
+	  m_Sustain(SampleRate)
 {
 	m_FeedbackPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_FeedbackPot->SetOnChangedListener(

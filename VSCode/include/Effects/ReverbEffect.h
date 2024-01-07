@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Reverb.h>
 
-class ControlManager;
 class Potentiometer;
 
 class ReverbEffect : public Effect

@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 DistortionEffect::DistortionEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Distortion(SampleRate)
+	: Effect(ControlManager),
+	  m_Distortion(SampleRate)
 {
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DrivePot->SetOnChangedListener(

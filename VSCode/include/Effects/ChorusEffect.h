@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Chorus.h>
 
-class ControlManager;
 class Potentiometer;
 
 class ChorusEffect : public Effect

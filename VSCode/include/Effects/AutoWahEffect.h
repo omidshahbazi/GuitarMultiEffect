@@ -7,8 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/AutoWah.h>
 
-class ControlManager;
-
 class AutoWahEffect : public Effect
 {
 public:

@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 ReverbEffect::ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Reverb(SampleRate)
+	: Effect(ControlManager),
+	  m_Reverb(SampleRate)
 {
 	m_DelayTimePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DelayTimePot->SetOnChangedListener(

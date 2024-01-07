@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Tremolo.h>
 
-class ControlManager;
 class Potentiometer;
 
 class TremoloEffect : public Effect

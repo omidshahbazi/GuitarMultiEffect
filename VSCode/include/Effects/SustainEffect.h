@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Sustain.h>
 
-class ControlManager;
 class Potentiometer;
 
 class SustainEffect : public Effect

@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Test.h>
 
-class ControlManager;
 class Potentiometer;
 
 class TestEffect : public Effect

@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Chorus(SampleRate)
+	: Effect(ControlManager),
+	  m_Chorus(SampleRate)
 {
 	m_DepthPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DepthPot->SetOnChangedListener(

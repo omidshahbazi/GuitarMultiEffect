@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Overdrive.h>
 
-class ControlManager;
 class Potentiometer;
 
 class OverdriveEffect : public Effect

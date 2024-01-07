@@ -66,8 +66,7 @@ T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
 }
 
 Application::Application(void)
-	: m_Mute(false),
-	  m_ControlManager(GPIOPins::Pin34)
+	: m_Mute(false)
 {
 #if __PLATFORMIO_BUILD_DEBUG__
 	Log::SetMask(Log::Types::General);

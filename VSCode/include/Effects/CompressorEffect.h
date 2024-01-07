@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/Compressor.h>
 
-class ControlManager;
 class Potentiometer;
 
 class CompressorEffect : public Effect

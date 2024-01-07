@@ -5,7 +5,8 @@
 #include <framework/include/Controls/Potentiometer.h>
 
 OverdriveEffect::OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate)
-	: m_Overdrive(SampleRate)
+	: Effect(ControlManager),
+	  m_Overdrive(SampleRate)
 {
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DrivePot->SetOnChangedListener(

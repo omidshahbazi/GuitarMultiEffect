@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/NoiseGate.h>
 
-class ControlManager;
 class Potentiometer;
 
 class NoiseGateEffect : public Effect
