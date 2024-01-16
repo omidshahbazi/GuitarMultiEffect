@@ -19,6 +19,7 @@ protected:
 
 private:
 	Overdrive m_Overdrive;
+	Potentiometer *m_GainPot;
 	Potentiometer *m_DrivePot;
 };
 

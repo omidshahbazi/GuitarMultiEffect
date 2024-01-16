@@ -8,6 +8,14 @@ ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
 	  m_Chorus(SampleRate)
 {
+
+	m_DelayTimePot = ControlManager->CreatePotentiometer(GPIOPins::Pin13);
+	m_DelayTimePot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Chorus.SetDelayTime(Math::Lerp(0.0, Chorus::MAX_DELAY_TIME, value));
+		});
+
 	m_DepthPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DepthPot->SetOnChangedListener(
 		[&](float value)
@@ -20,13 +28,6 @@ ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 		[&](float value)
 		{
 			m_Chorus.SetRate(value);
-		});
-
-	m_DelayTimePot = ControlManager->CreatePotentiometer(GPIOPins::Pin34);
-	m_DelayTimePot->SetOnChangedListener(
-		[&](float value)
-		{
-			m_Chorus.SetDelayTime(Math::Lerp(0.0, Chorus::MAX_DELAY_TIME, value));
 		});
 }
 

@@ -42,9 +42,9 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
-#include <framework/include/Controls/Potentiometer.h>
-
-#if defined(REVERB_EFFECT) || defined(SUSTAIN_EFFECT) || defined(CHORUS_EFFECT)
+#if defined(REVERB_EFFECT)
+const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
+#elif defined(SUSTAIN_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 #else
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
@@ -103,12 +103,13 @@ void Application::Initialize(void)
 	ESP32A1SCodec::SetOutputVolume(0);
 
 	// TODO: Check the memory optimization link in the bookmarks
+	// TODO: Check the memory usage by the i2s and other basic stuffs
 
 #ifdef AUTO_WAH_EFFECT
 	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Not working fine I guess
 #endif
 #ifdef CHORUS_EFFECT
-	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Not working fine
+	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Not working properly
@@ -138,6 +139,8 @@ void Application::Initialize(void)
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
+	// TODO: Add Phaser
+
 	ESP32A1SCodec::PrintSystemStatistics();
 
 	Task::Delay(10);
@@ -164,10 +167,12 @@ void Application::SineWavePlayerTask(void)
 {
 	Log::WriteInfo("Starting SineWavePlayer Task");
 
+	Task::Delay(2000);
+
 	SineWaveGenerator<int32> sineWave;
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
-	sineWave.SetAmplitude(1);
+	sineWave.SetAmplitude(0.03);
 	sineWave.SetFrequency(NOTE_A4);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
@@ -220,10 +225,10 @@ void Application::PassthroughTask(void)
 {
 	Log::WriteInfo("Starting Passthrough Task");
 
+	Task::Delay(2000);
+
 	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
 	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
-
-	Task::Delay(10);
 
 	while (true)
 	{
