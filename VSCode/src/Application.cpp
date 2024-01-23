@@ -106,7 +106,7 @@ void Application::Initialize(void)
 	// TODO: Check the memory usage by the i2s and other basic stuffs
 
 #ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Not working fine I guess
+	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tuning needed
 #endif
 #ifdef CHORUS_EFFECT
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -115,7 +115,7 @@ void Application::Initialize(void)
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Not working properly
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Modify the algorithm, so it wouldn't gain the noises probably setting the resonance is the key
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
