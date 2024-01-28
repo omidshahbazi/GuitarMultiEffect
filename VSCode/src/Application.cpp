@@ -104,6 +104,9 @@ void Application::Initialize(void)
 
 	// TODO: Check the memory usage by the i2s and other basic stuffs
 
+#ifdef AUTO_WAH_EFFECT
+	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
 #ifdef CHORUS_EFFECT
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
@@ -126,9 +129,6 @@ void Application::Initialize(void)
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
-#ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tuning needed
-#endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Algorithm seems incorrect
 #endif
