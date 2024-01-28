@@ -84,8 +84,8 @@ void Application::Initialize(void)
 	configs.SampleRate = SAMPLE_RATE;
 	configs.BitsPerSample = ESP32A1SCodec::BitsPerSamples::BPS32;
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::LeftAndRight;
-	configs.BufferCount = 3;
-	configs.BufferLength = 300;
+	configs.BufferCount = 2;
+	configs.BufferLength = SAMPLE_COUNT * sizeof(int32);
 	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
 	configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneLAndHeadphoneR;
 	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
@@ -102,17 +102,10 @@ void Application::Initialize(void)
 	ESP32A1SCodec::SetDigitalVolume(0);
 	ESP32A1SCodec::SetOutputVolume(0);
 
-	// TODO: Check the memory optimization link in the bookmarks
 	// TODO: Check the memory usage by the i2s and other basic stuffs
 
-#ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tuning needed
-#endif
 #ifdef CHORUS_EFFECT
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-#endif
-#ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Not working properly
 #endif
 #ifdef DISTORTION_EFFECT
 	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -126,20 +119,33 @@ void Application::Initialize(void)
 #ifdef REVERB_EFFECT
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
-#ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
-#endif
 #ifdef TREMOLO_EFFECT
 	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
+
+#ifdef AUTO_WAH_EFFECT
+	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Tuning needed
+#endif
+#ifdef COMPRESSOR_EFFECT
+	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Algorithm seems incorrect
+#endif
+#ifdef SUSTAIN_EFFECT
+	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
+#endif
+
 #ifdef TEST_EFFECT
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
 	// TODO: Add Phaser
+	// Flanger
+	// MXR Phase
+	// Looper
+	// Tube Screamer
+	// Octave
 
 	ESP32A1SCodec::PrintSystemStatistics();
 

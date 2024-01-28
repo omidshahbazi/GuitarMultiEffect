@@ -12,7 +12,7 @@ CompressorEffect::CompressorEffect(ControlManager *ControlManager)
 	m_ThresholdPot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Compressor.SetThreshold(Math::Lerp(-1.0, 1, value));
+			m_Compressor.SetThreshold(Math::Lerp(0.0, 1, value));
 		});
 
 	m_RatioPot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
