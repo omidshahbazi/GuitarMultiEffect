@@ -12,7 +12,7 @@ TremoloEffect::TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_RatePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Tremolo.SetRate(value);
+			m_Tremolo.SetRate(Math::Lerp(0.01, 25, value));
 		});
 
 	m_DepthPot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);

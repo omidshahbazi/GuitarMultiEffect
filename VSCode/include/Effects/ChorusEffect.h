@@ -19,9 +19,9 @@ protected:
 
 private:
 	Chorus m_Chorus;
+	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DepthPot;
 	Potentiometer *m_RatePot;
-	Potentiometer *m_DelayTimePot;
 };
 
 #endif

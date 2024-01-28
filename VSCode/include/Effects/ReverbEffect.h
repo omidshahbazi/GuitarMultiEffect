@@ -19,6 +19,7 @@ protected:
 
 private:
 	Reverb m_Reverb;
+	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DelayTimePot;
 	Potentiometer *m_FeedbackPot;
 };

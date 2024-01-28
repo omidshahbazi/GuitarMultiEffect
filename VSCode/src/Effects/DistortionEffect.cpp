@@ -6,7 +6,8 @@
 
 DistortionEffect::DistortionEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Distortion(SampleRate)
+	  m_Distortion(SampleRate),
+	  m_DrivePot(nullptr)
 {
 	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DrivePot->SetOnChangedListener(

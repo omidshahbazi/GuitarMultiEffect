@@ -6,8 +6,18 @@
 
 ReverbEffect::ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Reverb(SampleRate)
+	  m_Reverb(SampleRate),
+	  m_WetRatePot(nullptr),
+	  m_DelayTimePot(nullptr),
+	  m_FeedbackPot(nullptr)
 {
+	m_WetRatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin13);
+	m_WetRatePot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Reverb.SetWetRate(value);
+		});
+
 	m_DelayTimePot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DelayTimePot->SetOnChangedListener(
 		[&](float value)

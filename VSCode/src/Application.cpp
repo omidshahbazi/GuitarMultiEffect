@@ -17,6 +17,9 @@
 #ifdef DISTORTION_EFFECT
 #include "Effects/DistortionEffect.h"
 #endif
+#ifdef FLANGER_EFFECT
+#include "Effects/FlangerEffect.h"
+#endif
 #ifdef NOISE_GATE_EFFECT
 #include "Effects/NoiseGateEffect.h"
 #endif
@@ -113,6 +116,9 @@ void Application::Initialize(void)
 #ifdef DISTORTION_EFFECT
 	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
+#ifdef FLANGER_EFFECT
+	CreateEffect<FlangerEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
 #ifdef NOISE_GATE_EFFECT
 	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
@@ -141,7 +147,6 @@ void Application::Initialize(void)
 #endif
 
 	// TODO: Add Phaser
-	// Flanger
 	// MXR Phase
 	// Looper
 	// Tube Screamer

@@ -6,7 +6,9 @@
 
 OverdriveEffect::OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Overdrive(SampleRate)
+	  m_Overdrive(SampleRate),
+	  m_GainPot(nullptr),
+	  m_DrivePot(nullptr)
 {
 	m_GainPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_GainPot->SetOnChangedListener(

@@ -1,41 +1,49 @@
-#ifdef CHORUS_EFFECT
+#ifdef FLANGER_EFFECT
 
-#include "Effects/ChorusEffect.h"
+#include "Effects/FlangerEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
 
-ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
+FlangerEffect::FlangerEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Chorus(SampleRate),
+	  m_Flanger(SampleRate),
+	  m_FeedbackPot(nullptr),
 	  m_WetRatePot(nullptr),
 	  m_DepthPot(nullptr),
 	  m_RatePot(nullptr)
 {
+	m_FeedbackPot = ControlManager->CreatePotentiometer(GPIOPins::Pin4);
+	m_FeedbackPot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Flanger.SetFeedback(value);
+		});
+
 	m_WetRatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin13);
 	m_WetRatePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Chorus.SetWetRate(value);
+			m_Flanger.SetWetRate(value);
 		});
 
 	m_DepthPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_DepthPot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Chorus.SetDepth(Math::Lerp(0.0, Chorus::MAX_DEPTH, value));
+			m_Flanger.SetDepth(Math::Lerp(0.0, Flanger::MAX_DEPTH, value));
 		});
 
 	m_RatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
 	m_RatePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Chorus.SetRate(Math::Lerp(0.01, 4, value));
+			m_Flanger.SetRate(Math::Lerp(0.01, 4, value));
 		});
 }
 
-IDSP *ChorusEffect::GetDSP(void)
+IDSP *FlangerEffect::GetDSP(void)
 {
-	return &m_Chorus;
+	return &m_Flanger;
 }
 
 #endif

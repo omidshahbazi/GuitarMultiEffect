@@ -8,6 +8,7 @@
 #include <framework/include/DSP/Sustain.h>
 
 class Potentiometer;
+class Switch;
 
 class SustainEffect : public Effect
 {
@@ -20,6 +21,8 @@ protected:
 private:
 	Sustain m_Sustain;
 	Potentiometer *m_FeedbackPot;
+	Switch *m_ActiveSwitch;
+	Switch *m_WetSwitch;
 };
 
 #endif

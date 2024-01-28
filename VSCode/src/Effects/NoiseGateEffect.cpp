@@ -6,7 +6,8 @@
 
 NoiseGateEffect::NoiseGateEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_NoiseGate(SampleRate)
+	  m_NoiseGate(SampleRate),
+	  m_ThresholdPot(nullptr)
 {
 	m_ThresholdPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
 	m_ThresholdPot->SetOnChangedListener(
