@@ -17,11 +17,11 @@ public:
 public:
 	ControlManager(void);
 
-	LED *CreateLED(GPIOPins Pin);
+	LED *CreateLED(const char *Name, GPIOPins Pin);
 
-	Switch *CreateSwitch(GPIOPins Pin);
+	Switch *CreateSwitch(const char *Name, GPIOPins Pin);
 
-	Potentiometer *CreatePotentiometer(GPIOPins Pin);
+	Potentiometer *CreatePotentiometer(const char *Name, GPIOPins Pin);
 
 private:
 	void CheckIfGPIOIsUsed(GPIOPins Pin);

@@ -12,14 +12,13 @@ class Potentiometer;
 class CompressorEffect : public Effect
 {
 public:
-	CompressorEffect(ControlManager *ControlManager);
+	CompressorEffect(ControlManager *ControlManager, uint32 SampleRate);
 
 protected:
 	IDSP *GetDSP(void);
 
 private:
 	Compressor m_Compressor;
-	Potentiometer *m_ThresholdPot;
 	Potentiometer *m_RatioPot;
 };
 

@@ -19,6 +19,7 @@ protected:
 
 private:
 	Distortion m_Distortion;
+	Potentiometer *m_GainPot;
 	Potentiometer *m_DrivePot;
 };
 

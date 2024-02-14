@@ -6,18 +6,17 @@
 
 OverdriveEffect::OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Overdrive(SampleRate),
 	  m_GainPot(nullptr),
 	  m_DrivePot(nullptr)
 {
-	m_GainPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin14);
 	m_GainPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Overdrive.SetGain(value);
 		});
 
-	m_DrivePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
+	m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin15);
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{

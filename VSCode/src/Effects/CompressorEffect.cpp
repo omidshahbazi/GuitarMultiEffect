@@ -5,19 +5,12 @@
 #include <framework/include/Controls/Potentiometer.h>
 #include <framework/include/Math.h>
 
-CompressorEffect::CompressorEffect(ControlManager *ControlManager)
+CompressorEffect::CompressorEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_ThresholdPot(nullptr),
+	  m_Compressor(SampleRate),
 	  m_RatioPot(nullptr)
 {
-	m_ThresholdPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
-	m_ThresholdPot->SetOnChangedListener(
-		[&](float value)
-		{
-			m_Compressor.SetThreshold(Math::Lerp(0.0, 1, value));
-		});
-
-	m_RatioPot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
+	m_RatioPot = ControlManager->CreatePotentiometer("Ratio", GPIOPins::Pin15);
 	m_RatioPot->SetOnChangedListener(
 		[&](float value)
 		{

@@ -7,7 +7,7 @@
 Effect::Effect(ControlManager *ControlManager)
 	: m_Enabled(true)
 {
-	m_EnabledLED = ControlManager->CreateLED(GPIOPins::Pin23);
+	m_EnabledLED = ControlManager->CreateLED("Enabled", GPIOPins::Pin23);
 	m_EnabledLED->SetTurnedOn(false);
 
 	auto onSwitchChanged = [&](bool value)
@@ -20,7 +20,7 @@ Effect::Effect(ControlManager *ControlManager)
 			m_EnabledLED->SetTurnedOn(false);
 	};
 
-	m_EnabledSwitch = ControlManager->CreateSwitch(GPIOPins::Pin19);
+	m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin19);
 	m_EnabledSwitch->SetOnChangedListener(onSwitchChanged);
 
 	onSwitchChanged(m_EnabledSwitch->GetTurnedOn());

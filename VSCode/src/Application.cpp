@@ -89,7 +89,7 @@ void Application::Initialize(void)
 	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::LeftAndRight;
 	configs.BufferCount = 2;
 	configs.BufferLength = SAMPLE_COUNT * sizeof(int32);
-	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
+	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1AndMicrophone2Differential; // TODO: Not sure why, but if I use Microphone1 only, a tick noise would be present where it makes many issue in clipping effects, also I haven't switched to the differential mode on the dev-board
 	configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneLAndHeadphoneR;
 	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
 	configs.EnableNoiseGate = true;
@@ -98,14 +98,12 @@ void Application::Initialize(void)
 	ESP32A1SCodec::Initialize(&configs);
 
 	if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
-		ESP32A1SCodec::SetMicrophoneGain(0);
+		ESP32A1SCodec::SetMicrophoneGain(6);
 
 	ESP32A1SCodec::SetInputToMixerGain(0);
 	ESP32A1SCodec::SetInputVolume(0);
 	ESP32A1SCodec::SetDigitalVolume(0);
 	ESP32A1SCodec::SetOutputVolume(0);
-
-	// TODO: Check the memory usage by the i2s and other basic stuffs
 
 #ifdef AUTO_WAH_EFFECT
 	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -136,7 +134,7 @@ void Application::Initialize(void)
 #endif
 
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager); // TODO: Algorithm seems incorrect
+	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
 #endif
 #ifdef SUSTAIN_EFFECT
 	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
@@ -178,8 +176,6 @@ void Application::SineWavePlayerTask(void)
 {
 	Log::WriteInfo("Starting SineWavePlayer Task");
 
-	Task::Delay(2000);
-
 	SineWaveGenerator<int32> sineWave;
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
@@ -191,23 +187,6 @@ void Application::SineWavePlayerTask(void)
 
 	int32 *outBuffer = Memory::Allocate<int32>(sampleCount);
 	double *processBufferL = Memory::Allocate<double>(bufferLen);
-
-	{
-		double *inputBufferL = Memory::Allocate<double>(bufferLen);
-
-		for (uint16 i = 0; i < bufferLen; ++i)
-			CONVERT_INT32_TO_NORMALIZED_DOUBLE(sineWave.GetBuffer(), false, 0, inputBufferL, i);
-
-		Memory::Copy(inputBufferL, processBufferL, bufferLen);
-
-		for (Effect *effect : m_Effects)
-			effect->Apply(processBufferL, bufferLen);
-
-		for (uint16 i = 0; i < bufferLen; ++i)
-			printf("%0.10f#%0.10f\n", inputBufferL[i], processBufferL[i]);
-
-		Memory::Deallocate(inputBufferL);
-	}
 
 	while (true)
 	{

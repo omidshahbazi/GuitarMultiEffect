@@ -11,21 +11,21 @@ ChorusEffect::ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
 	  m_DepthPot(nullptr),
 	  m_RatePot(nullptr)
 {
-	m_WetRatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin13);
+	m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", GPIOPins::Pin13);
 	m_WetRatePot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Chorus.SetWetRate(value);
 		});
 
-	m_DepthPot = ControlManager->CreatePotentiometer(GPIOPins::Pin14);
+	m_DepthPot = ControlManager->CreatePotentiometer("Depth", GPIOPins::Pin14);
 	m_DepthPot->SetOnChangedListener(
 		[&](float value)
 		{
 			m_Chorus.SetDepth(Math::Lerp(0.0, Chorus::MAX_DEPTH, value));
 		});
 
-	m_RatePot = ControlManager->CreatePotentiometer(GPIOPins::Pin15);
+	m_RatePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin15);
 	m_RatePot->SetOnChangedListener(
 		[&](float value)
 		{
