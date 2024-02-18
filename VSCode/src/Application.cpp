@@ -45,6 +45,9 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
+#include <framework/include/Controls/Switch.h>
+#include <framework/include/Controls/Potentiometer.h>
+
 #if defined(REVERB_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 #elif defined(SUSTAIN_EFFECT)
@@ -55,6 +58,8 @@ const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
+
+const float MAX_GAIN = 500;
 
 template <typename T, typename... ArgsT>
 T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
@@ -92,27 +97,23 @@ void Application::Initialize(void)
 	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1AndMicrophone2Differential; // TODO: Not sure why, but if I use Microphone1 only, a tick noise would be present where it makes many issue in clipping effects, also I haven't switched to the differential mode on the dev-board
 	configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneLAndHeadphoneR;
 	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
-	configs.EnableNoiseGate = true;
+	configs.EnableNoiseGate = false;
 	configs.EnableAutomaticLevelControl = false;
 
 	ESP32A1SCodec::Initialize(&configs);
 
 	if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
-		ESP32A1SCodec::SetMicrophoneGain(6);
+		ESP32A1SCodec::SetMicrophoneGain(0);
 
-	ESP32A1SCodec::SetInputToMixerGain(0);
-	ESP32A1SCodec::SetInputVolume(0);
+	ESP32A1SCodec::SetInputVolume(-50);
 	ESP32A1SCodec::SetDigitalVolume(0);
-	ESP32A1SCodec::SetOutputVolume(0);
+	ESP32A1SCodec::SetOutputVolume(4.5);
 
 #ifdef AUTO_WAH_EFFECT
 	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef CHORUS_EFFECT
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
-#endif
-#ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef FLANGER_EFFECT
 	CreateEffect<FlangerEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -133,6 +134,9 @@ void Application::Initialize(void)
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
+#ifdef DISTORTION_EFFECT
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
 #endif
@@ -232,6 +236,9 @@ void Application::PassthroughTask(void)
 
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
+
+			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+				processBufferL[i] *= MAX_GAIN;
 
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
