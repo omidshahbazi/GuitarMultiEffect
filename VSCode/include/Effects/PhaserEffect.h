@@ -19,6 +19,8 @@ protected:
 
 private:
 	Phaser m_Phaser;
+	Potentiometer *m_WetRatePot;
+	Potentiometer *m_DepthPot;
 	Potentiometer *m_RatePot;
 };
 

@@ -7,7 +7,10 @@
 
 SustainEffect::SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Sustain(SampleRate)
+	  m_Sustain(SampleRate),
+	  m_FeedbackPot(nullptr),
+	  m_ActiveSwitch(nullptr),
+	  m_WetSwitch(nullptr)
 {
 	m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin15);
 	m_FeedbackPot->SetOnChangedListener(

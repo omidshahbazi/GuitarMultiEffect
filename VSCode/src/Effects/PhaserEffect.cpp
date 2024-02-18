@@ -6,13 +6,30 @@
 
 PhaserEffect::PhaserEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Phaser(SampleRate)
+	  m_Phaser(SampleRate),
+	  m_WetRatePot(nullptr),
+	  m_DepthPot(nullptr),
+	  m_RatePot(nullptr)
 {
+	m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", GPIOPins::Pin13);
+	m_WetRatePot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Phaser.SetWetRate(value);
+		});
+
+	m_DepthPot = ControlManager->CreatePotentiometer("Depth", GPIOPins::Pin14);
+	m_DepthPot->SetOnChangedListener(
+		[&](float value)
+		{
+			m_Phaser.SetDepth(Math::Lerp(0.0, Phaser::MAX_DEPTH, value));
+		});
+
 	m_RatePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin15);
 	m_RatePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Phaser.SetRate(Math::Lerp(0.01, 25, value));
+			m_Phaser.SetRate(Math::Lerp(0.01, 4, value));
 		});
 }
 

@@ -6,7 +6,9 @@
 
 TremoloEffect::TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
-	  m_Tremolo(SampleRate)
+	  m_Tremolo(SampleRate),
+	  m_RatePot(nullptr),
+	  m_DepthPot(nullptr)
 {
 	m_RatePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin14);
 	m_RatePot->SetOnChangedListener(

@@ -187,7 +187,7 @@ void Application::SineWavePlayerTask(void)
 	SineWaveGenerator<int32> sineWave;
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
-	sineWave.SetAmplitude(0.3);
+	sineWave.SetAmplitude(0.03);
 	sineWave.SetFrequency(NOTE_A4);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
