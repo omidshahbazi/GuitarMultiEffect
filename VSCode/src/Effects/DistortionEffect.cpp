@@ -17,7 +17,7 @@ DistortionEffect::DistortionEffect(ControlManager *ControlManager, uint32 Sample
 			m_Distortion.SetGain(value);
 		});
 
-	m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin15);
+	m_DrivePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin15);
 	m_DrivePot->SetOnChangedListener(
 		[&](float value)
 		{

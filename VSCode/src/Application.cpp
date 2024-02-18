@@ -11,9 +11,6 @@
 #ifdef CHORUS_EFFECT
 #include "Effects/ChorusEffect.h"
 #endif
-#ifdef COMPRESSOR_EFFECT
-#include "Effects/CompressorEffect.h"
-#endif
 #ifdef DISTORTION_EFFECT
 #include "Effects/DistortionEffect.h"
 #endif
@@ -29,24 +26,29 @@
 #ifdef REVERB_EFFECT
 #include "Effects/ReverbEffect.h"
 #endif
-#ifdef SUSTAIN_EFFECT
-#include "Effects/SustainEffect.h"
-#endif
 #ifdef TREMOLO_EFFECT
 #include "Effects/TremoloEffect.h"
 #endif
 #ifdef WAH_EFFECT
 #include "Effects/WahEffect.h"
 #endif
+
+#ifdef PHASER_EFFECT
+#include "Effects/PhaserEffect.h"
+#endif
+#ifdef COMPRESSOR_EFFECT
+#include "Effects/CompressorEffect.h"
+#endif
+#ifdef SUSTAIN_EFFECT
+#include "Effects/SustainEffect.h"
+#endif
 #ifdef TEST_EFFECT
 #include "Effects/TestEffect.h"
 #endif
+
 #ifdef SINE_WAVE_PLAYER
 #include <framework/include/SineWaveGenerator.h>
 #endif
-
-#include <framework/include/Controls/Switch.h>
-#include <framework/include/Controls/Potentiometer.h>
 
 #if defined(REVERB_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
@@ -107,13 +109,16 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::SetInputVolume(-50);
 	ESP32A1SCodec::SetDigitalVolume(0);
-	ESP32A1SCodec::SetOutputVolume(4.5);
+	ESP32A1SCodec::SetOutputVolume(3);
 
 #ifdef AUTO_WAH_EFFECT
 	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef CHORUS_EFFECT
 	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
+#ifdef DISTORTION_EFFECT
+	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef FLANGER_EFFECT
 	CreateEffect<FlangerEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
@@ -134,8 +139,8 @@ void Application::Initialize(void)
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
-#ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#ifdef PHASER_EFFECT
+	CreateEffect<PhaserEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
@@ -148,7 +153,6 @@ void Application::Initialize(void)
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
-	// TODO: Add Phaser
 	// MXR Phase
 	// Looper
 	// Tube Screamer
@@ -183,7 +187,7 @@ void Application::SineWavePlayerTask(void)
 	SineWaveGenerator<int32> sineWave;
 	sineWave.SetDoubleBuffered(false);
 	sineWave.SetSampleRate(SAMPLE_RATE);
-	sineWave.SetAmplitude(0.03);
+	sineWave.SetAmplitude(0.3);
 	sineWave.SetFrequency(NOTE_A4);
 
 	uint32 bufferLen = sineWave.GetBufferLength();
