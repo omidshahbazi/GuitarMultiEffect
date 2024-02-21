@@ -23,6 +23,9 @@
 #ifdef OVERDRIVE_EFFECT
 #include "Effects/OverdriveEffect.h"
 #endif
+#ifdef PHASER_EFFECT
+#include "Effects/PhaserEffect.h"
+#endif
 #ifdef REVERB_EFFECT
 #include "Effects/ReverbEffect.h"
 #endif
@@ -33,8 +36,8 @@
 #include "Effects/WahEffect.h"
 #endif
 
-#ifdef PHASER_EFFECT
-#include "Effects/PhaserEffect.h"
+#ifdef LOOPER_EFFECT
+#include "Effects/LooperEffect.h"
 #endif
 #ifdef COMPRESSOR_EFFECT
 #include "Effects/CompressorEffect.h"
@@ -50,7 +53,9 @@
 #include <framework/include/SineWaveGenerator.h>
 #endif
 
-#if defined(REVERB_EFFECT)
+#if defined(LOOPER_EFFECT)
+const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
+#elif defined(REVERB_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 #elif defined(SUSTAIN_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
@@ -129,6 +134,9 @@ void Application::Initialize(void)
 #ifdef OVERDRIVE_EFFECT
 	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
+#ifdef PHASER_EFFECT
+	CreateEffect<PhaserEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#endif
 #ifdef REVERB_EFFECT
 	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
@@ -139,8 +147,8 @@ void Application::Initialize(void)
 	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
-#ifdef PHASER_EFFECT
-	CreateEffect<PhaserEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+#ifdef LOOPER_EFFECT
+	CreateEffect<LooperEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
@@ -153,8 +161,6 @@ void Application::Initialize(void)
 	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
 #endif
 
-	// MXR Phase
-	// Looper
 	// Tube Screamer
 	// Octave
 

@@ -29,7 +29,7 @@ PhaserEffect::PhaserEffect(ControlManager *ControlManager, uint32 SampleRate)
 	m_RatePot->SetOnChangedListener(
 		[&](float value)
 		{
-			m_Phaser.SetRate(Math::Lerp(0.01, 4, value));
+			m_Phaser.SetRate(Math::Lerp(0.1, 3.7, value));
 		});
 }
 
