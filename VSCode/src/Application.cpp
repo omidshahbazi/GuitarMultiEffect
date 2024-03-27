@@ -148,7 +148,7 @@ void Application::Initialize(void)
 #endif
 
 #ifdef LOOPER_EFFECT
-	CreateEffect<LooperEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<LooperEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
 #endif
 #ifdef COMPRESSOR_EFFECT
 	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect

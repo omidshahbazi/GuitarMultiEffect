@@ -11,10 +11,13 @@ LooperEffect::LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
 	  m_ModeSwitch(nullptr),
 	  m_VolumePot(nullptr)
 {
+	// TODO: this needs to set different modes using a single switch or probably two?
+
 	m_ModeSwitch = ControlManager->CreateSwitch("Mode", GPIOPins::Pin21);
 	m_ModeSwitch->SetOnChangedListener(
-		[&](bool value) {
-
+		[&](bool value)
+		{
+			m_Looper.SetMode(value ? Looper::Modes::Record : Looper::Modes::Replay);
 		});
 
 	m_VolumePot = ControlManager->CreatePotentiometer("Volume", GPIOPins::Pin15);
