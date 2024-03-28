@@ -13,10 +13,8 @@
 // }
 
 #include "daisy_seed.h"
-// #include "daisysp.h"
 
 using namespace daisy;
-// using namespace daisysp;
 
 DaisySeed hw;
 
