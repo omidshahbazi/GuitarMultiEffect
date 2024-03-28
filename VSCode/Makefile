@@ -1,12 +1,11 @@
 # Project Name
-TARGET = VSCode
+TARGET = GuitarMultiEffect
 
 # Sources
-CPP_SOURCES = VSCode.cpp
+CPP_SOURCES = src/main.cpp
 
 # Library Locations
-LIBDAISY_DIR = ../Projects/WorkingFiles/DaisyExamples/libDaisy/
-DAISYSP_DIR = ../Projects/WorkingFiles/DaisyExamples/DaisySP/
+LIBDAISY_DIR ?= include/libDaisy
 
 # Core location, and generic Makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
