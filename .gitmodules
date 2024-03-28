@@ -3,4 +3,4 @@
 	url = git@github.com:omidshahbazi/ESP32-A1S-ES8388-Framework.git
 [submodule "VSCode/include/libDaisy"]
 	path = VSCode/include/libDaisy
-	url = https://github.com/electro-smith/libDaisy
+	url = https://github.com/electro-smith/libDaisy.git
