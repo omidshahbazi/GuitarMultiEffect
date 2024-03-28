@@ -8,6 +8,26 @@
         "_DEBUG"
         , "UNICODE"
         , "_UNICODE"
+
+        //, "SIMPLE_LOW_HIGH_PASS_FILTER",
+        
+	      //, "AUTO_WAH_EFFECT",
+	      //, "CHORUS_EFFECT",
+	      //, "DISTORTION_EFFECT",
+	      //, "FLANGER_EFFECT",
+	      //, "NOISE_GATE_EFFECT",
+	      , "OVERDRIVE_EFFECT"
+	      //, "PHASER_EFFECT",
+	      //, "REVERB_EFFECT",
+	      //, "TREMOLO_EFFECT",
+	      //, "WAH_EFFECT",
+        
+	      //, "LOOPER_EFFECT",
+	      //, "COMPRESSOR_EFFECT",
+	      //, "SUSTAIN_EFFECT",
+	      //, "TEST_EFFECT",
+        
+	      //"SINE_WAVE_PLAYER"
       ],
       "includePath": [
         "${workspaceFolder}/include/",
