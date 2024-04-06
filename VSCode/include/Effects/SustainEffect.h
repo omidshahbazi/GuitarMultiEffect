@@ -5,7 +5,7 @@
 #define SUSTAIN_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Sustain.h>
+#include <framework/include/DSP/DSPs/Sustain.h>
 
 class Potentiometer;
 class Switch;

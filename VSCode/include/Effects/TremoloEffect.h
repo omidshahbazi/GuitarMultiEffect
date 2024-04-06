@@ -5,7 +5,7 @@
 #define TREMOLO_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Tremolo.h>
+#include <framework/include/DSP/DSPs/Tremolo.h>
 
 class Potentiometer;
 

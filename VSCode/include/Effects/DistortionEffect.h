@@ -5,7 +5,7 @@
 #define DISTORTION_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Distortion.h>
+#include <framework/include/DSP/DSPs/Distortion.h>
 
 class Potentiometer;
 

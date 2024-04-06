@@ -5,7 +5,7 @@
 #define TEST_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Test.h>
+#include <framework/include/DSP/DSPs/Test.h>
 
 class Potentiometer;
 

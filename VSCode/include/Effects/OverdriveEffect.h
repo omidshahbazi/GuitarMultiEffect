@@ -5,7 +5,7 @@
 #define OVERDRIVE_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Overdrive.h>
+#include <framework/include/DSP/DSPs/Overdrive.h>
 
 class Potentiometer;
 

@@ -5,7 +5,7 @@
 #define LOOPER_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Looper.h>
+#include <framework/include/DSP/DSPs/Looper.h>
 
 class Switch;
 class Potentiometer;

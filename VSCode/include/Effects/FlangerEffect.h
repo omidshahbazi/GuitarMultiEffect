@@ -5,7 +5,7 @@
 #define FLANGER_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Flanger.h>
+#include <framework/include/DSP/DSPs/Flanger.h>
 
 class Potentiometer;
 

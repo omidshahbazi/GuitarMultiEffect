@@ -5,7 +5,7 @@
 #define AUTO_WAH_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/AutoWah.h>
+#include <framework/include/DSP/DSPs/AutoWah.h>
 
 class AutoWahEffect : public Effect
 {

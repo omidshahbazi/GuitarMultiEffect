@@ -1,6 +1,6 @@
 #include "Effects/Effect.h"
 #include "ControlManager.h"
-#include <framework/include/DSP/IDSP.h>
+#include <framework/include/DSP/DSPs/IDSP.h>
 #include <framework/include/Controls/Switch.h>
 #include <framework/include/Controls/LED.h>
 

@@ -5,7 +5,7 @@
 #define WAH_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Wah.h>
+#include <framework/include/DSP/DSPs/Wah.h>
 
 class Potentiometer;
 

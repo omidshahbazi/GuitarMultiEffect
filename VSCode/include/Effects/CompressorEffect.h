@@ -5,7 +5,7 @@
 #define COMPRESSOR_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Compressor.h>
+#include <framework/include/DSP/DSPs/Compressor.h>
 
 class Potentiometer;
 

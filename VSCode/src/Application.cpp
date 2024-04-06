@@ -1,7 +1,7 @@
 #include "Application.h"
-#include <framework/include/Time.h>
+#include <framework/include/DSP/Time.h>
 #include <framework/include/Task.h>
-#include <framework/include/Memory.h>
+#include <framework/include/DSP/Memory.h>
 #include <framework/include/ESP32A1SCodec.h>
 #include <framework/include/BufferUtils.h>
 
@@ -50,7 +50,7 @@
 #endif
 
 #ifdef SINE_WAVE_PLAYER
-#include <framework/include/SineWaveGenerator.h>
+#include <framework/include/DSP/SineWaveGenerator.h>
 #endif
 
 #if defined(LOOPER_EFFECT)

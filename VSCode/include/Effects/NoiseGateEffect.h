@@ -5,7 +5,7 @@
 #define NOISE_GATE_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/NoiseGate.h>
+#include <framework/include/DSP/DSPs/NoiseGate.h>
 
 class Potentiometer;
 

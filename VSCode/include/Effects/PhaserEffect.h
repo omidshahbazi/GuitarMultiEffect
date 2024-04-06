@@ -5,7 +5,7 @@
 #define PHASER_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Phaser.h>
+#include <framework/include/DSP/DSPs/Phaser.h>
 
 class Potentiometer;
 

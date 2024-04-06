@@ -5,7 +5,7 @@
 #define REVERB_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Reverb.h>
+#include <framework/include/DSP/DSPs/Reverb.h>
 
 class Potentiometer;
 
