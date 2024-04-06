@@ -3,7 +3,7 @@
 #include "Effects/CompressorEffect.h"
 #include "ControlManager.h"
 #include <framework/include/Controls/Potentiometer.h>
-#include <framework/include/Math.h>
+#include <framework/include/DSP/Math.h>
 
 CompressorEffect::CompressorEffect(ControlManager *ControlManager, uint32 SampleRate)
 	: Effect(ControlManager),
