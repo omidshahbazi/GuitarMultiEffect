@@ -7,19 +7,47 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Sustain.h>
 
-class Potentiometer;
-class Switch;
-
-class SustainEffect : public Effect
+template <typename T>
+class SustainEffect : public Effect<T>
 {
 public:
-	SustainEffect(ControlManager *ControlManager, uint32 SampleRate);
+	SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
+		: Effect<T>(ControlManager),
+		  m_Sustain(SampleRate),
+		  m_FeedbackPot(nullptr),
+		  m_ActiveSwitch(nullptr),
+		  m_WetSwitch(nullptr)
+	{
+		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin15);
+		m_FeedbackPot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_Sustain.SetFeedback(value);
+			});
+
+		m_ActiveSwitch = ControlManager->CreateSwitch("Active", GPIOPins::Pin21);
+		m_ActiveSwitch->SetOnChangedListener(
+			[&](bool value)
+			{
+				m_Sustain.SetActive(value);
+			});
+
+		m_WetSwitch = ControlManager->CreateSwitch("Wet", GPIOPins::Pin22);
+		m_WetSwitch->SetOnChangedListener(
+			[&](bool value)
+			{
+				m_Sustain.SetWet(value);
+			});
+	}
 
 protected:
-	IDSP *GetDSP(void);
+	IDSP<T> *GetDSP(void)
+	{
+		return &m_Sustain;
+	}
 
 private:
-	Sustain m_Sustain;
+	Sustain<T> m_Sustain;
 	Potentiometer *m_FeedbackPot;
 	Switch *m_ActiveSwitch;
 	Switch *m_WetSwitch;

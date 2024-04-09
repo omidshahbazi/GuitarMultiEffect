@@ -68,18 +68,6 @@ const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
 const float MAX_GAIN = 500;
 
-template <typename T, typename... ArgsT>
-T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
-{
-	T *effect = Memory::Allocate<T>(1, true);
-
-	new (effect) T(Args...);
-
-	Effects.push_back(effect);
-
-	return effect;
-}
-
 Application::Application(void)
 	: m_Mute(false)
 {
@@ -117,48 +105,48 @@ void Application::Initialize(void)
 	ESP32A1SCodec::SetOutputVolume(3);
 
 #ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<AutoWahEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef CHORUS_EFFECT
-	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ChorusEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<DistortionEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef FLANGER_EFFECT
-	CreateEffect<FlangerEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<FlangerEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef NOISE_GATE_EFFECT
-	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<NoiseGateEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef OVERDRIVE_EFFECT
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<OverdriveEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef PHASER_EFFECT
-	CreateEffect<PhaserEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<PhaserEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef REVERB_EFFECT
-	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ReverbEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
-	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TremoloEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<WahEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 
 #ifdef LOOPER_EFFECT
-	CreateEffect<LooperEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
+	CreateEffect<LooperEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
 #endif
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
+	CreateEffect<CompressorEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
 #endif
 #ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
+	CreateEffect<SustainEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
 #endif
 
 #ifdef TEST_EFFECT
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TestEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
 #endif
 
 	// Tube Screamer
@@ -200,7 +188,7 @@ void Application::SineWavePlayerTask(void)
 	uint32 sampleCount = bufferLen * 2;
 
 	int32 *outBuffer = Memory::Allocate<int32>(sampleCount);
-	double *processBufferL = Memory::Allocate<double>(bufferLen);
+	SampleType *processBufferL = Memory::Allocate<SampleType>(bufferLen);
 
 	while (true)
 	{
@@ -210,7 +198,7 @@ void Application::SineWavePlayerTask(void)
 		for (uint16 i = 0; i < bufferLen; ++i)
 			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 1);
 
-		for (Effect *effect : m_Effects)
+		for (Effect<SampleType> *effect : m_Effects)
 			effect->Apply(processBufferL, bufferLen);
 
 		for (uint16 i = 0; i < bufferLen; ++i)
@@ -232,7 +220,7 @@ void Application::PassthroughTask(void)
 	Task::Delay(2000);
 
 	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
-	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
+	SampleType *processBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
 	while (true)
 	{
@@ -253,7 +241,7 @@ void Application::PassthroughTask(void)
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
 
-			for (Effect *effect : m_Effects)
+			for (Effect<SampleType> *effect : m_Effects)
 				effect->Apply(processBufferL, FRAME_LENGTH);
 		}
 

@@ -7,19 +7,41 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Looper.h>
 
-class Switch;
-class Potentiometer;
-
-class LooperEffect : public Effect
+template <typename T>
+class LooperEffect : public Effect<T>
 {
 public:
-	LooperEffect(ControlManager *ControlManager, uint32 SampleRate);
+	LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
+		: Effect<T>(ControlManager),
+		  m_Looper(SampleRate),
+		  m_ModeSwitch(nullptr),
+		  m_VolumePot(nullptr)
+	{
+		// TODO: this needs to set different modes using a single switch or probably two?
+
+		m_ModeSwitch = ControlManager->CreateSwitch("Mode", GPIOPins::Pin21);
+		m_ModeSwitch->SetOnChangedListener(
+			[&](bool value)
+			{
+				m_Looper.SetMode(value ? Looper<T>::Modes::Record : Looper<T>::Modes::Replay);
+			});
+
+		m_VolumePot = ControlManager->CreatePotentiometer("Volume", GPIOPins::Pin15);
+		m_VolumePot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_Looper.SetVolume(value);
+			});
+	}
 
 protected:
-	IDSP *GetDSP(void);
+	IDSP<T> *GetDSP(void)
+	{
+		return &m_Looper;
+	}
 
 private:
-	Looper m_Looper;
+	Looper<T> m_Looper;
 	Switch *m_ModeSwitch;
 	Potentiometer *m_VolumePot;
 };

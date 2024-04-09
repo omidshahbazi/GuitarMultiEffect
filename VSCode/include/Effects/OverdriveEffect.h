@@ -7,18 +7,38 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Overdrive.h>
 
-class Potentiometer;
-
-class OverdriveEffect : public Effect
+template <typename T>
+class OverdriveEffect : public Effect<T>
 {
 public:
-	OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate);
+	OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate)
+		: Effect<T>(ControlManager),
+		  m_GainPot(nullptr),
+		  m_DrivePot(nullptr)
+	{
+		m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin14);
+		m_GainPot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_Overdrive.SetGain(value);
+			});
+
+		m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin15);
+		m_DrivePot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_Overdrive.SetDrive(value);
+			});
+	}
 
 protected:
-	IDSP *GetDSP(void);
+	IDSP<T> *GetDSP(void)
+	{
+		return &m_Overdrive;
+	}
 
 private:
-	Overdrive m_Overdrive;
+	Overdrive<T> m_Overdrive;
 	Potentiometer *m_GainPot;
 	Potentiometer *m_DrivePot;
 };

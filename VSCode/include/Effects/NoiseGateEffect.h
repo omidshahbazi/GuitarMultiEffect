@@ -7,18 +7,31 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/NoiseGate.h>
 
-class Potentiometer;
-
-class NoiseGateEffect : public Effect
+template <typename T>
+class NoiseGateEffect : public Effect<T>
 {
 public:
-	NoiseGateEffect(ControlManager *ControlManager, uint32 SampleRate);
+	NoiseGateEffect(ControlManager *ControlManager, uint32 SampleRate)
+		: Effect<T>(ControlManager),
+		  m_NoiseGate(SampleRate),
+		  m_ThresholdPot(nullptr)
+	{
+		m_ThresholdPot = ControlManager->CreatePotentiometer("Threshold", GPIOPins::Pin14);
+		m_ThresholdPot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_NoiseGate.SetThreshold(value);
+			});
+	}
 
 protected:
-	IDSP *GetDSP(void);
+	IDSP<T> *GetDSP(void)
+	{
+		return &m_NoiseGate;
+	}
 
 private:
-	NoiseGate m_NoiseGate;
+	NoiseGate<T> m_NoiseGate;
 	Potentiometer *m_ThresholdPot;
 };
 
