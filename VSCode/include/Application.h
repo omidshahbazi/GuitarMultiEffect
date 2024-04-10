@@ -4,12 +4,12 @@
 
 #include "Effects/Effect.h"
 #include "ControlManager.h"
-#include <framework/include/Common.h>
+#include <framework/include/ESP32HAL.h>
 #include <vector>
 
 typedef float SampleType;
 
-class Application
+class Application : public ESP32HAL
 {
 private:
 	typedef std::vector<Effect<SampleType> *> EffectList;
@@ -40,7 +40,7 @@ private:
 
 private:
 	bool m_Mute;
-	ControlManager m_ControlManager;
+	ControlManager *m_ControlManager;
 	EffectList m_Effects;
 };
 

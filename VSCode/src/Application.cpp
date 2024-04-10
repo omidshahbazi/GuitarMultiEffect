@@ -69,8 +69,12 @@ const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 const float MAX_GAIN = 500;
 
 Application::Application(void)
-	: m_Mute(false)
+	: m_ControlManager(nullptr),
+	  m_Mute(false)
 {
+	Log::Initialize(this);
+	Memory::Initialize(this);
+
 #if __PLATFORMIO_BUILD_DEBUG__
 	Log::SetMask(Log::Types::General);
 #endif
@@ -104,49 +108,52 @@ void Application::Initialize(void)
 	ESP32A1SCodec::SetDigitalVolume(0);
 	ESP32A1SCodec::SetOutputVolume(3);
 
+	m_ControlManager = Memory::Allocate<ControlManager>();
+	new (m_ControlManager) ControlManager(this);
+
 #ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef CHORUS_EFFECT
-	CreateEffect<ChorusEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ChorusEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<DistortionEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef FLANGER_EFFECT
-	CreateEffect<FlangerEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<FlangerEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef NOISE_GATE_EFFECT
-	CreateEffect<NoiseGateEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<NoiseGateEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef OVERDRIVE_EFFECT
-	CreateEffect<OverdriveEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<OverdriveEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef PHASER_EFFECT
-	CreateEffect<PhaserEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<PhaserEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef REVERB_EFFECT
-	CreateEffect<ReverbEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ReverbEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
-	CreateEffect<TremoloEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TremoloEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
-	CreateEffect<WahEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 #ifdef LOOPER_EFFECT
-	CreateEffect<LooperEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
+	CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
 #endif
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
+	CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
 #endif
 #ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
+	CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
 #endif
 
 #ifdef TEST_EFFECT
-	CreateEffect<TestEffect<SampleType>>(&m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 	// Tube Screamer

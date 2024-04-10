@@ -5,9 +5,9 @@
 #include "ControlManager.h"
 #include <framework/include/Common.h>
 #include <framework/include/DSP/DSPs/IDSP.h>
-#include <framework/include/Controls/Switch.h>
-#include <framework/include/Controls/LED.h>
-#include <framework/include/Controls/Potentiometer.h>
+#include <framework/include/DSP/Controls/Switch.h>
+#include <framework/include/DSP/Controls/LED.h>
+#include <framework/include/DSP/Controls/Potentiometer.h>
 
 template <typename T>
 class Effect

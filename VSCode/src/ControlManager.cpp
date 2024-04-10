@@ -1,11 +1,27 @@
 #include "ControlManager.h"
-#include <framework/include/Controls/LED.h>
-#include <framework/include/Controls/Switch.h>
-#include <framework/include/Controls/Potentiometer.h>
+#include <framework/include/DSP/Controls/LED.h>
+#include <framework/include/DSP/Controls/Switch.h>
+#include <framework/include/DSP/Controls/Potentiometer.h>
+#include <framework/include/Task.h>
 
-ControlManager::ControlManager(void)
-	: m_UsedGPIOs()
+#define PROCESS_RATE 10
+
+ControlManager::ControlManager(IHAL *HAL)
+	: m_HAL(HAL),
+	  m_Factory(PROCESS_RATE),
+	  m_UsedGPIOs()
 {
+	Task::Create(
+		[&]()
+		{
+			while (true)
+			{
+				Task::Delay(1);
+
+				m_Factory.Process();
+			}
+		},
+		2048, "ControlsTask", 0, 1);
 }
 
 LED *ControlManager::CreateLED(const char *Name, GPIOPins Pin)
@@ -16,7 +32,7 @@ LED *ControlManager::CreateLED(const char *Name, GPIOPins Pin)
 
 	Log::WriteInfo("Controls", "%s: LED %i", Name, Pin);
 
-	return m_Factory.Create<LED>(Pin);
+	return m_Factory.Create<LED>(m_HAL, (uint8)Pin);
 }
 
 Switch *ControlManager::CreateSwitch(const char *Name, GPIOPins Pin)
@@ -27,7 +43,7 @@ Switch *ControlManager::CreateSwitch(const char *Name, GPIOPins Pin)
 
 	Log::WriteInfo("Controls", "%s: Switch %i", Name, Pin);
 
-	return m_Factory.Create<Switch>(Pin);
+	return m_Factory.Create<Switch>(m_HAL, (uint8)Pin);
 }
 
 Potentiometer *ControlManager::CreatePotentiometer(const char *Name, GPIOPins Pin)
@@ -38,7 +54,7 @@ Potentiometer *ControlManager::CreatePotentiometer(const char *Name, GPIOPins Pi
 
 	Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
-	return m_Factory.Create<Potentiometer>(Pin);
+	return m_Factory.Create<Potentiometer>(m_HAL, PROCESS_RATE, (uint8)Pin);
 }
 
 void ControlManager::CheckIfGPIOIsUsed(GPIOPins Pin)
