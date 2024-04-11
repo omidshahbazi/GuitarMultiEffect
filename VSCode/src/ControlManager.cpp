@@ -8,7 +8,6 @@
 
 ControlManager::ControlManager(IHAL *HAL)
 	: m_HAL(HAL),
-	  m_Factory(PROCESS_RATE),
 	  m_UsedGPIOs()
 {
 	Task::Create(
@@ -32,7 +31,7 @@ LED *ControlManager::CreateLED(const char *Name, GPIOPins Pin)
 
 	Log::WriteInfo("Controls", "%s: LED %i", Name, Pin);
 
-	return m_Factory.Create<LED>(m_HAL, (uint8)Pin);
+	return m_Factory.Create<LED>(m_HAL, (uint8)Pin, PROCESS_RATE);
 }
 
 Switch *ControlManager::CreateSwitch(const char *Name, GPIOPins Pin)
@@ -43,7 +42,7 @@ Switch *ControlManager::CreateSwitch(const char *Name, GPIOPins Pin)
 
 	Log::WriteInfo("Controls", "%s: Switch %i", Name, Pin);
 
-	return m_Factory.Create<Switch>(m_HAL, (uint8)Pin);
+	return m_Factory.Create<Switch>(m_HAL, (uint8)Pin, PROCESS_RATE);
 }
 
 Potentiometer *ControlManager::CreatePotentiometer(const char *Name, GPIOPins Pin)
@@ -54,7 +53,7 @@ Potentiometer *ControlManager::CreatePotentiometer(const char *Name, GPIOPins Pi
 
 	Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
-	return m_Factory.Create<Potentiometer>(m_HAL, PROCESS_RATE, (uint8)Pin);
+	return m_Factory.Create<Potentiometer>(m_HAL, (uint8)Pin, PROCESS_RATE);
 }
 
 void ControlManager::CheckIfGPIOIsUsed(GPIOPins Pin)

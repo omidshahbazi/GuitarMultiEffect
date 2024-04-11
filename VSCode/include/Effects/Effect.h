@@ -30,7 +30,7 @@ public:
 		};
 
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin19);
-		m_EnabledSwitch->SetOnChangedListener(onSwitchChanged);
+		m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
 
 		onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
 	}
