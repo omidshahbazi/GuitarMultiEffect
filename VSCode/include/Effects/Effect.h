@@ -6,7 +6,7 @@
 #include <framework/include/Common.h>
 #include <framework/include/DSP/DSPs/IDSP.h>
 #include <framework/include/DSP/Controls/Switch.h>
-#include <framework/include/DSP/Controls/LED.h>
+#include <framework/include/DSP/Controls/SingleLED.h>
 #include <framework/include/DSP/Controls/Potentiometer.h>
 
 template <typename T>
@@ -16,17 +16,17 @@ public:
 	Effect(ControlManager *ControlManager)
 		: m_Enabled(true)
 	{
-		m_EnabledLED = ControlManager->CreateLED("Enabled", GPIOPins::Pin23);
-		m_EnabledLED->SetTurnedOn(false);
+		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", GPIOPins::Pin22);
+		m_EnabledLED->SetConstantBrighness(0);
 
 		auto onSwitchChanged = [&](bool value)
 		{
 			m_Enabled = value;
 
 			if (m_Enabled)
-				m_EnabledLED->SetBlinking(2);
+				m_EnabledLED->SetBlinkingBrighness(1, 1);
 			else
-				m_EnabledLED->SetTurnedOn(false);
+				m_EnabledLED->SetConstantBrighness(0);
 		};
 
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin19);
@@ -49,7 +49,7 @@ protected:
 private:
 	bool m_Enabled;
 	Switch *m_EnabledSwitch;
-	LED *m_EnabledLED;
+	SingleLED *m_EnabledLED;
 };
 
 #endif

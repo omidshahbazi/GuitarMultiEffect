@@ -6,7 +6,9 @@
 #include <framework/include/Common.h>
 #include <functional>
 
-class LED;
+class SingleLED;
+class DualLED;
+class TripleLED;
 class Switch;
 class Potentiometer;
 
@@ -18,7 +20,9 @@ public:
 public:
 	ControlManager(IHAL *HAL);
 
-	LED *CreateLED(const char *Name, GPIOPins Pin);
+	SingleLED *CreateSingleLED(const char *Name, GPIOPins Pin);
+	DualLED *CreateDualLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin);
+	TripleLED *CreateTripleLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin, GPIOPins BluePin);
 
 	Switch *CreateSwitch(const char *Name, GPIOPins Pin);
 
