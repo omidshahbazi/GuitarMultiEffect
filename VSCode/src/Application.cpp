@@ -75,7 +75,7 @@ Application::Application(void)
 	Log::Initialize(this);
 	Memory::Initialize(this);
 
-#if __PLATFORMIO_BUILD_DEBUG__
+#if _DEBUG
 	Log::SetMask(Log::Types::General);
 #endif
 
