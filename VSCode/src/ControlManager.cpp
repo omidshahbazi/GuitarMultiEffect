@@ -2,6 +2,7 @@
 #include <framework/include/DSP/Controls/SingleLED.h>
 #include <framework/include/DSP/Controls/DualLED.h>
 #include <framework/include/DSP/Controls/TripleLED.h>
+#include <framework/include/DSP/Controls/Button.h>
 #include <framework/include/DSP/Controls/Switch.h>
 #include <framework/include/DSP/Controls/Potentiometer.h>
 #include <framework/include/Task.h>
@@ -17,7 +18,7 @@ ControlManager::ControlManager(IHAL *HAL)
 		{
 			while (true)
 			{
-				Task::Delay(1);
+				HAL->Delay(1);
 
 				m_Factory.Process();
 			}
@@ -65,6 +66,17 @@ TripleLED *ControlManager::CreateTripleLED(const char *Name, GPIOPins RedPin, GP
 	Log::WriteInfo("Controls", "%s: LED %i", Name, BluePin);
 
 	return m_Factory.Create<TripleLED>(m_HAL, (uint8)RedPin, (uint8)GreenPin, (uint8)BluePin, PROCESS_RATE);
+}
+
+Button *ControlManager::CreateButton(const char *Name, GPIOPins Pin)
+{
+	CheckIfGPIOIsUsed(Pin);
+
+	MarkGPIOAsUsed(Pin);
+
+	Log::WriteInfo("Controls", "%s: Button %i", Name, Pin);
+
+	return m_Factory.Create<Button>(m_HAL, (uint8)Pin, PROCESS_RATE);
 }
 
 Switch *ControlManager::CreateSwitch(const char *Name, GPIOPins Pin)

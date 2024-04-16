@@ -161,7 +161,7 @@ void Application::Initialize(void)
 
 	ESP32A1SCodec::PrintSystemStatistics();
 
-	Task::Delay(10);
+	Delay(10);
 
 #ifdef SINE_WAVE_PLAYER
 	Task::Create(
@@ -224,7 +224,7 @@ void Application::PassthroughTask(void)
 {
 	Log::WriteInfo("Starting Passthrough Task");
 
-	Task::Delay(2000);
+	Delay(2000);
 
 	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
 	SampleType *processBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
