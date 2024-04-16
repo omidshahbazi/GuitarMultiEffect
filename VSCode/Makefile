@@ -2,7 +2,7 @@
 TARGET = GuitarMultiEffect
 
 # Sources
-CPP_SOURCES = src/main.cpp src/Application.cpp src/ControlManager.cpp
+CPP_SOURCES = src/main.cpp
 
 # Library Locations
 LIBDAISY_DIR ?= include/framework/libDaisy

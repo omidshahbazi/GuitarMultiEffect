@@ -4,37 +4,111 @@
 
 #include "framework/DSP/Controls/ControlFactory.h"
 #include "framework/Common.h"
+#include "framework/DSP/Controls/SingleLED.h"
+#include "framework/DSP/Controls/DualLED.h"
+#include "framework/DSP/Controls/TripleLED.h"
+#include "framework/DSP/Controls/Button.h"
+#include "framework/DSP/Controls/Switch.h"
+#include "framework/DSP/Controls/Potentiometer.h"
 
-class SingleLED;
-class DualLED;
-class TripleLED;
-class Button;
-class Switch;
-class Potentiometer;
+#define PROCESS_RATE 10
 
 class ControlManager
 {
 public:
-	ControlManager(IHAL *HAL);
+	ControlManager(IHAL *HAL)
+		: m_HAL(HAL),
+		  m_UsedGPIOs()
+	{
+	}
 
 	void Update(void)
 	{
 		m_Factory.Process();
 	}
 
-	SingleLED *CreateSingleLED(const char *Name, GPIOPins Pin);
-	DualLED *CreateDualLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin);
-	TripleLED *CreateTripleLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin, GPIOPins BluePin);
+	SingleLED *CreateSingleLED(const char *Name, GPIOPins Pin)
+	{
+		CheckIfGPIOIsUsed(Pin);
 
-	Button *CreateButton(const char *Name, GPIOPins Pin);
+		MarkGPIOAsUsed(Pin);
 
-	Switch *CreateSwitch(const char *Name, GPIOPins Pin);
+		Log::WriteInfo("Controls", "%s: LED %i", Name, Pin);
 
-	Potentiometer *CreatePotentiometer(const char *Name, GPIOPins Pin);
+		return m_Factory.Create<SingleLED>(m_HAL, (uint8)Pin, PROCESS_RATE);
+	}
+	DualLED *CreateDualLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin)
+	{
+		CheckIfGPIOIsUsed(RedPin);
+		CheckIfGPIOIsUsed(GreenPin);
+
+		MarkGPIOAsUsed(RedPin);
+		MarkGPIOAsUsed(GreenPin);
+
+		Log::WriteInfo("Controls", "%s: LED %i", Name, RedPin);
+		Log::WriteInfo("Controls", "%s: LED %i", Name, GreenPin);
+
+		return m_Factory.Create<DualLED>(m_HAL, (uint8)RedPin, (uint8)GreenPin, PROCESS_RATE);
+	}
+	TripleLED *CreateTripleLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin, GPIOPins BluePin)
+	{
+		CheckIfGPIOIsUsed(RedPin);
+		CheckIfGPIOIsUsed(GreenPin);
+		CheckIfGPIOIsUsed(BluePin);
+
+		MarkGPIOAsUsed(RedPin);
+		MarkGPIOAsUsed(GreenPin);
+		MarkGPIOAsUsed(BluePin);
+
+		Log::WriteInfo("Controls", "%s: LED %i", Name, RedPin);
+		Log::WriteInfo("Controls", "%s: LED %i", Name, GreenPin);
+		Log::WriteInfo("Controls", "%s: LED %i", Name, BluePin);
+
+		return m_Factory.Create<TripleLED>(m_HAL, (uint8)RedPin, (uint8)GreenPin, (uint8)BluePin, PROCESS_RATE);
+	}
+
+	Button *CreateButton(const char *Name, GPIOPins Pin)
+	{
+		CheckIfGPIOIsUsed(Pin);
+
+		MarkGPIOAsUsed(Pin);
+
+		Log::WriteInfo("Controls", "%s: Button %i", Name, Pin);
+
+		return m_Factory.Create<Button>(m_HAL, (uint8)Pin, PROCESS_RATE);
+	}
+
+	Switch *CreateSwitch(const char *Name, GPIOPins Pin)
+	{
+		CheckIfGPIOIsUsed(Pin);
+
+		MarkGPIOAsUsed(Pin);
+
+		Log::WriteInfo("Controls", "%s: Switch %i", Name, Pin);
+
+		return m_Factory.Create<Switch>(m_HAL, (uint8)Pin, PROCESS_RATE);
+	}
+
+	Potentiometer *CreatePotentiometer(const char *Name, GPIOPins Pin)
+	{
+		CheckIfGPIOIsUsed(Pin);
+
+		MarkGPIOAsUsed(Pin);
+
+		Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
+
+		return m_Factory.Create<Potentiometer>(m_HAL, (uint8)Pin, PROCESS_RATE, true);
+	}
 
 private:
-	void CheckIfGPIOIsUsed(GPIOPins Pin);
-	void MarkGPIOAsUsed(GPIOPins Pin);
+	void CheckIfGPIOIsUsed(GPIOPins Pin)
+	{
+		ASSERT(!m_UsedGPIOs[(uint32)Pin], "GPIOPin%i is already in use", (uint32)Pin);
+	}
+	void MarkGPIOAsUsed(GPIOPins Pin)
+	{
+		m_UsedGPIOs[(uint32)Pin] = true;
+	}
 
 private:
 	IHAL *m_HAL;

@@ -13,18 +13,6 @@ int main()
 	return 0;
 }
 
-//-----------------------------------------------------------------------
-// Test the lib in the ESP DONE
-// Test GPIOs ANALOGs INPUT DONE
-// Test GPIOs DIGITALs INPUT DONE
-// Test Voltage
-// Test TL072s Barely, sounds like clear but lower lever!
-// Send the PCB
-// Develop more the libs like what is written in the Notes (PersistentBlob????)
-// Test the above changes in the ESP
-//-----------------------------------------------------------------------
-
-
 // #include "daisy_seed.h"
 
 // using namespace daisy;
