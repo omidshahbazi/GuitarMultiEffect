@@ -30,8 +30,8 @@
 	      //"SINE_WAVE_PLAYER"
       ],
       "includePath": [
-        "${workspaceFolder}/include/",
-        "${workspaceFolder}/include/libDaisy/**"
+        "${workspaceFolder}/include/**",
+        "${workspaceFolder}/include/framework/libDaisy/**"
       ],
       "name": "Win32",
       "windowsSdkVersion": "10.0.17763.0"

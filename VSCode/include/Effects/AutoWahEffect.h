@@ -5,18 +5,26 @@
 #define AUTO_WAH_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/AutoWah.h>
+#include <framework/include/DSP/DSPs/AutoWah.h>
 
-class AutoWahEffect : public Effect
+template <typename T>
+class AutoWahEffect : public Effect<T>
 {
 public:
-	AutoWahEffect(ControlManager *ControlManager, uint32 SampleRate);
+	AutoWahEffect(ControlManager *ControlManager, uint32 SampleRate)
+		: Effect<T>(ControlManager),
+		  m_AutoWah(SampleRate)
+	{
+	}
 
 protected:
-	IDSP *GetDSP(void);
+	IDSP<T> *GetDSP(void)
+	{
+		return reinterpret_cast<IDSP<T> *>(&m_AutoWah);
+	}
 
 private:
-	AutoWah m_AutoWah;
+	AutoWah<T> m_AutoWah;
 };
 
 #endif

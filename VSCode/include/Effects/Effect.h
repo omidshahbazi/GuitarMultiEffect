@@ -2,27 +2,54 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
-#include <framework/include/Common.h>
+#include "../ControlManager.h"
+#include "../framework/Common.h"
+#include "../framework/DSP/DSPs/IDSP.h"
+#include "../framework/DSP/Controls/Switch.h"
+#include "../framework/DSP/Controls/SingleLED.h"
+#include "../framework/DSP/Controls/Potentiometer.h"
 
-class IDSP;
-class ControlManager;
-class Switch;
-class LED;
-
+template <typename T>
 class Effect
 {
 public:
-	Effect(ControlManager *ControlManager);
+	Effect(ControlManager *ControlManager)
+		: m_Enabled(true)
+	{
+		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", GPIOPins::Pin22);
+		m_EnabledLED->SetConstantBrighness(0);
 
-	void Apply(double *Buffer, uint16 Count);
+		auto onSwitchChanged = [&](bool value)
+		{
+			m_Enabled = value;
+
+			if (m_Enabled)
+				m_EnabledLED->SetBlinkingBrighness(1, 1);
+			else
+				m_EnabledLED->SetConstantBrighness(0);
+		};
+
+		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin19);
+		m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
+
+		onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
+	}
+
+	void Apply(T *Buffer, uint16 Count)
+	{
+		if (!m_Enabled)
+			return;
+
+		GetDSP()->ProcessBuffer(Buffer, Count);
+	}
 
 protected:
-	virtual IDSP *GetDSP(void) = 0;
+	virtual IDSP<T> *GetDSP(void) = 0;
 
 private:
 	bool m_Enabled;
 	Switch *m_EnabledSwitch;
-	LED *m_EnabledLED;
+	SingleLED *m_EnabledLED;
 };
 
 #endif

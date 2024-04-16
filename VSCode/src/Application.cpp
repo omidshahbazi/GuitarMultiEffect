@@ -1,9 +1,6 @@
-#include "Application.h"
-#include <framework/include/Time.h>
-#include <framework/include/Task.h>
-#include <framework/include/Memory.h>
-#include <framework/include/ESP32A1SCodec.h>
-#include <framework/include/BufferUtils.h>
+#include "../include/Application.h"
+#include "../include/framework/DSP/Time.h"
+#include "../include/framework/DSP/Memory.h"
 
 #ifdef AUTO_WAH_EFFECT
 #include "Effects/AutoWahEffect.h"
@@ -50,7 +47,7 @@
 #endif
 
 #ifdef SINE_WAVE_PLAYER
-#include <framework/include/SineWaveGenerator.h>
+#include <framework/include/DSP/SineWaveGenerator.h>
 #endif
 
 #if defined(LOOPER_EFFECT)
@@ -68,21 +65,13 @@ const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
 const float MAX_GAIN = 500;
 
-template <typename T, typename... ArgsT>
-T *CreateEffect(Application::EffectList &Effects, ArgsT... Args)
-{
-	T *effect = Memory::Allocate<T>(1, true);
-
-	new (effect) T(Args...);
-
-	Effects.push_back(effect);
-
-	return effect;
-}
-
 Application::Application(void)
-	: m_Mute(false)
+	: m_ControlManager(nullptr),
+	  m_Mute(false)
 {
+	Log::Initialize(this);
+	Memory::Initialize(this);
+
 #if __PLATFORMIO_BUILD_DEBUG__
 	Log::SetMask(Log::Types::General);
 #endif
@@ -94,95 +83,74 @@ void Application::Initialize(void)
 {
 	Log::WriteInfo("Initializing");
 
-	ESP32A1SCodec::Configs configs;
-	configs.Version = ESP32A1SCodec::Versions::V2974;
-	configs.SampleRate = SAMPLE_RATE;
-	configs.BitsPerSample = ESP32A1SCodec::BitsPerSamples::BPS32;
-	configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::LeftAndRight;
-	configs.BufferCount = 2;
-	configs.BufferLength = SAMPLE_COUNT * sizeof(int32);
-	configs.InputMode = ESP32A1SCodec::InputModes::Microphone1AndMicrophone2Differential; // TODO: Not sure why, but if I use Microphone1 only, a tick noise would be present where it makes many issue in clipping effects, also I haven't switched to the differential mode on the dev-board
-	configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneLAndHeadphoneR;
-	configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
-	configs.EnableNoiseGate = false;
-	configs.EnableAutomaticLevelControl = false;
+	// TODO: Init Daisy Seed
 
-	ESP32A1SCodec::Initialize(&configs);
-
-	if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
-		ESP32A1SCodec::SetMicrophoneGain(0);
-
-	ESP32A1SCodec::SetInputVolume(-50);
-	ESP32A1SCodec::SetDigitalVolume(0);
-	ESP32A1SCodec::SetOutputVolume(3);
+	m_ControlManager = Memory::Allocate<ControlManager>();
+	new (m_ControlManager) ControlManager(this);
 
 #ifdef AUTO_WAH_EFFECT
-	CreateEffect<AutoWahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef CHORUS_EFFECT
-	CreateEffect<ChorusEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ChorusEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef DISTORTION_EFFECT
-	CreateEffect<DistortionEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<DistortionEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef FLANGER_EFFECT
-	CreateEffect<FlangerEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<FlangerEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef NOISE_GATE_EFFECT
-	CreateEffect<NoiseGateEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<NoiseGateEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef OVERDRIVE_EFFECT
-	CreateEffect<OverdriveEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<OverdriveEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef PHASER_EFFECT
-	CreateEffect<PhaserEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<PhaserEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef REVERB_EFFECT
-	CreateEffect<ReverbEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<ReverbEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef TREMOLO_EFFECT
-	CreateEffect<TremoloEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TremoloEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef WAH_EFFECT
-	CreateEffect<WahEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 #ifdef LOOPER_EFFECT
-	CreateEffect<LooperEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
+	CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
 #endif
 #ifdef COMPRESSOR_EFFECT
-	CreateEffect<CompressorEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
+	CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
 #endif
 #ifdef SUSTAIN_EFFECT
-	CreateEffect<SustainEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
+	CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
 #endif
 
 #ifdef TEST_EFFECT
-	CreateEffect<TestEffect>(m_Effects, &m_ControlManager, SAMPLE_RATE);
+	CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 	// Tube Screamer
 	// Octave
 
-	ESP32A1SCodec::PrintSystemStatistics();
-
-	Task::Delay(10);
-
-#ifdef SINE_WAVE_PLAYER
-	Task::Create(
-		[this]()
-		{
-			SineWavePlayerTask();
-		},
-		4096, "SineWavePlayerTask", 1, 10);
-#else
-	Task::Create(
-		[this]()
-		{
-			PassthroughTask();
-		},
-		4096, "PassthroughTask", 1, 10);
-#endif
+	// #ifdef SINE_WAVE_PLAYER
+	// 	Task::Create(
+	// 		[this]()
+	// 		{
+	// 			SineWavePlayerTask();
+	// 		},
+	// 		4096, "SineWavePlayerTask", 1, 10);
+	// #else
+	// 	Task::Create(
+	// 		[this]()
+	// 		{
+	// 			PassthroughTask();
+	// 		},
+	// 		4096, "PassthroughTask", 1, 10);
+	// #endif
 }
 
 #ifdef SINE_WAVE_PLAYER
@@ -200,7 +168,7 @@ void Application::SineWavePlayerTask(void)
 	uint32 sampleCount = bufferLen * 2;
 
 	int32 *outBuffer = Memory::Allocate<int32>(sampleCount);
-	double *processBufferL = Memory::Allocate<double>(bufferLen);
+	SampleType *processBufferL = Memory::Allocate<SampleType>(bufferLen);
 
 	while (true)
 	{
@@ -210,7 +178,7 @@ void Application::SineWavePlayerTask(void)
 		for (uint16 i = 0; i < bufferLen; ++i)
 			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 1);
 
-		for (Effect *effect : m_Effects)
+		for (Effect<SampleType> *effect : m_Effects)
 			effect->Apply(processBufferL, bufferLen);
 
 		for (uint16 i = 0; i < bufferLen; ++i)
@@ -229,43 +197,41 @@ void Application::PassthroughTask(void)
 {
 	Log::WriteInfo("Starting Passthrough Task");
 
-	Task::Delay(2000);
+	Delay(2000);
 
 	int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
-	double *processBufferL = Memory::Allocate<double>(FRAME_LENGTH);
+	SampleType *processBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
-	while (true)
-	{
-		if (m_Mute)
-		{
-			Memory::Set(processBufferL, 0, FRAME_LENGTH);
-		}
-		else
-		{
-			ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
+	// while (true)
+	// {
+	// 	if (m_Mute)
+	// 	{
+	// 		Memory::Set(processBufferL, 0, FRAME_LENGTH);
+	// 	}
+	// 	else
+	// 	{
+	// 		ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
 
-			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-				CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
+	// 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+	// 			CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
 
-			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-				processBufferL[i] *= MAX_GAIN;
+	// 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+	// 			processBufferL[i] *= MAX_GAIN;
 
-			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
+	// 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+	// 			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
 
-			for (Effect *effect : m_Effects)
-				effect->Apply(processBufferL, FRAME_LENGTH);
-		}
+	// 		for (Effect<SampleType> *effect : m_Effects)
+	// 			effect->Apply(processBufferL, FRAME_LENGTH);
+	// 	}
 
-		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 0);
+	// 	for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+	// 		SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 0);
 
-		ESP32A1SCodec::Write(ioBuffer, SAMPLE_COUNT, 20);
-	}
+	// 	ESP32A1SCodec::Write(ioBuffer, SAMPLE_COUNT, 20);
+	// }
 
 	Memory::Deallocate(processBufferL);
 	Memory::Deallocate(ioBuffer);
-
-	Task::Delete();
 }
 #endif

@@ -5,20 +5,34 @@
 #define COMPRESSOR_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/Compressor.h>
+#include <framework/include/DSP/DSPs/Compressor.h>
+#include <framework/include/DSP/Math.h>
 
-class Potentiometer;
-
-class CompressorEffect : public Effect
+template <typename T>
+class CompressorEffect : public Effect<T>
 {
 public:
-	CompressorEffect(ControlManager *ControlManager, uint32 SampleRate);
+	CompressorEffect(ControlManager *ControlManager, uint32 SampleRate)
+		: Effect<T>(ControlManager),
+		  m_Compressor(SampleRate),
+		  m_RatioPot(nullptr)
+	{
+		m_RatioPot = ControlManager->CreatePotentiometer("Ratio", GPIOPins::Pin15);
+		m_RatioPot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_Compressor.SetRatio(Math::Lerp(0.001, 2, value));
+			});
+	}
 
 protected:
-	IDSP *GetDSP(void);
+	IDSP<T> *GetDSP(void)
+	{
+		return &m_Compressor;
+	}
 
 private:
-	Compressor m_Compressor;
+	Compressor<T> m_Compressor;
 	Potentiometer *m_RatioPot;
 };
 
