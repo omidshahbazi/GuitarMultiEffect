@@ -57,22 +57,15 @@
 #include "framework/DSP/SineWaveGenerator.h"
 #endif
 
-#if defined(LOOPER_EFFECT)
-const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
-#elif defined(REVERB_EFFECT)
-const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
-#elif defined(SUSTAIN_EFFECT)
-const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
-#else
-const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
-#endif
+const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
-const uint16 SAMPLE_COUNT = 64;
-const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
-
-const float MAX_GAIN = 500;
+const uint8 FRAME_LENGTH = 4;
 
 typedef float SampleType;
+
+class Application;
+Application *g_Application;
+std::function<void(const float *const *In, float **Out, uint32 Size)> g_ProcessorFunction;
 
 class Application : public DaisySeedHAL
 {
@@ -81,23 +74,66 @@ private:
 
 public:
 	Application(void)
-		: m_ControlManager(nullptr)
+		: DaisySeedHAL(&m_Hardware),
+		  m_ControlManager(nullptr),
+		  m_ProcessBufferL(nullptr)
 	{
 		Log::Initialize(this);
 		Memory::Initialize(this);
 
-#if _DEBUG
+#ifdef _DEBUG
 		Log::SetMask(Log::Types::General);
+		// daisy::DaisySeed::StartLog(true); // TODO: wouldn't work here I guess
 #endif
 
 		Time::Initialize();
+
+		g_Application = this;
+	}
+
+	~Application(void)
+	{
+		if (m_ProcessBufferL != nullptr)
+			Memory::Deallocate(m_ProcessBufferL);
+
+		if (m_ControlManager != nullptr)
+			Memory::Deallocate(m_ControlManager);
 	}
 
 	void Initialize(void)
 	{
 		Log::WriteInfo("Initializing");
 
-		// TODO: Init Daisy Seed
+		daisy::SaiHandle::Config::SampleRate daisySampleRate;
+		switch (SAMPLE_RATE)
+		{
+		case SAMPLE_RATE_8000:
+			daisySampleRate = daisy::SaiHandle::Config::SampleRate::SAI_8KHZ;
+			break;
+
+		case SAMPLE_RATE_16000:
+			daisySampleRate = daisy::SaiHandle::Config::SampleRate::SAI_16KHZ;
+			break;
+
+		case SAMPLE_RATE_32000:
+			daisySampleRate = daisy::SaiHandle::Config::SampleRate::SAI_32KHZ;
+			break;
+
+		case SAMPLE_RATE_48000:
+			daisySampleRate = daisy::SaiHandle::Config::SampleRate::SAI_48KHZ;
+			break;
+
+		case SAMPLE_RATE_96000:
+			daisySampleRate = daisy::SaiHandle::Config::SampleRate::SAI_96KHZ;
+			break;
+
+		default:
+			ASSERT(false, "No sutaible sample rate for %i found in the daisy", SAMPLE_RATE);
+		}
+
+		m_Hardware.Init();
+		m_Hardware.SetAudioBlockSize(FRAME_LENGTH);
+		m_Hardware.SetAudioSampleRate(daisySampleRate);
 
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
@@ -150,104 +186,86 @@ public:
 		// Tube Screamer
 		// Octave
 
-		// #ifdef SINE_WAVE_PLAYER
-		// 	Task::Create(
-		// 		[this]()
-		// 		{
-		// 			SineWavePlayerTask();
-		// 		},
-		// 		4096, "SineWavePlayerTask", 1, 10);
-		// #else
-		// 	Task::Create(
-		// 		[this]()
-		// 		{
-		// 			PassthroughTask();
-		// 		},
-		// 		4096, "PassthroughTask", 1, 10);
-		// #endif
+#ifdef SINE_WAVE_PLAYER
+		InitializeSineWavePlayer();
+#else
+		InitializeAudioPassthrough();
+#endif
+
+		Delay(2000);
+
+		auto audioCallback = [](const float *const *In, float **Out, uint32 Size)
+		{
+			g_ProcessorFunction(In, Out, Size);
+		};
+		m_Hardware.StartAudio(audioCallback);
+	}
+
+	void Update(void)
+	{
+		m_ControlManager->Update();
 	}
 
 private:
 #ifdef SINE_WAVE_PLAYER
-	void SineWavePlayerTask(void)
+	void InitializeSineWavePlayer(void)
 	{
-		Log::WriteInfo("Starting SineWavePlayer Task");
+		Log::WriteInfo("Starting Sin eWave Player");
 
 		SineWaveGenerator<int32> sineWave;
 		sineWave.SetDoubleBuffered(false);
 		sineWave.SetSampleRate(SAMPLE_RATE);
-		sineWave.SetAmplitude(0.03);
+		sineWave.SetAmplitude(1);
 		sineWave.SetFrequency(NOTE_A4);
 
-		uint32 bufferLen = sineWave.GetBufferLength();
-		uint32 sampleCount = bufferLen * 2;
+		const uint32 bufferLen = sineWave.GetBufferLength();
 
-		int32 *outBuffer = Memory::Allocate<int32>(sampleCount);
-		SampleType *processBufferL = Memory::Allocate<SampleType>(bufferLen);
+		m_ProcessBufferL = Memory::Allocate<SampleType>(bufferLen);
 
-		while (true)
+		uint32 bufferIndex = 0;
+
+		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
 		{
-			for (uint16 i = 0; i < bufferLen; ++i)
-				CONVERT_INT32_TO_NORMALIZED_DOUBLE(sineWave.GetBuffer(), false, 0, processBufferL, i);
+			SampleType *processBufferChunk = m_ProcessBufferL + bufferIndex;
 
-			for (uint16 i = 0; i < bufferLen; ++i)
-				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 1);
+			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+			{
+				float value = sineWave.GetBuffer()[bufferIndex + i] / (float)SineWaveGenerator<int32>::MAX_VALUE;
+
+				processBufferChunk[i] = value;
+				Out[1][i] = value;
+			}
 
 			for (Effect<SampleType> *effect : m_Effects)
-				effect->Apply(processBufferL, bufferLen);
+				effect->Apply(processBufferChunk, FRAME_LENGTH);
 
-			for (uint16 i = 0; i < bufferLen; ++i)
-				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 0);
+			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+				Out[0][i] = processBufferChunk[i];
 
-			ESP32A1SCodec::Write(outBuffer, sampleCount, 20);
-		}
-
-		Memory::Deallocate(processBufferL);
-		Memory::Deallocate(outBuffer);
-
-		Task::Delete();
+			bufferIndex = (bufferIndex + FRAME_LENGTH) % bufferLen;
+		};
 	}
 #else
-	void PassthroughTask(void)
+	void InitializeAudioPassthrough(void)
 	{
-		Log::WriteInfo("Starting Passthrough Task");
+		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
-		Delay(2000);
+		Log::WriteInfo("Starting Audio Passthrough");
 
-		int32 *ioBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
-		SampleType *processBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
+		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
+		{
+			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+				m_ProcessBufferL[i] = In[0][i];
 
-		// while (true)
-		// {
-		// 	if (m_Mute)
-		// 	{
-		// 		Memory::Set(processBufferL, 0, FRAME_LENGTH);
-		// 	}
-		// 	else
-		// 	{
-		// 		ESP32A1SCodec::Read(ioBuffer, SAMPLE_COUNT, 20);
+			for (Effect<SampleType> *effect : m_Effects)
+				effect->Apply(m_ProcessBufferL, FRAME_LENGTH);
 
-		// 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-		// 			CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
-
-		// 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-		// 			processBufferL[i] *= MAX_GAIN;
-
-		// 		for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-		// 			SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
-
-		// 		for (Effect<SampleType> *effect : m_Effects)
-		// 			effect->Apply(processBufferL, FRAME_LENGTH);
-		// 	}
-
-		// 	for (uint16 i = 0; i < FRAME_LENGTH; ++i)
-		// 		SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 0);
-
-		// 	ESP32A1SCodec::Write(ioBuffer, SAMPLE_COUNT, 20);
-		// }
-
-		Memory::Deallocate(processBufferL);
-		Memory::Deallocate(ioBuffer);
+			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+			{
+				Out[0][i] = m_ProcessBufferL[i];
+				Out[1][i] = In[0][i];
+			}
+		};
 	}
 #endif
 
@@ -264,8 +282,10 @@ private:
 	}
 
 private:
+	daisy::DaisySeed m_Hardware;
 	ControlManager *m_ControlManager;
 	EffectList m_Effects;
+	SampleType *m_ProcessBufferL;
 };
 
 #endif

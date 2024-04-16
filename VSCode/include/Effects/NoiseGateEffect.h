@@ -5,7 +5,7 @@
 #define NOISE_GATE_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/NoiseGate.h>
+#include "../framework/DSP/DSPs/NoiseGate.h"
 
 template <typename T>
 class NoiseGateEffect : public Effect<T>

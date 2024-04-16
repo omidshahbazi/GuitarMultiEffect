@@ -5,7 +5,7 @@
 #define OVERDRIVE_EFFECT_H
 
 #include "Effect.h"
-#include "../framework/DSP/DSPs/Overdrive.h>
+#include "../framework/DSP/DSPs/Overdrive.h"
 
 template <typename T>
 class OverdriveEffect : public Effect<T>
@@ -16,19 +16,19 @@ public:
 		  m_GainPot(nullptr),
 		  m_DrivePot(nullptr)
 	{
-		m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin14);
-		m_GainPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetGain(value);
-			});
+		// m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin14);
+		// m_GainPot->SetOnChangedListener(
+		// 	[&](float value)
+		// 	{
+		// 		m_Overdrive.SetGain(value);
+		// 	});
 
-		m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin15);
-		m_DrivePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetDrive(value);
-			});
+		// m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin15);
+		// m_DrivePot->SetOnChangedListener(
+		// 	[&](float value)
+		// 	{
+		// 		m_Overdrive.SetDrive(value);
+		// 	});
 	}
 
 protected:

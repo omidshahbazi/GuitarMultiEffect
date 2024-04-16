@@ -5,7 +5,7 @@
 #define DISTORTION_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Distortion.h>
+#include "../framework/DSP/DSPs/Distortion.h"
 
 template <typename T>
 class DistortionEffect : public Effect<T>

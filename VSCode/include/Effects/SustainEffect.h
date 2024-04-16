@@ -5,7 +5,7 @@
 #define SUSTAIN_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Sustain.h>
+#include "../framework/DSP/DSPs/Sustain.h"
 
 template <typename T>
 class SustainEffect : public Effect<T>
@@ -26,14 +26,14 @@ public:
 			});
 
 		m_ActiveSwitch = ControlManager->CreateSwitch("Active", GPIOPins::Pin21);
-		m_ActiveSwitch->SetOnChangedListener(
+		m_ActiveSwitch->SetOnStateChangedListener(
 			[&](bool value)
 			{
 				m_Sustain.SetActive(value);
 			});
 
 		m_WetSwitch = ControlManager->CreateSwitch("Wet", GPIOPins::Pin22);
-		m_WetSwitch->SetOnChangedListener(
+		m_WetSwitch->SetOnStateChangedListener(
 			[&](bool value)
 			{
 				m_Sustain.SetWet(value);

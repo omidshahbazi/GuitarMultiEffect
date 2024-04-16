@@ -5,7 +5,7 @@
 #define FLANGER_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Flanger.h>
+#include "../framework/DSP/DSPs/Flanger.h"
 
 template <typename T>
 class FlangerEffect : public Effect<T>

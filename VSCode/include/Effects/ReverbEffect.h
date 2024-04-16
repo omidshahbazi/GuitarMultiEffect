@@ -5,7 +5,7 @@
 #define REVERB_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Reverb.h>
+#include "../framework/DSP/DSPs/Reverb.h"
 
 template <typename T>
 class ReverbEffect : public Effect<T>

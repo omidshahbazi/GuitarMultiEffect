@@ -5,7 +5,7 @@
 #define WAH_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Wah.h>
+#include "../framework/DSP/DSPs/Wah.h"
 
 template <typename T>
 class WahEffect : public Effect<T>

@@ -5,7 +5,7 @@
 #define TREMOLO_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Tremolo.h>
+#include "../framework/DSP/DSPs/Tremolo.h"
 
 template <typename T>
 class TremoloEffect : public Effect<T>

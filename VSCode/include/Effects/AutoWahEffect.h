@@ -5,7 +5,7 @@
 #define AUTO_WAH_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/AutoWah.h>
+#include "../framework/DSP/DSPs/AutoWah.h"
 
 template <typename T>
 class AutoWahEffect : public Effect<T>

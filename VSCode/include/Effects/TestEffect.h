@@ -5,7 +5,7 @@
 #define TEST_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Test.h>
+#include "../framework/DSP/DSPs/Test.h"
 
 template <typename T>
 class TestEffect : public Effect<T>

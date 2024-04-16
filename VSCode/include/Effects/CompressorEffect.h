@@ -5,8 +5,8 @@
 #define COMPRESSOR_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Compressor.h>
-#include <framework/include/DSP/Math.h>
+#include "../framework/DSP/DSPs/Compressor.h"
+#include "../framework/DSP/Math.h"
 
 template <typename T>
 class CompressorEffect : public Effect<T>

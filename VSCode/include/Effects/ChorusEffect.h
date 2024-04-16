@@ -5,7 +5,7 @@
 #define CHORUS_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Chorus.h>
+#include "../framework/DSP/DSPs/Chorus.h"
 
 template <typename T>
 class ChorusEffect : public Effect<T>

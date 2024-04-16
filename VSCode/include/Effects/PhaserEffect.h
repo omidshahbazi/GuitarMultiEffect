@@ -5,7 +5,7 @@
 #define PHASER_EFFECT_H
 
 #include "Effect.h"
-#include <framework/include/DSP/DSPs/Phaser.h>
+#include "../framework/DSP/DSPs/Phaser.h"
 
 template <typename T>
 class PhaserEffect : public Effect<T>
