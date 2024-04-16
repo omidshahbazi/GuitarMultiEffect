@@ -20,7 +20,7 @@ public:
 		// TODO: this needs to set different modes using a single switch or probably two?
 
 		m_ModeSwitch = ControlManager->CreateSwitch("Mode", GPIOPins::Pin21);
-		m_ModeSwitch->SetOnChangedListener(
+		m_ModeSwitch->SetOnStateChangedListener(
 			[&](bool value)
 			{
 				m_Looper.SetMode(value ? Looper<T>::Modes::Record : Looper<T>::Modes::Replay);
