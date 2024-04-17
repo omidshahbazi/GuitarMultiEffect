@@ -81,29 +81,6 @@ public:
 		Log::Initialize(this);
 		Memory::Initialize(this);
 
-#ifdef _DEBUG
-		Log::SetMask(Log::Types::General);
-		// daisy::DaisySeed::StartLog(true); // TODO: wouldn't work here I guess
-#endif
-
-		Time::Initialize();
-
-		g_Application = this;
-	}
-
-	~Application(void)
-	{
-		if (m_ProcessBufferL != nullptr)
-			Memory::Deallocate(m_ProcessBufferL);
-
-		if (m_ControlManager != nullptr)
-			Memory::Deallocate(m_ControlManager);
-	}
-
-	void Initialize(void)
-	{
-		Log::WriteInfo("Initializing");
-
 		daisy::SaiHandle::Config::SampleRate daisySampleRate;
 		switch (SAMPLE_RATE)
 		{
@@ -134,6 +111,29 @@ public:
 		m_Hardware.Init();
 		m_Hardware.SetAudioBlockSize(FRAME_LENGTH);
 		m_Hardware.SetAudioSampleRate(daisySampleRate);
+
+#ifdef _DEBUG
+		Log::SetMask(Log::Types::General);
+		// m_Hardware.StartLog(true);
+#endif
+
+		Time::Initialize();
+
+		g_Application = this;
+	}
+
+	~Application(void)
+	{
+		if (m_ProcessBufferL != nullptr)
+			Memory::Deallocate(m_ProcessBufferL);
+
+		if (m_ControlManager != nullptr)
+			Memory::Deallocate(m_ControlManager);
+	}
+
+	void Initialize(void)
+	{
+		Log::WriteInfo("Initializing");
 
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
@@ -185,6 +185,8 @@ public:
 
 		// Tube Screamer
 		// Octave
+
+		InitializeADC();
 
 #ifdef SINE_WAVE_PLAYER
 		InitializeSineWavePlayer();

@@ -1,6 +1,6 @@
 #define _DEBUG
 
-#define SIMPLE_LOW_HIGH_PASS_FILTER
+// #define SIMPLE_LOW_HIGH_PASS_FILTER
 
 // #define AUTO_WAH_EFFECT
 // #define CHORUS_EFFECT
