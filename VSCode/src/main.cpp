@@ -39,3 +39,5 @@ int main()
 }
 
 // TODO: Make the max delay time passable to set through Effect
+// TODO: Pass GPIOs to Effect
+// TODO: Use DualLED instead of SingleLED
