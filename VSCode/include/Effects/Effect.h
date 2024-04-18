@@ -16,23 +16,26 @@ public:
 	Effect(ControlManager *ControlManager)
 		: m_Enabled(true)
 	{
-		// m_EnabledLED = ControlManager->CreateSingleLED("Enabled", GPIOPins::Pin22);
-		// m_EnabledLED->SetConstantBrighness(0);
+		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", GPIOPins::Pin0);
+		m_EnabledLED->SetConstantBrighness(1);
 
-		// auto onSwitchChanged = [&](bool value)
-		// {
-		// 	m_Enabled = value;
+		auto onSwitchChanged = [&](bool value)
+		{
+			m_Enabled = value;
 
-		// 	if (m_Enabled)
-		// 		m_EnabledLED->SetBlinkingBrighness(1, 1);
-		// 	else
-		// 		m_EnabledLED->SetConstantBrighness(0);
-		// };
+			Log::WriteInfo("Switch %i", value);
 
-		// m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin19);
-		// m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
+			if (m_Enabled)
+				m_EnabledLED->SetConstantBrighness(1);
+			// m_EnabledLED->SetBlinkingBrighness(1, 1);
+			else
+				m_EnabledLED->SetConstantBrighness(0);
+		};
 
-		// onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
+		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin12);
+		m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
+
+		onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
 	}
 
 	void Apply(T *Buffer, uint16 Count)

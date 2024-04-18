@@ -4,7 +4,6 @@
 
 #include "Effects/Effect.h"
 #include "ControlManager.h"
-#include "framework/DSP/Time.h"
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
 #include <vector>
@@ -114,10 +113,8 @@ public:
 
 #ifdef _DEBUG
 		Log::SetMask(Log::Types::General);
-		// m_Hardware.StartLog(true);
+		m_Hardware.StartLog(true);
 #endif
-
-		Time::Initialize();
 
 		g_Application = this;
 	}
@@ -186,7 +183,7 @@ public:
 		// Tube Screamer
 		// Octave
 
-		InitializeADC();
+		DaisySeedHAL::Initialize();
 
 #ifdef SINE_WAVE_PLAYER
 		InitializeSineWavePlayer();
@@ -205,6 +202,7 @@ public:
 
 	void Update(void)
 	{
+		DaisySeedHAL::Update();
 		m_ControlManager->Update();
 	}
 

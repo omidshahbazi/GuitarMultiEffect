@@ -16,14 +16,14 @@ public:
 		  m_GainPot(nullptr),
 		  m_DrivePot(nullptr)
 	{
-		// m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin14);
+		// m_GainPot = ControlManager->CreatePotentiometer("Gain", AnalogPins::Pin0);
 		// m_GainPot->SetOnChangedListener(
 		// 	[&](float value)
 		// 	{
 		// 		m_Overdrive.SetGain(value);
 		// 	});
 
-		// m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin15);
+		// m_DrivePot = ControlManager->CreatePotentiometer("Drive", AnalogPins::Pin1);
 		// m_DrivePot->SetOnChangedListener(
 		// 	[&](float value)
 		// 	{

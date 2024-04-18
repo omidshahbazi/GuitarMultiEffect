@@ -37,3 +37,5 @@ int main()
 
 	return 0;
 }
+
+// TODO: Make the max delay time passable to set through Effect
