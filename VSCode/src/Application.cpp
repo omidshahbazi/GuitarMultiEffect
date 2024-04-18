@@ -1,5 +1,4 @@
 #include "Application.h"
-#include <framework/include/DSP/Time.h>
 #include <framework/include/Task.h>
 #include <framework/include/DSP/Memory.h>
 #include <framework/include/ESP32A1SCodec.h>
@@ -78,8 +77,6 @@ Application::Application(void)
 #if _DEBUG
 	Log::SetMask(Log::Types::General);
 #endif
-
-	Time::Initialize();
 }
 
 void Application::Initialize(void)
