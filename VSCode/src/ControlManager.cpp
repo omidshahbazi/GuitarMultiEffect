@@ -18,7 +18,7 @@ ControlManager::ControlManager(IHAL *HAL)
 		{
 			while (true)
 			{
-				HAL->Delay(1);
+				m_HAL->Delay(1);
 
 				m_Factory.Process();
 			}

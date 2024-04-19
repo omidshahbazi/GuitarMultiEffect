@@ -13,7 +13,7 @@ class ReverbEffect : public Effect<T>
 public:
 	ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
 		: Effect<T>(ControlManager),
-		  m_Reverb(SampleRate),
+		  m_Reverb(SampleRate, MAX_DELAY_TIME),
 		  m_WetRatePot(nullptr),
 		  m_DelayTimePot(nullptr),
 		  m_FeedbackPot(nullptr)
@@ -29,7 +29,7 @@ public:
 		m_DelayTimePot->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Reverb.SetDelayTime(Math::Lerp(0.0, Reverb<T>::MAX_DELAY_TIME, value));
+				m_Reverb.SetDelayTime(Math::Lerp(0.0, MAX_DELAY_TIME, value));
 			});
 
 		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin15);
@@ -51,6 +51,8 @@ private:
 	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DelayTimePot;
 	Potentiometer *m_FeedbackPot;
+
+	static constexpr float MAX_DELAY_TIME = 1;
 };
 
 #endif

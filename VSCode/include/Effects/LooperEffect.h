@@ -13,7 +13,7 @@ class LooperEffect : public Effect<T>
 public:
 	LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
 		: Effect<T>(ControlManager),
-		  m_Looper(SampleRate),
+		  m_Looper(SampleRate, MAX_DELAY_TIME),
 		  m_ModeSwitch(nullptr),
 		  m_VolumePot(nullptr)
 	{
@@ -44,6 +44,8 @@ private:
 	Looper<T> m_Looper;
 	Switch *m_ModeSwitch;
 	Potentiometer *m_VolumePot;
+
+	static constexpr float MAX_DELAY_TIME = 1;
 };
 
 #endif

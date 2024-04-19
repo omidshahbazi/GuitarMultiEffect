@@ -13,7 +13,7 @@ class SustainEffect : public Effect<T>
 public:
 	SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
 		: Effect<T>(ControlManager),
-		  m_Sustain(SampleRate),
+		  m_Sustain(SampleRate, MAX_DELAY_TIME),
 		  m_FeedbackPot(nullptr),
 		  m_ActiveSwitch(nullptr),
 		  m_WetSwitch(nullptr)
@@ -51,6 +51,8 @@ private:
 	Potentiometer *m_FeedbackPot;
 	Switch *m_ActiveSwitch;
 	Switch *m_WetSwitch;
+
+	static constexpr float MAX_DELAY_TIME = 1;
 };
 
 #endif
