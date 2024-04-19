@@ -113,7 +113,9 @@ public:
 
 #ifdef _DEBUG
 		Log::SetMask(Log::Types::General);
-		 m_Hardware.StartLog(true);
+#ifdef WAIT_FOR_DEBUGGER
+		m_Hardware.StartLog(true);
+#endif
 #endif
 
 		g_Application = this;
@@ -203,7 +205,7 @@ public:
 	void Update(void)
 	{
 		DaisySeedHAL::Update();
-		
+
 		m_ControlManager->Update();
 	}
 

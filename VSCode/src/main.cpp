@@ -1,4 +1,5 @@
 #define _DEBUG
+// #define WAIT_FOR_DEBUGGER
 
 // #define SIMPLE_LOW_HIGH_PASS_FILTER
 
