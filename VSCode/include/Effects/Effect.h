@@ -5,34 +5,29 @@
 #include "../ControlManager.h"
 #include "../framework/Common.h"
 #include "../framework/DSP/DSPs/IDSP.h"
-#include "../framework/DSP/Controls/Switch.h"
-#include "../framework/DSP/Controls/SingleLED.h"
-#include "../framework/DSP/Controls/Potentiometer.h"
 
 template <typename T>
 class Effect
 {
 public:
-	Effect(ControlManager *ControlManager)
+	Effect(ControlManager *ControlManager, GPIOPins RedLEDPin, GPIOPins GreenLEDPin, GPIOPins EnableButtonPin)
 		: m_Enabled(true)
 	{
-		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", GPIOPins::Pin0);
+		m_EnabledLED = ControlManager->CreateDualLED("Enabled", RedLEDPin, GreenLEDPin);
+		m_EnabledLED->SetColor(DUAL_LED_RED);
 		m_EnabledLED->SetConstantBrighness(1);
 
 		auto onSwitchChanged = [&](bool value)
 		{
 			m_Enabled = value;
 
-			Log::WriteInfo("Switch %i", value);
-
 			if (m_Enabled)
-				m_EnabledLED->SetConstantBrighness(1);
-			// m_EnabledLED->SetBlinkingBrighness(1, 1);
+				m_EnabledLED->SetBlinkingBrighness(1, 1);
 			else
 				m_EnabledLED->SetConstantBrighness(0);
 		};
 
-		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin12);
+		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);
 		m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
 
 		onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
@@ -51,8 +46,8 @@ protected:
 
 private:
 	bool m_Enabled;
+	DualLED *m_EnabledLED;
 	Switch *m_EnabledSwitch;
-	SingleLED *m_EnabledLED;
 };
 
 #endif

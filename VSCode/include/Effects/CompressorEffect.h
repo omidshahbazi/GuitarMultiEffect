@@ -13,11 +13,11 @@ class CompressorEffect : public Effect<T>
 {
 public:
 	CompressorEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_Compressor(SampleRate),
 		  m_RatioPot(nullptr)
 	{
-		m_RatioPot = ControlManager->CreatePotentiometer("Ratio", GPIOPins::Pin15);
+		m_RatioPot = ControlManager->CreatePotentiometer("Ratio", AnalogPins::Pin0);
 		m_RatioPot->SetOnChangedListener(
 			[&](float value)
 			{

@@ -12,13 +12,13 @@ class SustainEffect : public Effect<T>
 {
 public:
 	SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
-		  m_Sustain(SampleRate),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
+		  m_Sustain(SampleRate, MAX_DELAY_TIME),
 		  m_FeedbackPot(nullptr),
 		  m_ActiveSwitch(nullptr),
 		  m_WetSwitch(nullptr)
 	{
-		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin15);
+		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", AnalogPins::Pin0);
 		m_FeedbackPot->SetOnChangedListener(
 			[&](float value)
 			{
@@ -51,6 +51,8 @@ private:
 	Potentiometer *m_FeedbackPot;
 	Switch *m_ActiveSwitch;
 	Switch *m_WetSwitch;
+
+	static constexpr float MAX_DELAY_TIME = 2;
 };
 
 #endif

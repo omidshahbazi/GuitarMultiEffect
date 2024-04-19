@@ -12,27 +12,27 @@ class ReverbEffect : public Effect<T>
 {
 public:
 	ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
-		  m_Reverb(SampleRate),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
+		  m_Reverb(SampleRate, MAX_DELAY_TIME),
 		  m_WetRatePot(nullptr),
 		  m_DelayTimePot(nullptr),
 		  m_FeedbackPot(nullptr)
 	{
-		m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", GPIOPins::Pin13);
+		m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", AnalogPins::Pin0);
 		m_WetRatePot->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Reverb.SetWetRate(value);
 			});
 
-		m_DelayTimePot = ControlManager->CreatePotentiometer("Delay Time", GPIOPins::Pin14);
+		m_DelayTimePot = ControlManager->CreatePotentiometer("Delay Time", AnalogPins::Pin1);
 		m_DelayTimePot->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Reverb.SetDelayTime(Math::Lerp(0.0, Reverb<T>::MAX_DELAY_TIME, value));
+				m_Reverb.SetDelayTime(Math::Lerp(0.0, MAX_DELAY_TIME, value));
 			});
 
-		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin15);
+		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", AnalogPins::Pin2);
 		m_FeedbackPot->SetOnChangedListener(
 			[&](float value)
 			{
@@ -51,6 +51,8 @@ private:
 	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DelayTimePot;
 	Potentiometer *m_FeedbackPot;
+
+	static constexpr float MAX_DELAY_TIME = 10;
 };
 
 #endif

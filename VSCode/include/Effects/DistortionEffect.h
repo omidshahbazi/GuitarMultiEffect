@@ -12,19 +12,19 @@ class DistortionEffect : public Effect<T>
 {
 public:
 	DistortionEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_Distortion(SampleRate),
 		  m_GainPot(nullptr),
 		  m_DrivePot(nullptr)
 	{
-		m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin14);
+		m_GainPot = ControlManager->CreatePotentiometer("Gain", AnalogPins::Pin0);
 		m_GainPot->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Distortion.SetGain(value);
 			});
 
-		m_DrivePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin15);
+		m_DrivePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin1);
 		m_DrivePot->SetOnChangedListener(
 			[&](float value)
 			{

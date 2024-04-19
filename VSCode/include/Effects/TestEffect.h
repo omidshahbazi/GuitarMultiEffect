@@ -12,24 +12,24 @@ class TestEffect : public Effect<T>
 {
 public:
 	TestEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_Test(SampleRate)
 	{
-		m_Pot1 = ControlManager->CreatePotentiometer("High Tone", GPIOPins::Pin13);
+		m_Pot1 = ControlManager->CreatePotentiometer("High Tone", AnalogPins::Pin0);
 		m_Pot1->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Test.SetHighTone(Math::Lerp(-20.0, 20, value));
 			});
 
-		m_Pot2 = ControlManager->CreatePotentiometer("Mid Tone", GPIOPins::Pin14);
+		m_Pot2 = ControlManager->CreatePotentiometer("Mid Tone", AnalogPins::Pin1);
 		m_Pot2->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Test.SetMidTone(Math::Lerp(-20.0, 20, value));
 			});
 
-		m_Pot3 = ControlManager->CreatePotentiometer("Low Tone", GPIOPins::Pin15);
+		m_Pot3 = ControlManager->CreatePotentiometer("Low Tone", AnalogPins::Pin2);
 		m_Pot3->SetOnChangedListener(
 			[&](float value)
 			{

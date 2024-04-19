@@ -12,8 +12,8 @@ class LooperEffect : public Effect<T>
 {
 public:
 	LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
-		  m_Looper(SampleRate),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
+		  m_Looper(SampleRate, MAX_DELAY_TIME),
 		  m_ModeSwitch(nullptr),
 		  m_VolumePot(nullptr)
 	{
@@ -26,7 +26,7 @@ public:
 				m_Looper.SetMode(value ? Looper<T>::Modes::Record : Looper<T>::Modes::Replay);
 			});
 
-		m_VolumePot = ControlManager->CreatePotentiometer("Volume", GPIOPins::Pin15);
+		m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin0);
 		m_VolumePot->SetOnChangedListener(
 			[&](float value)
 			{
@@ -44,6 +44,8 @@ private:
 	Looper<T> m_Looper;
 	Switch *m_ModeSwitch;
 	Potentiometer *m_VolumePot;
+
+	static constexpr float MAX_DELAY_TIME = 10;
 };
 
 #endif

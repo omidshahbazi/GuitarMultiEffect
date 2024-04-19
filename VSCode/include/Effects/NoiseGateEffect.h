@@ -12,11 +12,11 @@ class NoiseGateEffect : public Effect<T>
 {
 public:
 	NoiseGateEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_NoiseGate(SampleRate),
 		  m_ThresholdPot(nullptr)
 	{
-		m_ThresholdPot = ControlManager->CreatePotentiometer("Threshold", GPIOPins::Pin14);
+		m_ThresholdPot = ControlManager->CreatePotentiometer("Threshold", AnalogPins::Pin0);
 		m_ThresholdPot->SetOnChangedListener(
 			[&](float value)
 			{
