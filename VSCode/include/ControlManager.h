@@ -18,7 +18,7 @@ class ControlManager
 public:
 	ControlManager(IHAL *HAL)
 		: m_HAL(HAL),
-		  m_UsedGPIOs()
+		  m_UsedGPIOs{}
 	{
 	}
 

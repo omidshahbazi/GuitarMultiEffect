@@ -20,6 +20,9 @@
 #ifdef FLANGER_EFFECT
 #include "Effects/FlangerEffect.h"
 #endif
+#ifdef LOOPER_EFFECT
+#include "Effects/LooperEffect.h"
+#endif
 #ifdef NOISE_GATE_EFFECT
 #include "Effects/NoiseGateEffect.h"
 #endif
@@ -39,9 +42,6 @@
 #include "Effects/WahEffect.h"
 #endif
 
-#ifdef LOOPER_EFFECT
-#include "Effects/LooperEffect.h"
-#endif
 #ifdef COMPRESSOR_EFFECT
 #include "Effects/CompressorEffect.h"
 #endif
@@ -72,13 +72,23 @@ private:
 	typedef std::vector<Effect<SampleType> *> EffectList;
 
 public:
-	Application(void)
-		: DaisySeedHAL(&m_Hardware),
+	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
+		: DaisySeedHAL(&m_Hardware, SDRAMAddress, SDRAMSize),
 		  m_ControlManager(nullptr),
 		  m_ProcessBufferL(nullptr)
 	{
 		Log::Initialize(this);
 		Memory::Initialize(this);
+
+		m_Hardware.Init();
+		m_Hardware.SetAudioBlockSize(FRAME_LENGTH);
+
+#ifdef _DEBUG
+		Log::SetMask(Log::Types::General);
+#ifdef WAIT_FOR_DEBUGGER
+		m_Hardware.StartLog(true);
+#endif
+#endif
 
 		daisy::SaiHandle::Config::SampleRate daisySampleRate;
 		switch (SAMPLE_RATE)
@@ -107,16 +117,7 @@ public:
 			ASSERT(false, "No sutaible sample rate for %i found in the daisy", SAMPLE_RATE);
 		}
 
-		m_Hardware.Init();
-		m_Hardware.SetAudioBlockSize(FRAME_LENGTH);
 		m_Hardware.SetAudioSampleRate(daisySampleRate);
-
-#ifdef _DEBUG
-		Log::SetMask(Log::Types::General);
-#ifdef WAIT_FOR_DEBUGGER
-		m_Hardware.StartLog(true);
-#endif
-#endif
 
 		g_Application = this;
 	}
@@ -149,6 +150,9 @@ public:
 #ifdef FLANGER_EFFECT
 		CreateEffect<FlangerEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
+#ifdef LOOPER_EFFECT
+		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+#endif
 #ifdef NOISE_GATE_EFFECT
 		CreateEffect<NoiseGateEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
@@ -168,9 +172,6 @@ public:
 		CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-#ifdef LOOPER_EFFECT
-		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
-#endif
 #ifdef COMPRESSOR_EFFECT
 		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
 #endif
@@ -185,7 +186,7 @@ public:
 		// Tube Screamer
 		// Octave
 
-		DaisySeedHAL::Initialize();
+		DaisySeedHAL::InitializeADC();
 
 #ifdef SINE_WAVE_PLAYER
 		InitializeSineWavePlayer();
@@ -197,6 +198,8 @@ public:
 
 		auto audioCallback = [](const float *const *In, float **Out, uint32 Size)
 		{
+			ASSERT(g_ProcessorFunction != nullptr, "g_ProcessorFunction cannot be null");
+
 			g_ProcessorFunction(In, Out, Size);
 		};
 		m_Hardware.StartAudio(audioCallback);
@@ -275,7 +278,7 @@ private:
 	template <typename EffectType, typename... ArgsT>
 	EffectType *CreateEffect(ArgsT... Args)
 	{
-		EffectType *effect = Memory::Allocate<EffectType>(1, true);
+		EffectType *effect = Memory::Allocate<EffectType>(1);
 
 		new (effect) EffectType(Args...);
 

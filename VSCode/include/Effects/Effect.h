@@ -11,26 +11,20 @@ class Effect
 {
 public:
 	Effect(ControlManager *ControlManager, GPIOPins RedLEDPin, GPIOPins GreenLEDPin, GPIOPins EnableButtonPin)
-		: m_Enabled(true)
+		: m_Enabled(false)
 	{
 		m_EnabledLED = ControlManager->CreateDualLED("Enabled", RedLEDPin, GreenLEDPin);
 		m_EnabledLED->SetColor(DUAL_LED_RED);
 		m_EnabledLED->SetConstantBrighness(1);
 
-		auto onSwitchChanged = [&](bool value)
-		{
-			m_Enabled = value;
-
-			if (m_Enabled)
-				m_EnabledLED->SetBlinkingBrighness(1, 1);
-			else
-				m_EnabledLED->SetConstantBrighness(0);
-		};
-
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);
-		m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
+		m_EnabledSwitch->SetOnTurnedOnListener([this](void)
+											   { OnButtonDown(); });
 
-		onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
+		m_EnabledSwitch->SetOnTurnedOffListener([&](float heldTime)
+												{ OnButtonUp(heldTime); });
+
+		SetEnabled(true);
 	}
 
 	void Apply(T *Buffer, uint16 Count)
@@ -42,6 +36,27 @@ public:
 	}
 
 protected:
+	virtual void SetEnabled(bool Value)
+	{
+		m_Enabled = Value;
+
+		if (m_Enabled)
+			m_EnabledLED->SetBlinkingBrighness(1, 1);
+		else
+			m_EnabledLED->SetConstantBrighness(0);
+	}
+
+	virtual void OnButtonDown(void)
+	{
+	}
+
+	virtual void OnButtonUp(float HeldTime)
+	{
+		m_Enabled = !m_Enabled;
+
+		SetEnabled(m_Enabled);
+	}
+
 	virtual IDSP<T> *GetDSP(void) = 0;
 
 private:
