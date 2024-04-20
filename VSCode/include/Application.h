@@ -278,7 +278,7 @@ private:
 	template <typename EffectType, typename... ArgsT>
 	EffectType *CreateEffect(ArgsT... Args)
 	{
-		EffectType *effect = Memory::Allocate<EffectType>(1);
+		EffectType *effect = Memory::Allocate<EffectType>();
 
 		new (effect) EffectType(Args...);
 
