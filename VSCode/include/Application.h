@@ -216,19 +216,20 @@ private:
 #ifdef SINE_WAVE_PLAYER
 	void InitializeSineWavePlayer(void)
 	{
-		Log::WriteInfo("Starting Sin eWave Player");
+		Log::WriteInfo("Starting Sine Wave Player");
 
-		SineWaveGenerator<int32> sineWave;
-		sineWave.SetDoubleBuffered(false);
-		sineWave.SetSampleRate(SAMPLE_RATE);
-		sineWave.SetAmplitude(1);
-		sineWave.SetFrequency(NOTE_A4);
+		SineWaveGenerator<int32> *sineWave = Memory::Allocate<SineWaveGenerator<int32>>();
+		new (sineWave) SineWaveGenerator<int32>;
+		sineWave->SetDoubleBuffered(false);
+		sineWave->SetSampleRate(SAMPLE_RATE);
+		sineWave->SetAmplitude(1);
+		sineWave->SetFrequency(NOTE_A4);
 
-		const uint32 bufferLen = sineWave.GetBufferLength();
+		const uint32 bufferLen = sineWave->GetBufferLength();
 
-		m_ProcessBufferL = Memory::Allocate<SampleType>(bufferLen);
+		m_ProcessBufferL = Memory::Allocate<SampleType>(bufferLen, true);
 
-		uint32 bufferIndex = 0;
+		static uint32 bufferIndex = 0;
 
 		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
 		{
@@ -236,7 +237,7 @@ private:
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				float value = sineWave.GetBuffer()[bufferIndex + i] / (float)SineWaveGenerator<int32>::MAX_VALUE;
+				float value = sineWave->GetBuffer()[bufferIndex + i] / (float)SineWaveGenerator<int32>::MAX_VALUE;
 
 				processBufferChunk[i] = value;
 				Out[1][i] = value;
