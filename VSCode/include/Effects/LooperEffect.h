@@ -18,8 +18,6 @@ public:
 	{
 		Effect<T>::SetEnabled(true);
 
-		// TODO: this needs to set different modes using a single switch or probably two?
-
 		// m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin0);
 		// m_VolumePot->SetOnChangedListener(
 		// 	[&](float value)
@@ -31,15 +29,23 @@ public:
 protected:
 	void OnButtonDown(void) override
 	{
-		m_Looper.SetMode(Looper<T>::Modes::Record);
+		m_Looper.SetRecordMode();
+
+		Effect<T>::ChangeEnabledLEDBlinkingRate(2);
 	}
 
 	void OnButtonUp(float HeldTime) override
 	{
-		// if (HeldTime < 3)
-		// 	CLEAR
+		Effect<T>::ChangeEnabledLEDBlinkingRate();
 
-		m_Looper.SetMode(Looper<T>::Modes::Replay);
+		if (HeldTime < 2)
+		{
+			m_Looper.Clear();
+
+			return;
+		}
+
+		m_Looper.SetReplayMode(Math::Min(MAX_DELAY_TIME, HeldTime));
 	}
 
 	IDSP<T> *GetDSP(void)
@@ -51,7 +57,7 @@ private:
 	Looper<T> m_Looper;
 	Potentiometer *m_VolumePot;
 
-	static constexpr float MAX_DELAY_TIME = 5;
+	static constexpr float MAX_DELAY_TIME = 300;
 };
 
 #endif

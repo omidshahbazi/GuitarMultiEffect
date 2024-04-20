@@ -36,12 +36,20 @@ public:
 	}
 
 protected:
+	void ChangeEnabledLEDBlinkingRate(float Rate = 1)
+	{
+		if (!m_Enabled)
+			return;
+
+		m_EnabledLED->SetBlinkingBrighness(1, Rate);
+	}
+
 	virtual void SetEnabled(bool Value)
 	{
 		m_Enabled = Value;
 
 		if (m_Enabled)
-			m_EnabledLED->SetBlinkingBrighness(1, 1);
+			ChangeEnabledLEDBlinkingRate();
 		else
 			m_EnabledLED->SetConstantBrighness(0);
 	}
