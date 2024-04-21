@@ -7,6 +7,7 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Looper.h>
 
+// TODO: Due to the memory limitations, I've left this effect uncompleted on ESP32-A1S, so the controls here are not well configured
 template <typename T>
 class LooperEffect : public Effect<T>
 {
@@ -17,8 +18,6 @@ public:
 		  m_ModeSwitch(nullptr),
 		  m_VolumePot(nullptr)
 	{
-		// TODO: this needs to set different modes using a single switch or probably two?
-
 		m_ModeSwitch = ControlManager->CreateSwitch("Mode", GPIOPins::Pin21);
 		m_ModeSwitch->SetOnStateChangedListener(
 			[&](bool value)

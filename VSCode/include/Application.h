@@ -155,13 +155,13 @@ public:
 #endif
 
 #ifdef LOOPER_EFFECT
-		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: The memory limitation is a big issue for this one
+		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef COMPRESSOR_EFFECT
-		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
+		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef SUSTAIN_EFFECT
-		CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
+		CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 #ifdef TEST_EFFECT
