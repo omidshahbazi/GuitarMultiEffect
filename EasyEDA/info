@@ -4,7 +4,7 @@
   "name": "EasyEDA",
   "content": "",
   "created_at": "2023-09-30 16:12:41",
-  "updated_at": "2024-04-15 19:57:57",
+  "updated_at": "2024-04-20 18:26:58",
   "stick": "",
   "documents": [
     {
@@ -716,6 +716,362 @@
       "histories": [],
       "created_at": "2024-04-08 14:59:06",
       "updated_at": "2024-04-08 19:33:33"
+    },
+    {
+      "uuid": "aa6a5419687fc8d21103aea4b57d0dc6",
+      "puuid": "1b704a982a365e841422acec9db2a462",
+      "title": "PCB_EasyEDA_2",
+      "filename": "PCB_EasyEDA_2.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "c1f50ebbfc7d491db63dc57e3c029936": 1,
+        "6924b36489de4921bb29ca14bf27c33f": 1,
+        "7e70b923819e4f3bb9fdeaf4abdca9d3": 1,
+        "cc36c6ebfbc648d5879d9c565d52f5f3": 1,
+        "d7aaa7f1b19a47d897ac58a70773b297": 1,
+        "5896eda49f3645259a2f966a2f813670": 1,
+        "a2ced4acaa4c44f09885f6447ef3efa4": 7,
+        "97780662768047419baee292bf4b33f3": 1,
+        "c2803222ad4b48fb94db0de548a6280a": 1,
+        "9e11392ef170476ebc6b0992f0010e80": 2,
+        "17616368dd8f4ed9b4b58241fcf0534d": 8,
+        "3744bcbe1f464b01ae180f32d7d4b0c4": 1
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "100pF",
+          1,
+          "CAP-TH_L8.0-W4.0-P5.00-D0.7",
+          "C3",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C249166",
+            "Manufacturer": "STE(松田)",
+            "Manufacturer Part": "R08B1B102KN0B0S0N0",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C249166&%26type=1&ref=editor",
+            "spiceSymbolName": "R08B1B102KN0B0S0N0",
+            "puuid": "17616368dd8f4ed9b4b58241fcf0534d",
+            "uuid": "7658eca442c142f09c6488b04b1b63e1"
+          }
+        ],
+        [
+          "1uF",
+          3,
+          "CAP-TH_L8.0-W4.0-P5.00-D0.7",
+          "C5,C16,C18",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C249166",
+            "Manufacturer": "STE(松田)",
+            "Manufacturer Part": "R08B1B102KN0B0S0N0",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C249166&%26type=1&ref=editor",
+            "spiceSymbolName": "R08B1B102KN0B0S0N0",
+            "puuid": "17616368dd8f4ed9b4b58241fcf0534d",
+            "uuid": "7658eca442c142f09c6488b04b1b63e1"
+          }
+        ],
+        [
+          "100uF",
+          1,
+          "CAP-TH_BD5.0-P2.00-D0.8-FD",
+          "C7",
+          {
+            "Supplier": "LCSC",
+            "Manufacturer": "CX(承兴)",
+            "Manufacturer Part": "KM475M050D11RR0VH2FP0",
+            "Supplier Part": "C43344",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C43344&%26type=1&ref=editor",
+            "spiceSymbolName": "4.7uF 50V 5*11",
+            "puuid": "3744bcbe1f464b01ae180f32d7d4b0c4",
+            "uuid": "800eedb62cd715e82ced19f820d754e8"
+          }
+        ],
+        [
+          "100nF",
+          3,
+          "CAP-TH_L8.0-W4.0-P5.00-D0.7",
+          "C8,C10,C11",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C249166",
+            "Manufacturer": "STE(松田)",
+            "Manufacturer Part": "R08B1B102KN0B0S0N0",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C249166&%26type=1&ref=editor",
+            "spiceSymbolName": "R08B1B102KN0B0S0N0",
+            "puuid": "17616368dd8f4ed9b4b58241fcf0534d",
+            "uuid": "7658eca442c142f09c6488b04b1b63e1"
+          }
+        ],
+        [
+          "1nF",
+          1,
+          "CAP-TH_L8.0-W4.0-P5.00-D0.7",
+          "C17",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C249166",
+            "Manufacturer": "STE(松田)",
+            "Manufacturer Part": "R08B1B102KN0B0S0N0",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C249166&%26type=1&ref=editor",
+            "spiceSymbolName": "R08B1B102KN0B0S0N0",
+            "puuid": "17616368dd8f4ed9b4b58241fcf0534d",
+            "uuid": "7658eca442c142f09c6488b04b1b63e1"
+          }
+        ],
+        [
+          "Input",
+          1,
+          "AUDIO-TH_CK6.35-3-15-6",
+          "CN2",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C718060",
+            "Manufacturer": "JINJIA(金佳)",
+            "Manufacturer Part": "CK6.35-3+15-6",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C718060&%26type=1&ref=editor",
+            "spiceSymbolName": "CK6.35-3+15-6",
+            "puuid": "9e11392ef170476ebc6b0992f0010e80",
+            "uuid": "2e287dd091804cad83b0b4645865380f"
+          }
+        ],
+        [
+          "Output",
+          1,
+          "AUDIO-TH_CK6.35-3-15-6",
+          "CN3",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C718060",
+            "Manufacturer": "JINJIA(金佳)",
+            "Manufacturer Part": "CK6.35-3+15-6",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C718060&%26type=1&ref=editor",
+            "spiceSymbolName": "CK6.35-3+15-6",
+            "puuid": "9e11392ef170476ebc6b0992f0010e80",
+            "uuid": "2e287dd091804cad83b0b4645865380f"
+          }
+        ],
+        [
+          "1N5817",
+          1,
+          "DO-41_BD2.4-L4.7-P8.70-D0.9-RD",
+          "D1",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C360254",
+            "Manufacturer": "PINGWEI(平伟)",
+            "Manufacturer Part": "1N5817",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "1N5817_C360254",
+            "puuid": "c2803222ad4b48fb94db0de548a6280a",
+            "uuid": "f60173524b374629b5435592ad4954fb"
+          }
+        ],
+        [
+          "Up to 30V",
+          1,
+          "CONN-TH_DC-005-2.5A-2.0",
+          "DC1",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C319098",
+            "Manufacturer": "XKB Connectivity(中国星坤)",
+            "Manufacturer Part": "DC-005-2.5A-2.5",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "DC-005-2.5A-2.5",
+            "puuid": "97780662768047419baee292bf4b33f3",
+            "uuid": "e653124a12e74cdf963920c5b02d2c52"
+          }
+        ],
+        [
+          "Analog/Digital",
+          1,
+          "HDR-TH_12P-P2.54-V-M",
+          "H1",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C2840012",
+            "Manufacturer": "XFCN(兴飞)",
+            "Manufacturer Part": "PZ254V-11-12P",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "PZ254V-11-12P",
+            "puuid": "cc36c6ebfbc648d5879d9c565d52f5f3",
+            "uuid": "ace3becc88124fab9f76ac2e97967c28"
+          }
+        ],
+        [
+          "Digital",
+          1,
+          "HDR-TH_19P-P2.54-V-M",
+          "H2",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C2894942",
+            "Manufacturer": "HCTL(华灿天禄)",
+            "Manufacturer Part": "PZ254-1-19-Z-8.5",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "PZ254-1-19-Z-8.5",
+            "puuid": "c1f50ebbfc7d491db63dc57e3c029936",
+            "uuid": "567cf5ed2ecd41268ab730b91f799fb3"
+          }
+        ],
+        [
+          "Input Voltage",
+          1,
+          "HDR-TH_3P-P2.54-V-M-1",
+          "H3",
+          {
+            "Supplier": "LCSC",
+            "Manufacturer": "BOOMELE(博穆精密)",
+            "Manufacturer Part": "2.54-1*3P针",
+            "Supplier Part": "C49257",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "Header-Male-2.54_1x3",
+            "puuid": "7e70b923819e4f3bb9fdeaf4abdca9d3",
+            "uuid": "21f8f80a3f7c3c2b00b33f71a31ff6ef"
+          }
+        ],
+        [
+          "1M",
+          4,
+          "PS-RES-16.5*6.42",
+          "R3,R5,R8,R12",
+          {
+            "Supplier Part": "",
+            "Supplier": "",
+            "Contributor": "LCEDA_Lib",
+            "spiceSymbolName": "R_0603_US",
+            "Manufacturer Part": "",
+            "puuid": "a2ced4acaa4c44f09885f6447ef3efa4",
+            "uuid": "b0248eb51e084227889f2cb84eab79c4"
+          }
+        ],
+        [
+          "1K",
+          1,
+          "PS-RES-16.5*6.42",
+          "R4",
+          {
+            "Supplier Part": "",
+            "Supplier": "",
+            "Contributor": "LCEDA_Lib",
+            "spiceSymbolName": "R_0603_US",
+            "Manufacturer Part": "",
+            "puuid": "a2ced4acaa4c44f09885f6447ef3efa4",
+            "uuid": "b0248eb51e084227889f2cb84eab79c4"
+          }
+        ],
+        [
+          "100R",
+          1,
+          "PS-RES-16.5*6.42",
+          "R11",
+          {
+            "Supplier Part": "",
+            "Supplier": "",
+            "Contributor": "LCEDA_Lib",
+            "spiceSymbolName": "R_0603_US",
+            "Manufacturer Part": "",
+            "puuid": "a2ced4acaa4c44f09885f6447ef3efa4",
+            "uuid": "b0248eb51e084227889f2cb84eab79c4"
+          }
+        ],
+        [
+          "100K",
+          1,
+          "PS-RES-16.5*6.42",
+          "R13",
+          {
+            "Supplier Part": "",
+            "Supplier": "",
+            "Contributor": "LCEDA_Lib",
+            "spiceSymbolName": "R_0603_US",
+            "Manufacturer Part": "",
+            "puuid": "a2ced4acaa4c44f09885f6447ef3efa4",
+            "uuid": "b0248eb51e084227889f2cb84eab79c4"
+          }
+        ],
+        [
+          "Daisy Seed",
+          1,
+          "DAISY_SEED",
+          "U2",
+          {
+            "Manufacturer": "",
+            "Manufacturer Part": "",
+            "Supplier Part": "",
+            "Supplier": "",
+            "link": "",
+            "Contributor": "jjmens",
+            "spiceSymbolName": "Daisy Seed",
+            "puuid": "5896eda49f3645259a2f966a2f813670",
+            "uuid": "c14fbda721334d15b6d9341f4a6291f5"
+          }
+        ],
+        [
+          "L78L05",
+          1,
+          "TO-92-3_L4.9-W3.7-P1.27-L",
+          "U3",
+          {
+            "Supplier": "LCSC",
+            "Manufacturer": "ST(意法半导体)",
+            "Manufacturer Part": "L78L05ACZ",
+            "Supplier Part": "C57900",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "L78L05ACZ",
+            "puuid": "6924b36489de4921bb29ca14bf27c33f",
+            "uuid": "3921eafbac0c3eb613e12fbf535fe715"
+          }
+        ],
+        [
+          "TL072",
+          1,
+          "DIP-8_L9.7-W6.6-P2.54-LS7.6-BL",
+          "U1",
+          {
+            "subpart_no": "1",
+            "Supplier": "LCSC",
+            "Supplier Part": "C529228",
+            "Manufacturer": "Gcore(扬州国芯)",
+            "Manufacturer Part": "TL072",
+            "spiceSymbolName": "TL072_C529228",
+            "puuid": "d7aaa7f1b19a47d897ac58a70773b297",
+            "uuid": "8a9baac1493f4519a72a51881f016fd7"
+          }
+        ]
+      ],
+      "updateTime": 1713621418,
+      "createTime": 1713620242,
+      "histories": [],
+      "created_at": "2024-04-20 18:07:22",
+      "updated_at": "2024-04-20 18:26:58"
     }
   ],
   "sort": [

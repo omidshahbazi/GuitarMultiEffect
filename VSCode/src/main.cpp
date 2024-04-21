@@ -41,3 +41,5 @@ int main()
 
 	return 0;
 }
+
+// TODO: Test all of the effects on DevBoard and separate the not working ones

@@ -7,6 +7,7 @@
 #include "Effect.h"
 #include "../framework/DSP/DSPs/Sustain.h"
 
+// TODO: Does it work?
 template <typename T>
 class SustainEffect : public Effect<T>
 {

@@ -173,10 +173,10 @@ public:
 #endif
 
 #ifdef COMPRESSOR_EFFECT
-		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Algorithm seems incorrect
+		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 #ifdef SUSTAIN_EFFECT
-		CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE); // TODO: Does it work?
+		CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 #ifdef TEST_EFFECT
