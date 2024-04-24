@@ -72,7 +72,7 @@ const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
-const float MAX_GAIN = 500;
+const float MAX_GAIN = 100;
 
 typedef float SampleType;
 
@@ -118,7 +118,7 @@ public:
 
 		ESP32A1SCodec::SetInputVolume(-50);
 		ESP32A1SCodec::SetDigitalVolume(0);
-		ESP32A1SCodec::SetOutputVolume(3);
+		ESP32A1SCodec::SetOutputVolume(0);
 
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
