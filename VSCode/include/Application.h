@@ -72,7 +72,7 @@ const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
-const float MAX_GAIN = 100;
+const float MAX_GAIN = 1.3;
 
 typedef float SampleType;
 
@@ -114,11 +114,11 @@ public:
 		ESP32A1SCodec::Initialize(&configs);
 
 		if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
-			ESP32A1SCodec::SetMicrophoneGain(0);
+			ESP32A1SCodec::SetMicrophoneGain(24);
 
-		ESP32A1SCodec::SetInputVolume(-50);
+		ESP32A1SCodec::SetInputVolume(0);
 		ESP32A1SCodec::SetDigitalVolume(0);
-		ESP32A1SCodec::SetOutputVolume(0);
+		ESP32A1SCodec::SetOutputVolume(-28);
 
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
@@ -201,7 +201,7 @@ private:
 		SineWaveGenerator<int32> sineWave;
 		sineWave.SetDoubleBuffered(false);
 		sineWave.SetSampleRate(SAMPLE_RATE);
-		sineWave.SetAmplitude(0.03);
+		sineWave.SetAmplitude(1);
 		sineWave.SetFrequency(NOTE_A4);
 
 		uint32 bufferLen = sineWave.GetBufferLength();
@@ -222,7 +222,11 @@ private:
 				effect->Apply(processBufferL, bufferLen);
 
 			for (uint16 i = 0; i < bufferLen; ++i)
+			{
+				ASSERT(fabs(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i] * 1000000);
+
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 0);
+			}
 
 			ESP32A1SCodec::Write(outBuffer, sampleCount, 20);
 		}
@@ -256,10 +260,18 @@ private:
 					CONVERT_INT32_TO_NORMALIZED_DOUBLE(ioBuffer, true, 0, processBufferL, i);
 
 				for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+				{
 					processBufferL[i] *= MAX_GAIN;
 
+					ASSERT(fabs(processBufferL[i]) <= 1, "Gained input value is out of range: %f", processBufferL[i]);
+				}
+
 				for (uint16 i = 0; i < FRAME_LENGTH; ++i)
+				{
+					ASSERT(fabs(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
+
 					SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
+				}
 
 				for (Effect<SampleType> *effect : m_Effects)
 					effect->Apply(processBufferL, FRAME_LENGTH);

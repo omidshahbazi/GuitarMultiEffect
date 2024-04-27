@@ -1,30 +1,30 @@
 {
-  "uuid": "1b704a982a365e841422acec9db2a462",
+  "uuid": "c4acc3ca02dc1d8f5cb046419c2951e8",
   "path": "Offline/EasyEDA",
   "name": "EasyEDA",
   "content": "",
   "created_at": "2023-09-30 16:12:41",
-  "updated_at": "2024-01-29 16:47:53",
+  "updated_at": "2024-04-26 10:10:34",
   "stick": "",
   "documents": [
     {
-      "uuid": "cc4d4b2d508db206210bd160ca9e35cc",
+      "uuid": "43e769648665a4ecd5448f7c01a88aa9",
       "title": "Shematic",
       "description": "",
       "docType": "1",
       "master": "",
       "thumb": "/images/thumb-default.png",
       "components": {
-        "5e8500671a0c4c9698dc53dc7d540fb3": 1,
-        "af3ab33b8a6f4324ab988fd4fe57916e": 2,
-        "f6bf59dc9204430a8ac131d00d8faa66": 2,
         "c5e3c95bc91b4c29ade5b871ddf776a2": 2,
         "8ba4e400652745a0a1ce03c877134888": 1,
-        "98301730d841461fa8aa068be49a167e": 1,
         "2e287dd091804cad83b0b4645865380f": 2,
-        "7658eca442c142f09c6488b04b1b63e1": 3,
-        "800eedb62cd715e82ced19f820d754e8": 2,
-        "d27afdf5cf734ed79ac52aa67711c652": 1
+        "7658eca442c142f09c6488b04b1b63e1": 8,
+        "800eedb62cd715e82ced19f820d754e8": 3,
+        "0af77319007a4306b73adb2411d7f822": 1,
+        "e653124a12e74cdf963920c5b02d2c52": 1,
+        "4972dbd9a873408eabf326095526bd1d": 1,
+        "6ed7b1533d7846b6bcb19eb4e96c170a": 1,
+        "f60173524b374629b5435592ad4954fb": 1
       },
       "BOM": [
         [
@@ -35,18 +35,38 @@
           "CustomPara"
         ],
         [
-          "LM2596 5V",
-          1,
-          "LM2596",
-          "1V",
+          "100nF",
+          4,
+          "CAP-TH_L8.0-W4.0-P5.00-D0.7",
+          "C1,C2,C3,C8",
           {
-            "Contributor": "Gabriel Nalin Bettanin",
-            "Supplier Part": "",
-            "Supplier": "Carls",
-            "spiceSymbolName": "LM2596",
-            "Manufacturer Part": "",
-            "puuid": "ca8abfdcf94e4933b270936bf14bfa55",
-            "uuid": "5e8500671a0c4c9698dc53dc7d540fb3"
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C249166",
+            "Manufacturer": "STE(松田)",
+            "Manufacturer Part": "R08B1B102KN0B0S0N0",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C249166&%26type=1&ref=editor",
+            "spiceSymbolName": "R08B1B102KN0B0S0N0",
+            "puuid": "17616368dd8f4ed9b4b58241fcf0534d",
+            "uuid": "7658eca442c142f09c6488b04b1b63e1"
+          }
+        ],
+        [
+          "100uF",
+          1,
+          "CAP-TH_BD5.0-P2.00-D0.8-FD",
+          "C7",
+          {
+            "Supplier": "LCSC",
+            "Manufacturer": "CX(承兴)",
+            "Manufacturer Part": "KM475M050D11RR0VH2FP0",
+            "Supplier Part": "C43344",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C43344&%26type=1&ref=editor",
+            "spiceSymbolName": "4.7uF 50V 5*11",
+            "puuid": "3744bcbe1f464b01ae180f32d7d4b0c4",
+            "uuid": "800eedb62cd715e82ced19f820d754e8"
           }
         ],
         [
@@ -85,38 +105,21 @@
           }
         ],
         [
-          "100nF",
-          2,
-          "CAP-TH_L6.5-W4.0-P5.00-D1.0",
-          "C19,C21",
+          "1uF",
+          1,
+          "CAP-TH_L8.0-W4.0-P5.00-D0.7",
+          "C21",
           {
             "Contributor": "LCSC",
             "Supplier": "LCSC",
-            "Supplier Part": "C424418",
-            "Manufacturer": "KYET(科雅)",
-            "Manufacturer Part": "CL112J103J0501",
+            "Supplier Part": "C249166",
+            "Manufacturer": "STE(松田)",
+            "Manufacturer Part": "R08B1B102KN0B0S0N0",
             "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C424418&%26type=1&ref=editor",
-            "spiceSymbolName": "CL112J103J0501",
-            "puuid": "aad4283918274b23b245f5909ab234eb",
-            "uuid": "f6bf59dc9204430a8ac131d00d8faa66"
-          }
-        ],
-        [
-          "10uF",
-          2,
-          "CAP-TH_BD5.0-P2.00-D0.5-FD-1",
-          "C20,C22",
-          {
-            "Contributor": "lcsc",
-            "Supplier": "LCSC",
-            "Supplier Part": "C2960373",
-            "Manufacturer": "HRK(鸿瑞凯电子)",
-            "Manufacturer Part": "50V10uF CD110",
-            "link": "https://lcsc.com/eda_search?q=C2960373&%26type=1&ref=editor",
-            "spiceSymbolName": "50V10UF CD110_C2960373",
-            "puuid": "0df1d8dcad404c8fb913edb9c9072ff6",
-            "uuid": "af3ab33b8a6f4324ab988fd4fe57916e"
+            "link": "https://lcsc.com/eda_search?q=C249166&%26type=1&ref=editor",
+            "spiceSymbolName": "R08B1B102KN0B0S0N0",
+            "puuid": "17616368dd8f4ed9b4b58241fcf0534d",
+            "uuid": "7658eca442c142f09c6488b04b1b63e1"
           }
         ],
         [
@@ -156,39 +159,72 @@
           }
         ],
         [
-          "AMS1117T-3.3G",
+          "1N5817",
           1,
-          "TO-220-3_L10.0-W4.5-P2.54-L",
-          "U1",
+          "DO-41_BD2.4-L4.7-P8.70-D0.9-RD",
+          "D1",
           {
-            "Contributor": "lcsc",
+            "Contributor": "LCSC",
             "Supplier": "LCSC",
-            "Supplier Part": "C2977163",
-            "Manufacturer": "HGC(深圳汉芯)",
-            "Manufacturer Part": "AMS1117T-3.3G",
+            "Supplier Part": "C360254",
+            "Manufacturer": "PINGWEI(平伟)",
+            "Manufacturer Part": "1N5817",
             "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C2977163&%26type=1&ref=editor",
-            "spiceSymbolName": "AMS1117T-3.3G",
-            "puuid": "948e610cffd14df79f04c73832b1409b",
-            "uuid": "98301730d841461fa8aa068be49a167e"
+            "spiceSymbolName": "1N5817_C360254",
+            "puuid": "c2803222ad4b48fb94db0de548a6280a",
+            "uuid": "f60173524b374629b5435592ad4954fb"
           }
         ],
         [
-          "9V",
+          "1N4734",
           1,
-          "DC-IN-TH_HX-DC005-2.5",
-          "U2",
+          "DO-41G_BD2.4-L4.0-P8.00-D0.7-RD",
+          "D3",
           {
+            "Contributor": "LCSC",
             "Supplier": "LCSC",
-            "Supplier Part": "C18357600",
-            "Manufacturer": "hanxia(韩下)",
-            "Manufacturer Part": "HX DC005-2.5-T",
-            "Contributor": "lcsc",
+            "Supplier Part": "C391329",
+            "Manufacturer": "PANJIT(强茂)",
+            "Manufacturer Part": "1N4734A-G_AY_10001",
             "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C18357600&%26type=1&ref=editor",
-            "spiceSymbolName": "HX DC005-2.5-T",
-            "puuid": "b605bc1778154897b84542b371f9f057",
-            "uuid": "d27afdf5cf734ed79ac52aa67711c652"
+            "spiceSymbolName": "1N4734A-G_AY_10001",
+            "puuid": "3ec2c10767c043209af3e151780fbc9d",
+            "uuid": "6ed7b1533d7846b6bcb19eb4e96c170a"
+          }
+        ],
+        [
+          "5V DC",
+          1,
+          "CONN-TH_DC-005-2.5A-2.0",
+          "DC1",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C319098",
+            "Manufacturer": "XKB Connectivity(中国星坤)",
+            "Manufacturer Part": "DC-005-2.5A-2.5",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "DC-005-2.5A-2.5",
+            "puuid": "97780662768047419baee292bf4b33f3",
+            "uuid": "e653124a12e74cdf963920c5b02d2c52"
+          }
+        ],
+        [
+          "GPIO A/D(2-34) D(5-23) 3.3V GND",
+          1,
+          "HDR-TH_15P-P2.54-V-M",
+          "H5",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C2894938",
+            "Manufacturer": "HCTL(华灿天禄)",
+            "Manufacturer Part": "PZ254-1-15-Z-8.5",
+            "JLCPCB Part Class": "Extended Part",
+            "link": "https://lcsc.com/eda_search?q=C2894938&%26type=1&ref=editor",
+            "spiceSymbolName": "PZ254-1-15-Z-8.5",
+            "puuid": "0d139e62728a49b09c74d4ad035ce944",
+            "uuid": "0af77319007a4306b73adb2411d7f822"
           }
         ],
         [
@@ -242,13 +278,30 @@
             "puuid": "273e4b1e1ad84e4b86d86b52ec4530fd",
             "uuid": "c5e3c95bc91b4c29ade5b871ddf776a2"
           }
+        ],
+        [
+          "LD1117V33C",
+          1,
+          "ITO-220AB-3_L10.2-W4.5-P2.60-L",
+          "U6",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C672117",
+            "Manufacturer": "ST(意法半导体)",
+            "Manufacturer Part": "LD1117V33C",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "LD1117V33C",
+            "puuid": "4b73c61053f9437599e8956c44ffaa53",
+            "uuid": "4972dbd9a873408eabf326095526bd1d"
+          }
         ]
       ],
-      "updateTime": 1706514223,
+      "updateTime": 1714109880,
       "createTime": 1696077761,
       "histories": [],
       "created_at": "2023-09-30 16:12:41",
-      "updated_at": "2024-01-29 11:13:43"
+      "updated_at": "2024-04-26 10:08:00"
     },
     {
       "uuid": "96d92ab4331a253d5f81b44cb88a1368",
@@ -260,15 +313,15 @@
       "master": "",
       "thumb": "/images/thumb-default.png",
       "components": {
-        "ca8abfdcf94e4933b270936bf14bfa55": 1,
-        "3744bcbe1f464b01ae180f32d7d4b0c4": 2,
-        "17616368dd8f4ed9b4b58241fcf0534d": 3,
-        "aad4283918274b23b245f5909ab234eb": 2,
-        "0df1d8dcad404c8fb913edb9c9072ff6": 2,
-        "9e11392ef170476ebc6b0992f0010e80": 2,
-        "948e610cffd14df79f04c73832b1409b": 1,
-        "b605bc1778154897b84542b371f9f057": 1,
-        "273e4b1e1ad84e4b86d86b52ec4530fd": 2
+        "17616368dd8f4ed9b4b58241fcf0534d": 8,
+        "3744bcbe1f464b01ae180f32d7d4b0c4": 3,
+        "c2803222ad4b48fb94db0de548a6280a": 1,
+        "3ec2c10767c043209af3e151780fbc9d": 1,
+        "97780662768047419baee292bf4b33f3": 1,
+        "0d139e62728a49b09c74d4ad035ce944": 1,
+        "4b73c61053f9437599e8956c44ffaa53": 1,
+        "273e4b1e1ad84e4b86d86b52ec4530fd": 2,
+        "9e11392ef170476ebc6b0992f0010e80": 2
       },
       "BOM": [
         [
@@ -506,11 +559,11 @@
           }
         ]
       ],
-      "updateTime": 1706534273,
+      "updateTime": 1714110034,
       "createTime": 1701788991,
       "histories": [],
       "created_at": "2023-12-05 18:39:51",
-      "updated_at": "2024-01-29 16:47:53"
+      "updated_at": "2024-04-26 10:10:34"
     }
   ],
   "sort": [
@@ -520,5 +573,5 @@
   "title": "EasyEDA",
   "foldername": "EasyEDA",
   "schfilename": "GuitarMultiEffect.json",
-  "schfilemtime": 1706514223168
+  "schfilemtime": 1714109880972
 }
