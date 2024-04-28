@@ -12,7 +12,7 @@ class FlangerEffect : public Effect<T>
 {
 public:
 	FlangerEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Flanger(SampleRate),
 		  m_FeedbackPot(nullptr),
 		  m_WetRatePot(nullptr),

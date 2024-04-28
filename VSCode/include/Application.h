@@ -72,7 +72,7 @@ const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
-const float MAX_GAIN = 1.3;
+const float MAX_GAIN = 1.1;
 
 typedef float SampleType;
 
@@ -105,7 +105,7 @@ public:
 		configs.ChannelFormat = ESP32A1SCodec::ChannelFormats::LeftAndRight;
 		configs.BufferCount = 2;
 		configs.BufferLength = SAMPLE_COUNT * sizeof(int32);
-		configs.InputMode = ESP32A1SCodec::InputModes::Microphone1AndMicrophone2Differential; // TODO: Not sure why, but if I use Microphone1 only, a tick noise would be present where it makes many issue in clipping effects, also I haven't switched to the differential mode on the dev-board
+		configs.InputMode = ESP32A1SCodec::InputModes::Microphone1;
 		configs.OutputMode = ESP32A1SCodec::OutputModes::HeadphoneLAndHeadphoneR;
 		configs.MonoMixMode = ESP32A1SCodec::MonoMixModes::None;
 		configs.EnableNoiseGate = false;
@@ -114,11 +114,11 @@ public:
 		ESP32A1SCodec::Initialize(&configs);
 
 		if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
-			ESP32A1SCodec::SetMicrophoneGain(24);
+			ESP32A1SCodec::SetMicrophoneGain(21);
 
 		ESP32A1SCodec::SetInputVolume(0);
 		ESP32A1SCodec::SetDigitalVolume(0);
-		ESP32A1SCodec::SetOutputVolume(-28);
+		ESP32A1SCodec::SetOutputVolume(-28.5);
 
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
@@ -223,7 +223,7 @@ private:
 
 			for (uint16 i = 0; i < bufferLen; ++i)
 			{
-				ASSERT(fabs(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i] * 1000000);
+				ASSERT(fabs(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
 
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 0);
 			}

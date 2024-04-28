@@ -12,7 +12,7 @@ class PhaserEffect : public Effect<T>
 {
 public:
 	PhaserEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Phaser(SampleRate),
 		  m_WetRatePot(nullptr),
 		  m_DepthPot(nullptr),

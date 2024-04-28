@@ -12,7 +12,7 @@ class ReverbEffect : public Effect<T>
 {
 public:
 	ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Reverb(SampleRate, MAX_DELAY_TIME),
 		  m_WetRatePot(nullptr),
 		  m_DelayTimePot(nullptr),

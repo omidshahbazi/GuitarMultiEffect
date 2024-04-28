@@ -13,27 +13,50 @@ class LooperEffect : public Effect<T>
 {
 public:
 	LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Looper(SampleRate, MAX_DELAY_TIME),
-		  m_ModeSwitch(nullptr),
 		  m_VolumePot(nullptr)
 	{
-		m_ModeSwitch = ControlManager->CreateSwitch("Mode", GPIOPins::Pin21);
-		m_ModeSwitch->SetOnStateChangedListener(
-			[&](bool value)
-			{
-				m_Looper.SetMode(value ? Looper<T>::Modes::Record : Looper<T>::Modes::Replay);
-			});
-
 		m_VolumePot = ControlManager->CreatePotentiometer("Volume", GPIOPins::Pin15);
 		m_VolumePot->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Looper.SetVolume(value);
 			});
+
+		SetEnabled(true);
+
+		if (Effect<T>::GetIsEnabledButtonOn())
+			OnTurnedOn();
 	}
 
 protected:
+	void SetEnabled(bool Value) override
+	{
+		Effect<T>::SetEnabled(true);
+	}
+
+	void OnTurnedOn(void) override
+	{
+		m_Looper.SetRecordMode();
+
+		Effect<T>::SetLEDBlinkingEnabled(true);
+	}
+
+	void OnTurnedOff(float TurnedOnTime) override
+	{
+		Effect<T>::SetLEDBlinkingEnabled(false);
+
+		// if (TurnedOnTime < 2)
+		// {
+		// 	m_Looper.Clear();
+
+		// 	return;
+		// }
+
+		m_Looper.SetReplayMode(Math::Min(MAX_DELAY_TIME, TurnedOnTime));
+	}
+
 	IDSP<T> *GetDSP(void)
 	{
 		return &m_Looper;
@@ -41,7 +64,6 @@ protected:
 
 private:
 	Looper<T> m_Looper;
-	Switch *m_ModeSwitch;
 	Potentiometer *m_VolumePot;
 
 	static constexpr float MAX_DELAY_TIME = 1;

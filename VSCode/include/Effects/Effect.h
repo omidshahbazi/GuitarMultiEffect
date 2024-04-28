@@ -13,26 +13,19 @@ template <typename T>
 class Effect
 {
 public:
-	Effect(ControlManager *ControlManager)
+	Effect(ControlManager *ControlManager, GPIOPins LEDPin, GPIOPins EnableButtonPin)
 		: m_Enabled(true)
 	{
-		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", GPIOPins::Pin22);
-		m_EnabledLED->SetConstantBrighness(1);
+		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", LEDPin);
 
-		auto onSwitchChanged = [&](bool value)
-		{
-			m_Enabled = value;
+		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);
+		m_EnabledSwitch->SetOnTurnedOnListener([this](void)
+											   { OnTurnedOn(); });
 
-			if (m_Enabled)
-				m_EnabledLED->SetConstantBrighness(1);
-			else
-				m_EnabledLED->SetConstantBrighness(0);
-		};
+		m_EnabledSwitch->SetOnTurnedOffListener([&](float heldTime)
+												{ OnTurnedOff(heldTime); });
 
-		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", GPIOPins::Pin19);
-		m_EnabledSwitch->SetOnStateChangedListener(onSwitchChanged);
-
-		onSwitchChanged(m_EnabledSwitch->GetTurnedOn());
+		UpdateEnabledState();
 	}
 
 	void Apply(T *Buffer, uint16 Count)
@@ -44,6 +37,41 @@ public:
 	}
 
 protected:
+	void SetLEDBlinkingEnabled(bool Enabled, float Rate = 1)
+	{
+		if (m_Enabled && Enabled)
+			m_EnabledLED->SetBlinkingBrighness(1, Rate);
+		else
+			UpdateEnabledState();
+	}
+
+	virtual void SetEnabled(bool Value)
+	{
+		m_Enabled = Value;
+
+		m_EnabledLED->SetConstantBrighness(m_Enabled);
+	}
+
+	virtual void UpdateEnabledState(void)
+	{
+		SetEnabled(GetIsEnabledButtonOn());
+	}
+
+	virtual void OnTurnedOn(void)
+	{
+		UpdateEnabledState();
+	}
+
+	virtual void OnTurnedOff(float TurnedOnTime)
+	{
+		UpdateEnabledState();
+	}
+
+	virtual bool GetIsEnabledButtonOn(void) const
+	{
+		return m_EnabledSwitch->GetTurnedOn();
+	}
+
 	virtual IDSP<T> *GetDSP(void) = 0;
 
 private:

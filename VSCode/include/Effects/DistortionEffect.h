@@ -12,7 +12,7 @@ class DistortionEffect : public Effect<T>
 {
 public:
 	DistortionEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Distortion(SampleRate),
 		  m_RatePot(nullptr),
 		  m_GainPot(nullptr)

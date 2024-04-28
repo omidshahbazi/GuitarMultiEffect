@@ -13,7 +13,7 @@ class CompressorEffect : public Effect<T>
 {
 public:
 	CompressorEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Compressor(SampleRate),
 		  m_RatioPot(nullptr)
 	{

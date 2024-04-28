@@ -12,7 +12,7 @@ class TremoloEffect : public Effect<T>
 {
 public:
 	TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Tremolo(SampleRate),
 		  m_RatePot(nullptr),
 		  m_DepthPot(nullptr)

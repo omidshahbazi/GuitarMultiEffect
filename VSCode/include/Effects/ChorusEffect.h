@@ -12,7 +12,7 @@ class ChorusEffect : public Effect<T>
 {
 public:
 	ChorusEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Chorus(SampleRate),
 		  m_WetRatePot(nullptr),
 		  m_DepthPot(nullptr),

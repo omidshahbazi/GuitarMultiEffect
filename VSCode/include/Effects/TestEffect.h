@@ -12,7 +12,7 @@ class TestEffect : public Effect<T>
 {
 public:
 	TestEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Test(SampleRate)
 	{
 		m_Pot1 = ControlManager->CreatePotentiometer("High Tone", GPIOPins::Pin13);

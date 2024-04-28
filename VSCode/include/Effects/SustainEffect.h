@@ -12,7 +12,7 @@ class SustainEffect : public Effect<T>
 {
 public:
 	SustainEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_Sustain(SampleRate, MAX_DELAY_TIME),
 		  m_FeedbackPot(nullptr),
 		  m_ActiveSwitch(nullptr),

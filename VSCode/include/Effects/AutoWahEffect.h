@@ -12,7 +12,7 @@ class AutoWahEffect : public Effect<T>
 {
 public:
 	AutoWahEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager),
+		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_AutoWah(SampleRate)
 	{
 	}
