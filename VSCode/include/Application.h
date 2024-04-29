@@ -230,7 +230,7 @@ private:
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				ASSERT(fabs(processBufferChunk[i]) <= 1, "Processed value is out of range: %f", processBufferChunk[i]);
+				ASSERT(Math::Absolute(processBufferChunk[i]) <= 1, "Processed value is out of range: %f", processBufferChunk[i]);
 
 				Out[0][i] = processBufferChunk[i];
 			}
@@ -251,7 +251,7 @@ private:
 			{
 				m_ProcessBufferL[i] = In[0][i];
 
-				ASSERT(fabs(m_ProcessBufferL[i]) <= 1, "Input value is out of range: %f", m_ProcessBufferL[i]);
+				ASSERT(Math::Absolute(m_ProcessBufferL[i]) <= 1, "Input value is out of range: %f", m_ProcessBufferL[i]);
 			}
 
 			for (Effect<SampleType> *effect : m_Effects)
@@ -259,7 +259,7 @@ private:
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				ASSERT(fabs(m_ProcessBufferL[i]) <= 1, "Processed value is out of range: %f", m_ProcessBufferL[i]);
+				ASSERT(Math::Absolute(m_ProcessBufferL[i]) <= 1, "Processed value is out of range: %f", m_ProcessBufferL[i]);
 
 				Out[0][i] = m_ProcessBufferL[i];
 				Out[1][i] = In[0][i];

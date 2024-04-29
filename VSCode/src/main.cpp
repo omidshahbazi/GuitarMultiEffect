@@ -1,5 +1,5 @@
-// #undef _DEBUG
-// #define WAIT_FOR_DEBUGGER
+#undef _DEBUG
+#define WAIT_FOR_DEBUGGER
 
 #define AUTO_WAH_EFFECT
 #define CHORUS_EFFECT
