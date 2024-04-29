@@ -1,23 +1,17 @@
-#define _DEBUG
+// #undef _DEBUG
 // #define WAIT_FOR_DEBUGGER
 
-// #define SIMPLE_LOW_HIGH_PASS_FILTER
-
-// #define AUTO_WAH_EFFECT
-// #define CHORUS_EFFECT
-// #define DISTORTION_EFFECT
-// #define FLANGER_EFFECT
+#define AUTO_WAH_EFFECT
+#define CHORUS_EFFECT
+#define DISTORTION_EFFECT
+#define FLANGER_EFFECT
 #define LOOPER_EFFECT
-// #define NOISE_GATE_EFFECT
-// #define OVERDRIVE_EFFECT
-// #define PHASER_EFFECT
-// #define REVERB_EFFECT
-// #define TREMOLO_EFFECT
-// #define WAH_EFFECT
-
-// #define COMPRESSOR_EFFECT
-// #define SUSTAIN_EFFECT
-// #define TEST_EFFECT
+#define OVERDRIVE_EFFECT
+#define PHASER_EFFECT
+#define REVERB_EFFECT
+#define TREMOLO_EFFECT
+#define WAH_EFFECT
+#define TEST_EFFECT
 
 // #define SINE_WAVE_PLAYER
 
@@ -34,6 +28,7 @@ int main()
 
 	while (true)
 	{
+		// TODO: The CPU gets hot not that much but I guess by limiting the process time through this loop, it wouldn't get that hot anymore, try it out
 		app.Delay(1);
 
 		app.Update();

@@ -18,12 +18,12 @@ public:
 	{
 		Effect<T>::SetEnabled(true);
 
-		// m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin0);
-		// m_VolumePot->SetOnChangedListener(
-		// 	[&](float value)
-		// 	{
-		// 		m_Looper.SetVolume(value);
-		// 	});
+		m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin0);
+		m_VolumePot->SetOnChangedListener(
+			[&](float value)
+			{
+				m_Looper.SetVolume(value);
+			});
 	}
 
 protected:

@@ -7,6 +7,16 @@
 		"initializer_list": "cpp",
 		"ranges": "cpp",
 		"regex": "cpp",
-		"utility": "cpp"
+		"utility": "cpp",
+		"type_traits": "cpp",
+		"*.tcc": "cpp",
+		"optional": "cpp",
+		"istream": "cpp",
+		"ostream": "cpp",
+		"ratio": "cpp",
+		"system_error": "cpp",
+		"functional": "cpp",
+		"tuple": "cpp",
+		"variant": "cpp"
 	}
 }

@@ -23,9 +23,6 @@
 #ifdef LOOPER_EFFECT
 #include "Effects/LooperEffect.h"
 #endif
-#ifdef NOISE_GATE_EFFECT
-#include "Effects/NoiseGateEffect.h"
-#endif
 #ifdef OVERDRIVE_EFFECT
 #include "Effects/OverdriveEffect.h"
 #endif
@@ -42,12 +39,6 @@
 #include "Effects/WahEffect.h"
 #endif
 
-#ifdef COMPRESSOR_EFFECT
-#include "Effects/CompressorEffect.h"
-#endif
-#ifdef SUSTAIN_EFFECT
-#include "Effects/SustainEffect.h"
-#endif
 #ifdef TEST_EFFECT
 #include "Effects/TestEffect.h"
 #endif
@@ -56,7 +47,7 @@
 #include "framework/DSP/SineWaveGenerator.h"
 #endif
 
-const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
+const uint32 SAMPLE_RATE = SAMPLE_RATE_96000;
 
 const uint8 FRAME_LENGTH = 4;
 
@@ -153,9 +144,6 @@ public:
 #ifdef LOOPER_EFFECT
 		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
-#ifdef NOISE_GATE_EFFECT
-		CreateEffect<NoiseGateEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
 #ifdef OVERDRIVE_EFFECT
 		CreateEffect<OverdriveEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
@@ -172,19 +160,13 @@ public:
 		CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-#ifdef COMPRESSOR_EFFECT
-		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
-#ifdef SUSTAIN_EFFECT
-		CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
-
 #ifdef TEST_EFFECT
 		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-		// Tube Screamer
-		// Octave
+		// TODO: Fuzz (Sawtooth)
+		// TODO: Tube Screamer
+		// TODO: Octave
 
 		DaisySeedHAL::InitializeADC();
 
@@ -247,7 +229,11 @@ private:
 				effect->Apply(processBufferChunk, FRAME_LENGTH);
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+			{
+				ASSERT(fabs(processBufferChunk[i]) <= 1, "Processed value is out of range: %f", processBufferChunk[i]);
+
 				Out[0][i] = processBufferChunk[i];
+			}
 
 			bufferIndex = (bufferIndex + FRAME_LENGTH) % bufferLen;
 		};
@@ -262,13 +248,19 @@ private:
 		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
 		{
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+			{
 				m_ProcessBufferL[i] = In[0][i];
+
+				ASSERT(fabs(m_ProcessBufferL[i]) <= 1, "Input value is out of range: %f", m_ProcessBufferL[i]);
+			}
 
 			for (Effect<SampleType> *effect : m_Effects)
 				effect->Apply(m_ProcessBufferL, FRAME_LENGTH);
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
+				ASSERT(fabs(m_ProcessBufferL[i]) <= 1, "Processed value is out of range: %f", m_ProcessBufferL[i]);
+
 				Out[0][i] = m_ProcessBufferL[i];
 				Out[1][i] = In[0][i];
 			}
