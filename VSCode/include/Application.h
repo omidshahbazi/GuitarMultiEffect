@@ -23,9 +23,6 @@
 #ifdef FLANGER_EFFECT
 #include "Effects/FlangerEffect.h"
 #endif
-#ifdef NOISE_GATE_EFFECT
-#include "Effects/NoiseGateEffect.h"
-#endif
 #ifdef OVERDRIVE_EFFECT
 #include "Effects/OverdriveEffect.h"
 #endif
@@ -45,12 +42,6 @@
 #ifdef LOOPER_EFFECT
 #include "Effects/LooperEffect.h"
 #endif
-#ifdef COMPRESSOR_EFFECT
-#include "Effects/CompressorEffect.h"
-#endif
-#ifdef SUSTAIN_EFFECT
-#include "Effects/SustainEffect.h"
-#endif
 #ifdef TEST_EFFECT
 #include "Effects/TestEffect.h"
 #endif
@@ -62,8 +53,6 @@
 #if defined(LOOPER_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 #elif defined(REVERB_EFFECT)
-const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
-#elif defined(SUSTAIN_EFFECT)
 const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 #else
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
@@ -135,9 +124,6 @@ public:
 #ifdef FLANGER_EFFECT
 		CreateEffect<FlangerEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
-#ifdef NOISE_GATE_EFFECT
-		CreateEffect<NoiseGateEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
 #ifdef OVERDRIVE_EFFECT
 		CreateEffect<OverdriveEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
@@ -157,19 +143,14 @@ public:
 #ifdef LOOPER_EFFECT
 		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
-#ifdef COMPRESSOR_EFFECT
-		CreateEffect<CompressorEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
-#ifdef SUSTAIN_EFFECT
-		CreateEffect<SustainEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
 
 #ifdef TEST_EFFECT
 		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-		// Tube Screamer
-		// Octave
+		// TODO: Fuzz (Sawtooth)
+		// TODO: Tube Screamer
+		// TODO: Octave
 
 		ESP32A1SCodec::PrintSystemStatistics();
 
