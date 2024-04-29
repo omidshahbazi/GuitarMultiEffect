@@ -39,9 +39,6 @@
 #include "Effects/WahEffect.h"
 #endif
 
-#ifdef LOOPER_EFFECT
-#include "Effects/LooperEffect.h"
-#endif
 #ifdef TEST_EFFECT
 #include "Effects/TestEffect.h"
 #endif
@@ -138,10 +135,6 @@ public:
 #endif
 #ifdef WAH_EFFECT
 		CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
-
-#ifdef LOOPER_EFFECT
-		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
 #ifdef TEST_EFFECT
