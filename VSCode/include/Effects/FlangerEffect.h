@@ -19,28 +19,28 @@ public:
 		  m_DepthPot(nullptr),
 		  m_RatePot(nullptr)
 	{
-		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin4);
+		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", GPIOPins::Pin13);
 		m_FeedbackPot->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Flanger.SetFeedback(value);
 			});
 
-		m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", GPIOPins::Pin13);
+		m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", GPIOPins::Pin14);
 		m_WetRatePot->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Flanger.SetWetRate(value);
 			});
 
-		m_DepthPot = ControlManager->CreatePotentiometer("Depth", GPIOPins::Pin14);
+		m_DepthPot = ControlManager->CreatePotentiometer("Depth", GPIOPins::Pin15);
 		m_DepthPot->SetOnChangedListener(
 			[&](float value)
 			{
 				m_Flanger.SetDepth(Math::Lerp(0.0, Flanger<T>::MAX_DEPTH, value));
 			});
 
-		m_RatePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin15);
+		m_RatePot = ControlManager->CreatePotentiometer("Rate", GPIOPins::Pin34);
 		m_RatePot->SetOnChangedListener(
 			[&](float value)
 			{

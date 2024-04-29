@@ -7,7 +7,6 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Looper.h>
 
-// TODO: Due to the memory limitations, I've left this effect uncompleted on ESP32-A1S, so the controls here are not well configured
 template <typename T>
 class LooperEffect : public Effect<T>
 {
@@ -47,7 +46,8 @@ protected:
 	{
 		Effect<T>::SetLEDBlinkingEnabled(false);
 
-		// if (TurnedOnTime < 2)
+		// TODO: Due to the memory limitations, This cannot be done since it needs to be less than 1s which is a short amount of time and the max record time is 1s
+		// if (TurnedOnTime < 1)
 		// {
 		// 	m_Looper.Clear();
 
