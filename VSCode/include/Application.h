@@ -197,7 +197,7 @@ private:
 
 			for (uint16 i = 0; i < bufferLen; ++i)
 			{
-				ASSERT(fabs(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
+				ASSERT(Math::Absolute(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
 
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 0);
 			}
@@ -237,12 +237,12 @@ private:
 				{
 					processBufferL[i] *= MAX_GAIN;
 
-					ASSERT(fabs(processBufferL[i]) <= 1, "Gained input value is out of range: %f", processBufferL[i]);
+					ASSERT(Math::Absolute(processBufferL[i]) <= 1, "Gained input value is out of range: %f", processBufferL[i]);
 				}
 
 				for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				{
-					ASSERT(fabs(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
+					ASSERT(Math::Absolute(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
 
 					SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
 				}
