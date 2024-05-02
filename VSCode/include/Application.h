@@ -58,7 +58,7 @@ const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 const uint16 SAMPLE_COUNT = 64;
 const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
 
-const float MAX_GAIN = 1.1;
+const float MAX_GAIN = 1.0;
 
 typedef float SampleType;
 
@@ -100,9 +100,9 @@ public:
 		ESP32A1SCodec::Initialize(&configs);
 
 		if (Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone1) || Bitwise::IsEnabled(configs.InputMode, ESP32A1SCodec::InputModes::Microphone2))
-			ESP32A1SCodec::SetMicrophoneGain(21);
+			ESP32A1SCodec::SetMicrophoneGain(12);
 
-		ESP32A1SCodec::SetInputVolume(0);
+		ESP32A1SCodec::SetInputVolume(-2.5);
 		ESP32A1SCodec::SetDigitalVolume(0);
 		ESP32A1SCodec::SetOutputVolume(-28.5);
 
@@ -141,8 +141,6 @@ public:
 		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-		// TODO: Fuzz (Sawtooth)
-		// TODO: Tube Screamer
 		// TODO: Octave
 
 		ESP32A1SCodec::PrintSystemStatistics();

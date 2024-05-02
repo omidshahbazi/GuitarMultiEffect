@@ -13,41 +13,35 @@ class TestEffect : public Effect<T>
 public:
 	TestEffect(ControlManager *ControlManager, uint32 SampleRate)
 		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
-		  m_Test(SampleRate)
+		  m_Overdrive(SampleRate),
+		  m_DrivePot(nullptr),
+		  m_GainPot(nullptr)
 	{
-		m_Pot1 = ControlManager->CreatePotentiometer("High Tone", GPIOPins::Pin13);
-		m_Pot1->SetOnChangedListener(
+		m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin14);
+		m_DrivePot->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Test.SetHighTone(Math::Lerp(-20.0, 20, value));
+				m_Overdrive.SetDrive(value);
 			});
 
-		m_Pot2 = ControlManager->CreatePotentiometer("Mid Tone", GPIOPins::Pin14);
-		m_Pot2->SetOnChangedListener(
+		m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin15);
+		m_GainPot->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Test.SetMidTone(Math::Lerp(-20.0, 20, value));
-			});
-
-		m_Pot3 = ControlManager->CreatePotentiometer("Low Tone", GPIOPins::Pin15);
-		m_Pot3->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Test.SetLowTone(Math::Lerp(-20.0, 20, value));
+				m_Overdrive.SetGain(value);
 			});
 	}
 
 protected:
 	IDSP<T> *GetDSP(void)
 	{
-		return &m_Test;
+		return &m_Overdrive;
 	}
 
 private:
-	Test<T> m_Test;
-	Potentiometer *m_Pot1;
-	Potentiometer *m_Pot2;
-	Potentiometer *m_Pot3;
+	Test<T> m_Overdrive;
+	Potentiometer *m_DrivePot;
+	Potentiometer *m_GainPot;
 };
 
 #endif
