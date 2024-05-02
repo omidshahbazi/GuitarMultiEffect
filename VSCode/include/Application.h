@@ -47,7 +47,7 @@
 #include "framework/DSP/SineWaveGenerator.h"
 #endif
 
-const uint32 SAMPLE_RATE = SAMPLE_RATE_96000;
+const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
 const uint8 FRAME_LENGTH = 4;
 
@@ -129,6 +129,10 @@ public:
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
 
+		Button *bootModeButton = m_ControlManager->CreateButton("Boot Mode Button", GPIOPins::Pin30);
+		bootModeButton->SetOnTurnedOffListener([&](float HeldTime)
+											   { m_Hardware.system.ResetToBootloader(); });
+
 #ifdef AUTO_WAH_EFFECT
 		CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
@@ -164,8 +168,6 @@ public:
 		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-		// TODO: Fuzz (Sawtooth)
-		// TODO: Tube Screamer
 		// TODO: Octave
 
 		DaisySeedHAL::InitializeADC();

@@ -4,7 +4,7 @@
   "name": "EasyEDA",
   "content": "",
   "created_at": "2023-09-30 16:12:41",
-  "updated_at": "2024-04-24 12:37:24",
+  "updated_at": "2024-05-02 10:54:34",
   "stick": "",
   "documents": [
     {
@@ -21,15 +21,15 @@
         "2e287dd091804cad83b0b4645865380f": 2,
         "8a9baac1493f4519a72a51881f016fd7": 1,
         "98878c7eb06140879f1eff800e2a2d17": 1,
-        "ace3becc88124fab9f76ac2e97967c28": 1,
-        "567cf5ed2ecd41268ab730b91f799fb3": 1,
-        "21f8f80a3f7c3c2b00b33f71a31ff6ef": 1,
         "6ed7b1533d7846b6bcb19eb4e96c170a": 1,
         "3921eafbac0c3eb613e12fbf535fe715": 1,
         "e653124a12e74cdf963920c5b02d2c52": 1,
         "800eedb62cd715e82ced19f820d754e8": 1,
         "f60173524b374629b5435592ad4954fb": 1,
-        "a441e2ca784044b884c53acf3e7176bf": 1
+        "78af059491b84c6b8ec36d9c711c4c6f": 1,
+        "8140c2826a418e6944733fb32c9d36e5": 1,
+        "cf871078049f4f328c098550293f6878": 1,
+        "ad6b0ffb72024c518d8e5f9b43cd641a": 1
       },
       "BOM": [
         [
@@ -129,20 +129,20 @@
           }
         ],
         [
-          "HC-ZH1.5-10A",
+          "Connector 1",
           1,
-          "CONN-TH_10P-P1.50_HCTL_HC-ZH1.5-10A",
+          "CONN-TH_12P-P2.00_A2001WV-12P",
           "CN1",
           {
             "Contributor": "LCSC",
             "Supplier": "LCSC",
-            "Supplier Part": "C2845558",
-            "Manufacturer": "HCTL(华灿天禄)",
-            "Manufacturer Part": "HC-ZH1.5-10A",
+            "Supplier Part": "C225198",
+            "Manufacturer": "CJT(长江连接器)",
+            "Manufacturer Part": "A2001WV-12P",
             "JLCPCB Part Class": "Extended Part",
-            "spiceSymbolName": "HC-ZH1.5-10A",
-            "puuid": "4f043f9ba6b643abb227c0211521265e",
-            "uuid": "a441e2ca784044b884c53acf3e7176bf"
+            "spiceSymbolName": "A2001WV-12P",
+            "puuid": "72b1c41d3be04d89bf1960aef0918a7e",
+            "uuid": "78af059491b84c6b8ec36d9c711c4c6f"
           }
         ],
         [
@@ -179,6 +179,39 @@
             "spiceSymbolName": "CK6.35-3+15-6",
             "puuid": "9e11392ef170476ebc6b0992f0010e80",
             "uuid": "2e287dd091804cad83b0b4645865380f"
+          }
+        ],
+        [
+          "Connector 2",
+          1,
+          "CONN-TH_11P-P2.00_PH11A",
+          "CN5",
+          {
+            "Supplier": "LCSC",
+            "Manufacturer": "BOOMELE(博穆精密)",
+            "Manufacturer Part": "PH-11A",
+            "Supplier Part": "C10399",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "PH-11A",
+            "puuid": "38a207a021b541a48bb4fc72cf7a9570",
+            "uuid": "8140c2826a418e6944733fb32c9d36e5"
+          }
+        ],
+        [
+          "Connector 3",
+          1,
+          "CONN-TH_B06B-PASK-1-LF-SN",
+          "CN6",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C160281",
+            "Manufacturer": "JST",
+            "Manufacturer Part": "B06B-PASK-1(LF)(SN)",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "B06B-PASK-1 (LF)(SN)",
+            "puuid": "28119c3d250a4578a8897d8a7679e81a",
+            "uuid": "ad6b0ffb72024c518d8e5f9b43cd641a"
           }
         ],
         [
@@ -230,56 +263,6 @@
             "spiceSymbolName": "DC-005-2.5A-2.5",
             "puuid": "97780662768047419baee292bf4b33f3",
             "uuid": "e653124a12e74cdf963920c5b02d2c52"
-          }
-        ],
-        [
-          "Analog/Digital",
-          1,
-          "HDR-TH_12P-P2.54-V-M",
-          "H1",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C2840012",
-            "Manufacturer": "XFCN(兴飞)",
-            "Manufacturer Part": "PZ254V-11-12P",
-            "JLCPCB Part Class": "Extended Part",
-            "spiceSymbolName": "PZ254V-11-12P",
-            "puuid": "cc36c6ebfbc648d5879d9c565d52f5f3",
-            "uuid": "ace3becc88124fab9f76ac2e97967c28"
-          }
-        ],
-        [
-          "Digital",
-          1,
-          "HDR-TH_19P-P2.54-V-M",
-          "H2",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C2894942",
-            "Manufacturer": "HCTL(华灿天禄)",
-            "Manufacturer Part": "PZ254-1-19-Z-8.5",
-            "JLCPCB Part Class": "Extended Part",
-            "spiceSymbolName": "PZ254-1-19-Z-8.5",
-            "puuid": "c1f50ebbfc7d491db63dc57e3c029936",
-            "uuid": "567cf5ed2ecd41268ab730b91f799fb3"
-          }
-        ],
-        [
-          "Input Voltage",
-          1,
-          "HDR-TH_3P-P2.54-V-M-1",
-          "H3",
-          {
-            "Supplier": "LCSC",
-            "Manufacturer": "BOOMELE(博穆精密)",
-            "Manufacturer Part": "2.54-1*3P针",
-            "Supplier Part": "C49257",
-            "JLCPCB Part Class": "Extended Part",
-            "spiceSymbolName": "Header-Male-2.54_1x3",
-            "puuid": "7e70b923819e4f3bb9fdeaf4abdca9d3",
-            "uuid": "21f8f80a3f7c3c2b00b33f71a31ff6ef"
           }
         ],
         [
@@ -360,6 +343,23 @@
           }
         ],
         [
+          "Connector 4",
+          1,
+          "CONN-TH_B5B-PH-K-S-LF-SN",
+          "U3",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C157993",
+            "Manufacturer": "JST",
+            "Manufacturer Part": "B5B-PH-K-S(LF)(SN)",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "B5B-PH-K-S-(LF)(SN)",
+            "puuid": "dc1bec8a96fb431eb7651cbafb5d5215",
+            "uuid": "cf871078049f4f328c098550293f6878"
+          }
+        ],
+        [
           "L78L05",
           1,
           "TO-92-3_L4.9-W3.7-P1.27-L",
@@ -392,11 +392,11 @@
           }
         ]
       ],
-      "updateTime": 1713946044,
+      "updateTime": 1714629499,
       "createTime": 1696077761,
       "histories": [],
       "created_at": "2023-09-30 16:12:41",
-      "updated_at": "2024-04-24 12:37:24"
+      "updated_at": "2024-05-02 10:28:19"
     },
     {
       "uuid": "cd18a08a27d9dc514bf6e2322795d345",
@@ -408,6 +408,10 @@
       "master": "",
       "thumb": "/images/thumb-default.png",
       "components": {
+        "28119c3d250a4578a8897d8a7679e81a": 1,
+        "dc1bec8a96fb431eb7651cbafb5d5215": 1,
+        "72b1c41d3be04d89bf1960aef0918a7e": 1,
+        "38a207a021b541a48bb4fc72cf7a9570": 1,
         "17616368dd8f4ed9b4b58241fcf0534d": 9,
         "3ec2c10767c043209af3e151780fbc9d": 1,
         "97780662768047419baee292bf4b33f3": 1,
@@ -416,9 +420,6 @@
         "a2ced4acaa4c44f09885f6447ef3efa4": 7,
         "5896eda49f3645259a2f966a2f813670": 1,
         "d7aaa7f1b19a47d897ac58a70773b297": 1,
-        "cc36c6ebfbc648d5879d9c565d52f5f3": 1,
-        "7e70b923819e4f3bb9fdeaf4abdca9d3": 1,
-        "c1f50ebbfc7d491db63dc57e3c029936": 1,
         "c2803222ad4b48fb94db0de548a6280a": 1,
         "9e11392ef170476ebc6b0992f0010e80": 2
       },
@@ -748,11 +749,11 @@
           }
         ]
       ],
-      "updateTime": 1713809454,
+      "updateTime": 1714631074,
       "createTime": 1712572146,
       "histories": [],
       "created_at": "2024-04-08 14:59:06",
-      "updated_at": "2024-04-22 22:40:54"
+      "updated_at": "2024-05-02 10:54:34"
     }
   ],
   "sort": [
@@ -762,5 +763,5 @@
   "title": "EasyEDA",
   "foldername": "EasyEDA",
   "schfilename": "GuitarMultiEffect.json",
-  "schfilemtime": 1713946044442
+  "schfilemtime": 1714629499801
 }

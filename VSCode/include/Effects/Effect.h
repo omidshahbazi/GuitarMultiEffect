@@ -14,7 +14,7 @@ public:
 		: m_Enabled(false)
 	{
 		m_EnabledLED = ControlManager->CreateDualLED("Enabled", RedLEDPin, GreenLEDPin);
-		m_EnabledLED->SetColor(DUAL_LED_RED);
+		m_EnabledLED->SetColor(DUAL_LED_GREEN);
 		m_EnabledLED->SetConstantBrighness(1);
 
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);

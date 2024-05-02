@@ -1,17 +1,25 @@
-#undef _DEBUG
+#define DEBUG_MODE
 #define WAIT_FOR_DEBUGGER
 
-#define AUTO_WAH_EFFECT
-#define CHORUS_EFFECT
-#define DISTORTION_EFFECT
+#ifdef DEBUG_MODE
+#ifndef _DEBUG
+#define _DEBUG
+#endif
+#else
+#undef _DEBUG
+#endif
+
+// #define AUTO_WAH_EFFECT
+// #define CHORUS_EFFECT
+// #define DISTORTION_EFFECT
 #define FLANGER_EFFECT
-#define LOOPER_EFFECT
-#define OVERDRIVE_EFFECT
-#define PHASER_EFFECT
-#define REVERB_EFFECT
-#define TREMOLO_EFFECT
-#define WAH_EFFECT
-#define TEST_EFFECT
+// #define LOOPER_EFFECT
+// #define OVERDRIVE_EFFECT
+// #define PHASER_EFFECT
+// #define REVERB_EFFECT
+// #define TREMOLO_EFFECT
+// #define WAH_EFFECT
+// #define TEST_EFFECT
 
 // #define SINE_WAVE_PLAYER
 
