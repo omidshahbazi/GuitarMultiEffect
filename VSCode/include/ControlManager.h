@@ -97,7 +97,7 @@ public:
 
 		Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
-		return m_Factory.Create<Potentiometer>(m_HAL, (uint8)Pin, PROCESS_RATE, true);
+		return m_Factory.Create<Potentiometer>(m_HAL, (uint8)Pin, PROCESS_RATE, false);
 	}
 
 private:

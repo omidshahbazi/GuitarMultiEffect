@@ -12,13 +12,13 @@ class LooperEffect : public Effect<T>
 {
 public:
 	LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
+		: Effect<T>(ControlManager, GPIOPins::Pin10, GPIOPins::Pin11, GPIOPins::Pin29),
 		  m_Looper(SampleRate, MAX_DELAY_TIME),
 		  m_VolumePot(nullptr)
 	{
 		Effect<T>::SetEnabled(true);
 
-		m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin0);
+		m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin11);
 		m_VolumePot->SetOnChangedListener(
 			[&](float value)
 			{

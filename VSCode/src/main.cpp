@@ -1,5 +1,5 @@
 #define DEBUG_MODE
-#define WAIT_FOR_DEBUGGER
+// #define WAIT_FOR_DEBUGGER
 
 #ifdef DEBUG_MODE
 #ifndef _DEBUG
@@ -9,10 +9,10 @@
 #undef _DEBUG
 #endif
 
-// #define AUTO_WAH_EFFECT
+#define AUTO_WAH_EFFECT
 // #define CHORUS_EFFECT
 // #define DISTORTION_EFFECT
-#define FLANGER_EFFECT
+// #define FLANGER_EFFECT
 // #define LOOPER_EFFECT
 // #define OVERDRIVE_EFFECT
 // #define PHASER_EFFECT
@@ -36,13 +36,10 @@ int main()
 
 	while (true)
 	{
-		// TODO: The CPU gets hot not that much but I guess by limiting the process time through this loop, it wouldn't get that hot anymore, try it out
-		app.Delay(1);
+		app.Delay(10);
 
 		app.Update();
 	}
 
 	return 0;
 }
-
-// TODO: Test all of the effects on DevBoard and separate the not working ones

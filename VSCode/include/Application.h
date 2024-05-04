@@ -8,6 +8,10 @@
 #include "framework/DaisySeedHAL.h"
 #include <vector>
 
+#ifdef _DEBUG
+#include "framework/DSP/SampleAmountMeter.h"
+#endif
+
 #ifdef AUTO_WAH_EFFECT
 #include "Effects/AutoWahEffect.h"
 #endif
@@ -51,6 +55,8 @@ const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
 const uint8 FRAME_LENGTH = 4;
 
+const float GAIN = 1.7;
+
 typedef float SampleType;
 
 class Application;
@@ -78,9 +84,10 @@ public:
 		Log::SetMask(Log::Types::General);
 #ifdef WAIT_FOR_DEBUGGER
 		m_Hardware.StartLog(true);
+#else
+		m_Hardware.StartLog(false);
 #endif
 #endif
-
 		daisy::SaiHandle::Config::SampleRate daisySampleRate;
 		switch (SAMPLE_RATE)
 		{
@@ -194,6 +201,12 @@ public:
 		DaisySeedHAL::Update();
 
 		m_ControlManager->Update();
+
+		ASSERT(m_InputSampleAmountMeter.GetAbsoluteMax() <= 1, "Gained Input value is out of range: %f", m_InputSampleAmountMeter.GetAbsoluteMax());
+		m_InputSampleAmountMeter.Reset();
+
+		ASSERT(m_OutputSampleAmountMeter.GetAbsoluteMax(), "Processed value is out of range: %f", m_OutputSampleAmountMeter.GetAbsoluteMax());
+		m_OutputSampleAmountMeter.Reset();
 	}
 
 private:
@@ -251,9 +264,11 @@ private:
 		{
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				m_ProcessBufferL[i] = In[0][i];
+				m_ProcessBufferL[i] = In[0][i] * GAIN;
 
-				ASSERT(Math::Absolute(m_ProcessBufferL[i]) <= 1, "Input value is out of range: %f", m_ProcessBufferL[i]);
+#ifdef _DEBUG
+				m_InputSampleAmountMeter.Record(m_ProcessBufferL[i]);
+#endif
 			}
 
 			for (Effect<SampleType> *effect : m_Effects)
@@ -261,7 +276,9 @@ private:
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				ASSERT(Math::Absolute(m_ProcessBufferL[i]) <= 1, "Processed value is out of range: %f", m_ProcessBufferL[i]);
+#ifdef _DEBUG
+				m_OutputSampleAmountMeter.Record(m_ProcessBufferL[i]);
+#endif
 
 				Out[0][i] = m_ProcessBufferL[i];
 				Out[1][i] = In[0][i];
@@ -287,6 +304,9 @@ private:
 	ControlManager *m_ControlManager;
 	EffectList m_Effects;
 	SampleType *m_ProcessBufferL;
+
+	SampleAmountMeter m_InputSampleAmountMeter;
+	SampleAmountMeter m_OutputSampleAmountMeter;
 };
 
 #endif
