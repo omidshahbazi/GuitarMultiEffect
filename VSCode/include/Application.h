@@ -55,10 +55,10 @@ const uint16 SAMPLE_RATE = SAMPLE_RATE_16000;
 const uint16 SAMPLE_RATE = SAMPLE_RATE_44100;
 #endif
 
-const uint16 SAMPLE_COUNT = 64;
-const uint16 FRAME_LENGTH = SAMPLE_COUNT / 2;
+const uint16 FRAME_LENGTH = 4;
+const uint16 SAMPLE_COUNT = FRAME_LENGTH * 2;
 
-const float MAX_GAIN = 1.0;
+const float GAIN = 1.0;
 
 typedef float SampleType;
 
@@ -233,7 +233,7 @@ private:
 
 				for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				{
-					processBufferL[i] *= MAX_GAIN;
+					processBufferL[i] *= GAIN;
 
 					ASSERT(Math::Absolute(processBufferL[i]) <= 1, "Gained input value is out of range: %f", processBufferL[i]);
 				}
