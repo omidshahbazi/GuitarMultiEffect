@@ -4,7 +4,7 @@
   "name": "EasyEDA",
   "content": "",
   "created_at": "2023-09-30 16:12:41",
-  "updated_at": "2024-04-26 10:10:34",
+  "updated_at": "2024-05-05 12:54:07",
   "stick": "",
   "documents": [
     {
@@ -20,11 +20,12 @@
         "2e287dd091804cad83b0b4645865380f": 2,
         "7658eca442c142f09c6488b04b1b63e1": 8,
         "800eedb62cd715e82ced19f820d754e8": 3,
-        "0af77319007a4306b73adb2411d7f822": 1,
+        "f60173524b374629b5435592ad4954fb": 1,
         "e653124a12e74cdf963920c5b02d2c52": 1,
-        "4972dbd9a873408eabf326095526bd1d": 1,
         "6ed7b1533d7846b6bcb19eb4e96c170a": 1,
-        "f60173524b374629b5435592ad4954fb": 1
+        "4972dbd9a873408eabf326095526bd1d": 1,
+        "ad6b0ffb72024c518d8e5f9b43cd641a": 1,
+        "f69e9e963aee433c8ef496059b3b728a": 1
       },
       "BOM": [
         [
@@ -141,6 +142,40 @@
           }
         ],
         [
+          "Connector 2",
+          1,
+          "CONN-TH_B04B-PASK-1-LF-SN",
+          "CN2",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C160284",
+            "Manufacturer": "JST",
+            "Manufacturer Part": "B04B-PASK-1(LF)(SN)",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "B04B-PASK-1 (LF)(SN)",
+            "puuid": "9cbbb4ff532b4b2e8008815dc6838507",
+            "uuid": "f69e9e963aee433c8ef496059b3b728a"
+          }
+        ],
+        [
+          "Connector 1",
+          1,
+          "CONN-TH_B06B-PASK-1-LF-SN",
+          "CN6",
+          {
+            "Contributor": "LCSC",
+            "Supplier": "LCSC",
+            "Supplier Part": "C160281",
+            "Manufacturer": "JST",
+            "Manufacturer Part": "B06B-PASK-1(LF)(SN)",
+            "JLCPCB Part Class": "Extended Part",
+            "spiceSymbolName": "B06B-PASK-1 (LF)(SN)",
+            "puuid": "28119c3d250a4578a8897d8a7679e81a",
+            "uuid": "ad6b0ffb72024c518d8e5f9b43cd641a"
+          }
+        ],
+        [
           "Input",
           1,
           "AUDIO-TH_CK6.35-3-15-6",
@@ -207,24 +242,6 @@
             "spiceSymbolName": "DC-005-2.5A-2.5",
             "puuid": "97780662768047419baee292bf4b33f3",
             "uuid": "e653124a12e74cdf963920c5b02d2c52"
-          }
-        ],
-        [
-          "GPIO A/D(2-34) D(5-23) 3.3V GND",
-          1,
-          "HDR-TH_15P-P2.54-V-M",
-          "H5",
-          {
-            "Contributor": "LCSC",
-            "Supplier": "LCSC",
-            "Supplier Part": "C2894938",
-            "Manufacturer": "HCTL(华灿天禄)",
-            "Manufacturer Part": "PZ254-1-15-Z-8.5",
-            "JLCPCB Part Class": "Extended Part",
-            "link": "https://lcsc.com/eda_search?q=C2894938&%26type=1&ref=editor",
-            "spiceSymbolName": "PZ254-1-15-Z-8.5",
-            "puuid": "0d139e62728a49b09c74d4ad035ce944",
-            "uuid": "0af77319007a4306b73adb2411d7f822"
           }
         ],
         [
@@ -297,11 +314,11 @@
           }
         ]
       ],
-      "updateTime": 1714109880,
+      "updateTime": 1714832965,
       "createTime": 1696077761,
       "histories": [],
       "created_at": "2023-09-30 16:12:41",
-      "updated_at": "2024-04-26 10:08:00"
+      "updated_at": "2024-05-04 18:59:25"
     },
     {
       "uuid": "96d92ab4331a253d5f81b44cb88a1368",
@@ -313,12 +330,13 @@
       "master": "",
       "thumb": "/images/thumb-default.png",
       "components": {
+        "28119c3d250a4578a8897d8a7679e81a": 1,
+        "9cbbb4ff532b4b2e8008815dc6838507": 1,
         "17616368dd8f4ed9b4b58241fcf0534d": 8,
         "3744bcbe1f464b01ae180f32d7d4b0c4": 3,
         "c2803222ad4b48fb94db0de548a6280a": 1,
         "3ec2c10767c043209af3e151780fbc9d": 1,
         "97780662768047419baee292bf4b33f3": 1,
-        "0d139e62728a49b09c74d4ad035ce944": 1,
         "4b73c61053f9437599e8956c44ffaa53": 1,
         "273e4b1e1ad84e4b86d86b52ec4530fd": 2,
         "9e11392ef170476ebc6b0992f0010e80": 2
@@ -559,11 +577,11 @@
           }
         ]
       ],
-      "updateTime": 1714110034,
+      "updateTime": 1714897447,
       "createTime": 1701788991,
       "histories": [],
       "created_at": "2023-12-05 18:39:51",
-      "updated_at": "2024-04-26 10:10:34"
+      "updated_at": "2024-05-05 12:54:07"
     }
   ],
   "sort": [
@@ -573,5 +591,5 @@
   "title": "EasyEDA",
   "foldername": "EasyEDA",
   "schfilename": "GuitarMultiEffect.json",
-  "schfilemtime": 1714109880972
+  "schfilemtime": 1714832965911
 }
