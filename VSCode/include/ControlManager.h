@@ -10,6 +10,7 @@
 #include "framework/DSP/Controls/Button.h"
 #include "framework/DSP/Controls/Switch.h"
 #include "framework/DSP/Controls/Potentiometer.h"
+#include "framework/DSP/Controls/RotaryButton.h"
 
 #define PROCESS_RATE 100
 
@@ -98,6 +99,37 @@ public:
 		Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
 		return m_Factory.Create<Potentiometer>(m_HAL, (uint8)Pin, PROCESS_RATE, false);
+	}
+
+	Rotary *CreateRotary(const char *Name, GPIOPins LeftPin, GPIOPins RightPin)
+	{
+		CheckIfGPIOIsUsed((uint8)LeftPin);
+		CheckIfGPIOIsUsed((uint8)RightPin);
+
+		MarkGPIOAsUsed((uint8)LeftPin);
+		MarkGPIOAsUsed((uint8)RightPin);
+
+		Log::WriteInfo("Controls", "%s: Rotary %i", Name, LeftPin);
+		Log::WriteInfo("Controls", "%s: Rotary %i", Name, RightPin);
+
+		return m_Factory.Create<Rotary>(m_HAL, (uint8)LeftPin, (uint8)RightPin, PROCESS_RATE);
+	}
+
+	RotaryButton *CreateRotaryButton(const char *Name, GPIOPins LeftPin, GPIOPins RightPin, GPIOPins ButtonPin)
+	{
+		CheckIfGPIOIsUsed((uint8)LeftPin);
+		CheckIfGPIOIsUsed((uint8)RightPin);
+		CheckIfGPIOIsUsed((uint8)ButtonPin);
+
+		MarkGPIOAsUsed((uint8)LeftPin);
+		MarkGPIOAsUsed((uint8)RightPin);
+		MarkGPIOAsUsed((uint8)ButtonPin);
+
+		Log::WriteInfo("Controls", "%s: RotaryButton %i", Name, LeftPin);
+		Log::WriteInfo("Controls", "%s: RotaryButton %i", Name, RightPin);
+		Log::WriteInfo("Controls", "%s: RotaryButton %i", Name, ButtonPin);
+
+		return m_Factory.Create<RotaryButton>(m_HAL, (uint8)LeftPin, (uint8)RightPin, (uint8)ButtonPin, PROCESS_RATE);
 	}
 
 private:

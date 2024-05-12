@@ -63,6 +63,7 @@ class Application;
 Application *g_Application;
 std::function<void(const float *const *In, float **Out, uint32 Size)> g_ProcessorFunction;
 
+// TODO: change the SineWavePlayer to use Oscilator or use Oscilator directly
 class Application : public DaisySeedHAL
 {
 private:
@@ -137,8 +138,21 @@ public:
 		new (m_ControlManager) ControlManager(this);
 
 		Button *bootModeButton = m_ControlManager->CreateButton("Boot Mode Button", GPIOPins::Pin30);
-		bootModeButton->SetOnTurnedOffListener([&](float HeldTime)
-											   { m_Hardware.system.ResetToBootloader(); });
+		bootModeButton->SetOnTurnedOffListener(
+			[&](float HeldTime)
+			{
+				if (HeldTime > 5)
+				{
+					// TODO: Do a Reset-Factory
+					// TODO: Restart
+
+					return;
+				}
+
+#ifdef _DEBUG
+				m_Hardware.system.ResetToBootloader();
+#endif
+			});
 
 #ifdef AUTO_WAH_EFFECT
 		CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
@@ -176,6 +190,9 @@ public:
 #endif
 
 		// TODO: Octave
+		// TODO: Amp
+		// TODO: Cab?
+		// Add different variation of the effects like Delay-> PingPong
 
 		DaisySeedHAL::InitializeADC();
 
@@ -202,11 +219,13 @@ public:
 
 		m_ControlManager->Update();
 
+#ifdef _DEBUG
 		ASSERT(m_InputSampleAmountMeter.GetAbsoluteMax() <= 1, "Gained Input value is out of range: %f", m_InputSampleAmountMeter.GetAbsoluteMax());
 		m_InputSampleAmountMeter.Reset();
 
 		ASSERT(m_OutputSampleAmountMeter.GetAbsoluteMax(), "Processed value is out of range: %f", m_OutputSampleAmountMeter.GetAbsoluteMax());
 		m_OutputSampleAmountMeter.Reset();
+#endif
 	}
 
 private:
@@ -305,8 +324,10 @@ private:
 	EffectList m_Effects;
 	SampleType *m_ProcessBufferL;
 
+#ifdef _DEBUG
 	SampleAmountMeter m_InputSampleAmountMeter;
 	SampleAmountMeter m_OutputSampleAmountMeter;
+#endif
 };
 
 #endif

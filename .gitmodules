@@ -1,3 +1,4 @@
 [submodule "VSCode/include/framework"]
 	path = VSCode/include/framework
 	url = git@github.com:omidshahbazi/DaisySeedFramework.git
+	branch = master

@@ -5,9 +5,9 @@
       "compilerPath": "arm-none-eabi-g++.exe",
       "cppStandard": "c++17",
       "defines": [
-        "_DEBUG"
-        , "UNICODE"
-        , "_UNICODE"
+        "_DEBUG", 
+        "UNICODE", 
+        "_UNICODE"
       ],
       "includePath": [
         "${workspaceFolder}/include/**",
