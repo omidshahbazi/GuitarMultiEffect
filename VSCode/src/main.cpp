@@ -1,5 +1,8 @@
+#ifdef __PLATFORMIO_BUILD_DEBUG__
+#define DEBUG
+#endif
+
 #include "Application.h"
-#include <Arduino.h>
 
 Application g_App;
 

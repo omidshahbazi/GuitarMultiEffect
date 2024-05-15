@@ -13,35 +13,33 @@ class TestEffect : public Effect<T>
 public:
 	TestEffect(ControlManager *ControlManager, uint32 SampleRate)
 		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
-		  m_Overdrive(SampleRate),
-		  m_DrivePot(nullptr),
-		  m_GainPot(nullptr)
+		  m_Test(SampleRate)
 	{
-		m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin14);
-		m_DrivePot->SetOnChangedListener(
+		m_Pot1 = ControlManager->CreatePotentiometer("Pot 0", GPIOPins::Pin14);
+		m_Pot1->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Overdrive.SetDrive(value);
+				m_Test.SetDrive(value);
 			});
 
-		m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin15);
-		m_GainPot->SetOnChangedListener(
+		m_Pot2 = ControlManager->CreatePotentiometer("Pot 1", GPIOPins::Pin15);
+		m_Pot2->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Overdrive.SetGain(value);
+				m_Test.SetGain(value);
 			});
 	}
 
 protected:
 	IDSP<T> *GetDSP(void)
 	{
-		return &m_Overdrive;
+		return &m_Test;
 	}
 
 private:
-	Test<T> m_Overdrive;
-	Potentiometer *m_DrivePot;
-	Potentiometer *m_GainPot;
+	Test<T> m_Test;
+	Potentiometer *m_Pot1;
+	Potentiometer *m_Pot2;
 };
 
 #endif

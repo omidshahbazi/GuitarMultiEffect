@@ -43,8 +43,9 @@
 #include "Effects/TestEffect.h"
 #endif
 
-#ifdef SINE_WAVE_PLAYER
-#include <framework/include/DSP/SineWaveGenerator.h>
+#ifdef PLAY_SINE_WAVE
+#include <framework/include/DSP/Filters/OscillatorFilter.h>
+#include <framework/include/DSP/Notes.h>
 #endif
 
 #if defined(LOOPER_EFFECT)
@@ -62,7 +63,7 @@ const float GAIN = 1.0;
 
 typedef float SampleType;
 
-class Application : public ESP32HAL
+class Application : public ESP32HAL<0, 0>
 {
 private:
 	typedef std::vector<Effect<SampleType> *> EffectList;
@@ -75,7 +76,7 @@ public:
 		Log::Initialize(this);
 		Memory::Initialize(this);
 
-#if _DEBUG
+#ifdef DEBUG
 		Log::SetMask(Log::Types::General);
 #endif
 	}
@@ -141,13 +142,11 @@ public:
 		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-		// TODO: Octave
-
 		ESP32A1SCodec::PrintSystemStatistics();
 
 		Delay(10);
 
-#ifdef SINE_WAVE_PLAYER
+#ifdef PLAY_SINE_WAVE
 		Task::Create(
 			[this]()
 			{
@@ -165,42 +164,35 @@ public:
 	}
 
 private:
-#ifdef SINE_WAVE_PLAYER
+#ifdef PLAY_SINE_WAVE
 	void SineWavePlayerTask(void)
 	{
 		Log::WriteInfo("Starting SineWavePlayer Task");
 
-		SineWaveGenerator<int32> sineWave;
-		sineWave.SetDoubleBuffered(false);
-		sineWave.SetSampleRate(SAMPLE_RATE);
-		sineWave.SetAmplitude(1);
-		sineWave.SetFrequency(NOTE_A4);
+		OscillatorFilter<SampleType> oscillator(SAMPLE_RATE);
+		oscillator.SetFrequency(NOTE_A4);
 
-		uint32 bufferLen = sineWave.GetBufferLength();
-		uint32 sampleCount = bufferLen * 2;
-
-		int32 *outBuffer = Memory::Allocate<int32>(sampleCount);
-		SampleType *processBufferL = Memory::Allocate<SampleType>(bufferLen);
+		int32 *outBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
+		SampleType *processBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
 		while (true)
 		{
-			for (uint16 i = 0; i < bufferLen; ++i)
-				CONVERT_INT32_TO_NORMALIZED_DOUBLE(sineWave.GetBuffer(), false, 0, processBufferL, i);
+			oscillator.ProcessBuffer(processBufferL, FRAME_LENGTH);
 
-			for (uint16 i = 0; i < bufferLen; ++i)
+			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 1);
 
 			for (Effect<SampleType> *effect : m_Effects)
-				effect->Apply(processBufferL, bufferLen);
+				effect->Apply(processBufferL, FRAME_LENGTH);
 
-			for (uint16 i = 0; i < bufferLen; ++i)
+			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 			{
 				ASSERT(Math::Absolute(processBufferL[i]) <= 1, "Processed value is out of range: %f", processBufferL[i]);
 
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 0);
 			}
 
-			ESP32A1SCodec::Write(outBuffer, sampleCount, 20);
+			ESP32A1SCodec::Write(outBuffer, SAMPLE_COUNT, 20);
 		}
 
 		Memory::Deallocate(processBufferL);
