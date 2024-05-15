@@ -20,32 +20,28 @@ public:
 		  m_RatePot(nullptr)
 	{
 		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", AnalogPins::Pin0);
-		m_FeedbackPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Flanger.SetFeedback(value);
-			});
+		m_FeedbackPot->SetOnChangedListener({this, [](void *Context, float Value)
+											 {
+												 static_cast<FlangerEffect *>(Context)->m_Flanger.SetFeedback(Value);
+											 }});
 
 		m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", AnalogPins::Pin1);
-		m_WetRatePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Flanger.SetWetRate(value);
-			});
+		m_WetRatePot->SetOnChangedListener({this, [](void *Context, float Value)
+											{
+												static_cast<FlangerEffect *>(Context)->m_Flanger.SetWetRate(Value);
+											}});
 
 		m_DepthPot = ControlManager->CreatePotentiometer("Depth", AnalogPins::Pin2);
-		m_DepthPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Flanger.SetDepth(Math::Lerp(0.0, Flanger<T>::MAX_DEPTH, value));
-			});
+		m_DepthPot->SetOnChangedListener({this, [](void *Context, float Value)
+										  {
+											  static_cast<FlangerEffect *>(Context)->m_Flanger.SetDepth(Math::Lerp(0.0, Flanger<T>::MAX_DEPTH, Value));
+										  }});
 
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin3);
-		m_RatePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Flanger.SetRate(Math::Lerp(0.01, 4, value));
-			});
+		m_RatePot->SetOnChangedListener({this, [](void *Context, float Value)
+										 {
+											 static_cast<FlangerEffect *>(Context)->m_Flanger.SetRate(Math::Lerp(0.01, 4, Value));
+										 }});
 	}
 
 protected:

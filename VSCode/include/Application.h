@@ -7,6 +7,7 @@
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
 #include <vector>
+#include <functional>
 
 #ifdef DEBUG
 #include "framework/DSP/SampleAmountMeter.h"
@@ -139,11 +140,10 @@ public:
 
 #ifdef DEBUG
 		Button *bootModeButton = m_ControlManager->CreateButton("Boot Mode Button", GPIOPins::Pin30);
-		bootModeButton->SetOnTurnedOffListener(
-			[&](float HeldTime)
-			{
-				m_Hardware.system.ResetToBootloader();
-			});
+		bootModeButton->SetOnTurnedOffListener({this, [](void *Context, float HeldTime)
+												{
+													static_cast<Application *>(Context)->m_Hardware.system.ResetToBootloader();
+												}});
 #endif
 
 #ifdef AUTO_WAH_EFFECT

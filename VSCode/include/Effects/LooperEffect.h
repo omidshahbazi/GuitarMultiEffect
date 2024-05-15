@@ -19,11 +19,10 @@ public:
 		Effect<T>::SetEnabled(true);
 
 		m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin11);
-		m_VolumePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Looper.SetVolume(value);
-			});
+		m_VolumePot->SetOnChangedListener({this, [](void *Context, float Value)
+										   {
+											   static_cast<LooperEffect *>(Context)->m_Looper.SetVolume(Value);
+										   }});
 	}
 
 protected:

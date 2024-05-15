@@ -19,25 +19,22 @@ public:
 		  m_FeedbackPot(nullptr)
 	{
 		m_WetRatePot = ControlManager->CreatePotentiometer("Wet Rate", AnalogPins::Pin0);
-		m_WetRatePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Reverb.SetWetRate(value);
-			});
+		m_WetRatePot->SetOnChangedListener({this, [](void *Context, float Value)
+											{
+												static_cast<ReverbEffect *>(Context)->m_Reverb.SetWetRate(Value);
+											}});
 
 		m_DelayTimePot = ControlManager->CreatePotentiometer("Delay Time", AnalogPins::Pin1);
-		m_DelayTimePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Reverb.SetDelayTime(Math::Lerp(0.0, MAX_DELAY_TIME, value));
-			});
+		m_DelayTimePot->SetOnChangedListener({this, [](void *Context, float Value)
+											  {
+												  static_cast<ReverbEffect *>(Context)->m_Reverb.SetDelayTime(Math::Lerp(0.0, MAX_DELAY_TIME, Value));
+											  }});
 
 		m_FeedbackPot = ControlManager->CreatePotentiometer("Feedback", AnalogPins::Pin2);
-		m_FeedbackPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Reverb.SetFeedback(value);
-			});
+		m_FeedbackPot->SetOnChangedListener({this, [](void *Context, float Value)
+											 {
+												 static_cast<ReverbEffect *>(Context)->m_Reverb.SetFeedback(Value);
+											 }});
 	}
 
 protected:

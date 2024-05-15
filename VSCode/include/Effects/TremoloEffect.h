@@ -18,18 +18,16 @@ public:
 		  m_DepthPot(nullptr)
 	{
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin0);
-		m_RatePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Tremolo.SetRate(Math::Lerp(0.01, 25, value));
-			});
+		m_RatePot->SetOnChangedListener({this, [](void *Context, float Value)
+										 {
+											 static_cast<TremoloEffect *>(Context)->m_Tremolo.SetRate(Math::Lerp(0.01, 25, Value));
+										 }});
 
 		m_DepthPot = ControlManager->CreatePotentiometer("Depth", AnalogPins::Pin1);
-		m_DepthPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Tremolo.SetDepth(value);
-			});
+		m_DepthPot->SetOnChangedListener({this, [](void *Context, float Value)
+										  {
+											  static_cast<TremoloEffect *>(Context)->m_Tremolo.SetDepth(Value);
+										  }});
 	}
 
 protected:

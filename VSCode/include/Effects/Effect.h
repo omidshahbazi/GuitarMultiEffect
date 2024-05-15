@@ -17,11 +17,11 @@ public:
 		m_EnabledLED->SetColor(DUAL_LED_GREEN);
 
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);
-		m_EnabledSwitch->SetOnTurnedOnListener([this](void)
-											   { OnButtonDown(); });
+		m_EnabledSwitch->SetOnTurnedOnListener({this, [](void *Context)
+												{ static_cast<Effect *>(Context)->OnButtonDown(); }});
 
-		m_EnabledSwitch->SetOnTurnedOffListener([&](float heldTime)
-												{ OnButtonUp(heldTime); });
+		m_EnabledSwitch->SetOnTurnedOffListener({this, [](void *Context, float HeldTime)
+												 { static_cast<Effect *>(Context)->OnButtonUp(HeldTime); }});
 
 		SetEnabled(true);
 	}

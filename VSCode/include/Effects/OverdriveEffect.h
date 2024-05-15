@@ -1,5 +1,3 @@
-#ifdef OVERDRIVE_EFFECT
-
 #pragma once
 #ifndef OVERDRIVE_EFFECT_H
 #define OVERDRIVE_EFFECT_H
@@ -18,18 +16,16 @@ public:
 		  m_GainPot(nullptr)
 	{
 		m_DrivePot = ControlManager->CreatePotentiometer("Drive", AnalogPins::Pin0);
-		m_DrivePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetDrive(value);
-			});
+		m_DrivePot->SetOnChangedListener({this, [](void *Context, float Value)
+										  {
+											  static_cast<OverdriveEffect *>(Context)->m_Overdrive.SetDrive(Value);
+										  }});
 
 		m_GainPot = ControlManager->CreatePotentiometer("Gain", AnalogPins::Pin1);
-		m_GainPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetGain(value);
-			});
+		m_GainPot->SetOnChangedListener({this, [](void *Context, float Value)
+										 {
+											 static_cast<OverdriveEffect *>(Context)->m_Overdrive.SetGain(Value);
+										 }});
 	}
 
 protected:
@@ -43,7 +39,5 @@ private:
 	Potentiometer *m_DrivePot;
 	Potentiometer *m_GainPot;
 };
-
-#endif
 
 #endif

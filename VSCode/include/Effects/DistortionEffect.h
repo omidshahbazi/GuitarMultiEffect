@@ -18,18 +18,16 @@ public:
 		  m_GainPot(nullptr)
 	{
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin0);
-		m_RatePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Distortion.SetRate(value);
-			});
+		m_RatePot->SetOnChangedListener({this, [](void *Context, float Value)
+										 {
+											 static_cast<DistortionEffect *>(Context)->m_Distortion.SetRate(Value);
+										 }});
 
 		m_GainPot = ControlManager->CreatePotentiometer("Gain", AnalogPins::Pin1);
-		m_GainPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Distortion.SetGain(value);
-			});
+		m_GainPot->SetOnChangedListener({this, [](void *Context, float Value)
+										 {
+											 static_cast<DistortionEffect *>(Context)->m_Distortion.SetGain(Value);
+										 }});
 	}
 
 protected:
