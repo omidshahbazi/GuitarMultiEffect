@@ -64,7 +64,7 @@ class Application;
 Application *g_Application;
 std::function<void(const float *const *In, float **Out, uint32 Size)> g_ProcessorFunction;
 
-class Application : public DaisySeedHAL
+class Application : public DaisySeedHAL<256, 32>
 {
 private:
 	typedef std::vector<Effect<SampleType> *> EffectList;
