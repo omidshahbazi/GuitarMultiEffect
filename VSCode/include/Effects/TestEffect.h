@@ -15,25 +15,18 @@ public:
 		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_Test(SampleRate)
 	{
-		m_Pot1 = ControlManager->CreatePotentiometer("High Tone", AnalogPins::Pin0);
+		m_Pot1 = ControlManager->CreatePotentiometer("Pot 0", AnalogPins::Pin0);
 		m_Pot1->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Test.SetHighTone(Math::Lerp(-20.0, 20, value));
+				m_Test.SetDrive(value);
 			});
 
-		m_Pot2 = ControlManager->CreatePotentiometer("Mid Tone", AnalogPins::Pin1);
+		m_Pot2 = ControlManager->CreatePotentiometer("Pot 1", AnalogPins::Pin1);
 		m_Pot2->SetOnChangedListener(
 			[&](float value)
 			{
-				m_Test.SetMidTone(Math::Lerp(-20.0, 20, value));
-			});
-
-		m_Pot3 = ControlManager->CreatePotentiometer("Low Tone", AnalogPins::Pin2);
-		m_Pot3->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Test.SetLowTone(Math::Lerp(-20.0, 20, value));
+				m_Test.SetGain(value);
 			});
 	}
 
@@ -47,7 +40,6 @@ private:
 	Test<T> m_Test;
 	Potentiometer *m_Pot1;
 	Potentiometer *m_Pot2;
-	Potentiometer *m_Pot3;
 };
 
 #endif

@@ -1,54 +1,75 @@
 {
   "tasks": [
     {
-      "command": "make clean; make",
-      "group": {
-        "isDefault": true,
-        "kind": "build"
-      },
-      "label": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "type": "shell"
-    },
-    {
-      "command": "make clean; make; make program",
-      "label": "build_and_program",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "type": "shell"
-    },
-    {
       "command": "make clean; make; make program-dfu",
-      "label": "build_and_program_dfu",
+      "label": "build_and_program_release",
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [
-        "$gcc"
-      ],
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
       "type": "shell"
     },
     {
-      "command": "make clean;make",
+      "command": "make clean; make; DEBUG=1 make program-dfu",
+      "label": "build_and_program_debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
+      "type": "shell"
+    },
+    {
+      "command": "make clean; make",
       "dependsOn": [
         "build_libdaisy"
       ],
-      "label": "build_all",
+      "label": "build_all_release",
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [
-        "$gcc"
-      ],
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
       "type": "shell"
     },
     {
@@ -60,21 +81,21 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "type": "shell"
-    },
-    {
-      "command": "make program-dfu",
-      "label": "program-dfu",
-      "problemMatcher": [],
-      "type": "shell"
-    },
-    {
-      "command": "make program",
-      "label": "program",
-      "problemMatcher": [],
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
       "type": "shell"
     },
     {
@@ -83,9 +104,21 @@
       "options": {
         "cwd": "${workspaceFolder}/include/framework/libDaisy"
       },
-      "problemMatcher": [
-        "$gcc"
-      ],
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
       "type": "shell"
     }
   ],

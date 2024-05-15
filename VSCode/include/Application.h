@@ -8,7 +8,7 @@
 #include "framework/DaisySeedHAL.h"
 #include <vector>
 
-#ifdef _DEBUG
+#ifdef DEBUG
 #include "framework/DSP/SampleAmountMeter.h"
 #endif
 
@@ -47,8 +47,9 @@
 #include "Effects/TestEffect.h"
 #endif
 
-#ifdef SINE_WAVE_PLAYER
-#include "framework/DSP/SineWaveGenerator.h"
+#ifdef PLAY_SINE_WAVE
+#include "framework/DSP/Filters/OscillatorFilter.h"
+#include "framework/DSP/Notes.h"
 #endif
 
 const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
@@ -63,7 +64,6 @@ class Application;
 Application *g_Application;
 std::function<void(const float *const *In, float **Out, uint32 Size)> g_ProcessorFunction;
 
-// TODO: change the SineWavePlayer to use Oscilator or use Oscilator directly
 class Application : public DaisySeedHAL
 {
 private:
@@ -81,7 +81,7 @@ public:
 		m_Hardware.Init();
 		m_Hardware.SetAudioBlockSize(FRAME_LENGTH);
 
-#ifdef _DEBUG
+#ifdef DEBUG
 		Log::SetMask(Log::Types::General);
 #ifdef WAIT_FOR_DEBUGGER
 		m_Hardware.StartLog(true);
@@ -137,22 +137,14 @@ public:
 		m_ControlManager = Memory::Allocate<ControlManager>();
 		new (m_ControlManager) ControlManager(this);
 
+#ifdef DEBUG
 		Button *bootModeButton = m_ControlManager->CreateButton("Boot Mode Button", GPIOPins::Pin30);
 		bootModeButton->SetOnTurnedOffListener(
 			[&](float HeldTime)
 			{
-				if (HeldTime > 5)
-				{
-					// TODO: Do a Reset-Factory
-					// TODO: Restart
-
-					return;
-				}
-
-#ifdef _DEBUG
 				m_Hardware.system.ResetToBootloader();
-#endif
 			});
+#endif
 
 #ifdef AUTO_WAH_EFFECT
 		CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
@@ -189,14 +181,11 @@ public:
 		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
 #endif
 
-		// TODO: Octave
-		// TODO: Amp
-		// TODO: Cab?
-		// Add different variation of the effects like Delay-> PingPong
-
 		DaisySeedHAL::InitializeADC();
 
-#ifdef SINE_WAVE_PLAYER
+		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
+
+#ifdef PLAY_SINE_WAVE
 		InitializeSineWavePlayer();
 #else
 		InitializeAudioPassthrough();
@@ -219,64 +208,50 @@ public:
 
 		m_ControlManager->Update();
 
-#ifdef _DEBUG
+#ifdef DEBUG
 		ASSERT(m_InputSampleAmountMeter.GetAbsoluteMax() <= 1, "Gained Input value is out of range: %f", m_InputSampleAmountMeter.GetAbsoluteMax());
 		m_InputSampleAmountMeter.Reset();
 
-		ASSERT(m_OutputSampleAmountMeter.GetAbsoluteMax(), "Processed value is out of range: %f", m_OutputSampleAmountMeter.GetAbsoluteMax());
+		ASSERT(m_OutputSampleAmountMeter.GetAbsoluteMax() <= 1, "Processed value is out of range: %f", m_OutputSampleAmountMeter.GetAbsoluteMax());
 		m_OutputSampleAmountMeter.Reset();
 #endif
 	}
 
 private:
-#ifdef SINE_WAVE_PLAYER
+#ifdef PLAY_SINE_WAVE
 	void InitializeSineWavePlayer(void)
 	{
 		Log::WriteInfo("Starting Sine Wave Player");
 
-		SineWaveGenerator<int32> *sineWave = Memory::Allocate<SineWaveGenerator<int32>>();
-		new (sineWave) SineWaveGenerator<int32>;
-		sineWave->SetDoubleBuffered(false);
-		sineWave->SetSampleRate(SAMPLE_RATE);
-		sineWave->SetAmplitude(1);
-		sineWave->SetFrequency(NOTE_A4);
+		OscillatorFilter<SampleType> *oscillator = Memory::Allocate<OscillatorFilter<SampleType>>();
+		new (oscillator) OscillatorFilter<SampleType>(SAMPLE_RATE);
+		oscillator->SetFrequency(NOTE_A4);
 
-		const uint32 bufferLen = sineWave->GetBufferLength();
-
-		m_ProcessBufferL = Memory::Allocate<SampleType>(bufferLen, true);
-
-		static uint32 bufferIndex = 0;
-
-		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
+		g_ProcessorFunction = [&, oscillator](const float *const *In, float **Out, uint32 Size)
 		{
-			SampleType *processBufferChunk = m_ProcessBufferL + bufferIndex;
-
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				float value = sineWave->GetBuffer()[bufferIndex + i] / (float)SineWaveGenerator<int32>::MAX_VALUE;
+				float value = oscillator->Process(1);
 
-				processBufferChunk[i] = value;
+				m_ProcessBufferL[i] = value;
 				Out[1][i] = value;
 			}
 
 			for (Effect<SampleType> *effect : m_Effects)
-				effect->Apply(processBufferChunk, FRAME_LENGTH);
+				effect->Apply(m_ProcessBufferL, FRAME_LENGTH);
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				ASSERT(Math::Absolute(processBufferChunk[i]) <= 1, "Processed value is out of range: %f", processBufferChunk[i]);
-
-				Out[0][i] = processBufferChunk[i];
+#ifdef DEBUG
+				m_OutputSampleAmountMeter.Record(m_ProcessBufferL[i]);
+#endif
+				Out[0][i] = m_ProcessBufferL[i];
 			}
-
-			bufferIndex = (bufferIndex + FRAME_LENGTH) % bufferLen;
 		};
 	}
 #else
 	void InitializeAudioPassthrough(void)
 	{
-		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
-
 		Log::WriteInfo("Starting Audio Passthrough");
 
 		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
@@ -285,7 +260,7 @@ private:
 			{
 				m_ProcessBufferL[i] = In[0][i] * GAIN;
 
-#ifdef _DEBUG
+#ifdef DEBUG
 				m_InputSampleAmountMeter.Record(m_ProcessBufferL[i]);
 #endif
 			}
@@ -295,7 +270,7 @@ private:
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-#ifdef _DEBUG
+#ifdef DEBUG
 				m_OutputSampleAmountMeter.Record(m_ProcessBufferL[i]);
 #endif
 
@@ -324,7 +299,7 @@ private:
 	EffectList m_Effects;
 	SampleType *m_ProcessBufferL;
 
-#ifdef _DEBUG
+#ifdef DEBUG
 	SampleAmountMeter m_InputSampleAmountMeter;
 	SampleAmountMeter m_OutputSampleAmountMeter;
 #endif
