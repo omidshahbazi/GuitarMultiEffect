@@ -95,7 +95,7 @@ public:
 	}
 
 private:
-	ControlFactory<31, 100> m_Factory;
+	ControlFactory<(uint8)GPIOPins::COUNT, 100> m_Factory;
 
 #ifdef DEBUG
 	Button *m_BootButton;
