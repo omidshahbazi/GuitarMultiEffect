@@ -1,17 +1,10 @@
-#define DEBUG_MODE
 // #define WAIT_FOR_DEBUGGER
 
-#ifdef DEBUG_MODE
-#ifndef _DEBUG
-#define _DEBUG
-#endif
-#else
-#undef _DEBUG
-#endif
+#define ENABLE_TYPE_CHECK
 
-#define AUTO_WAH_EFFECT
+// #define AUTO_WAH_EFFECT
 // #define CHORUS_EFFECT
-// #define DISTORTION_EFFECT
+#define DISTORTION_EFFECT
 // #define FLANGER_EFFECT
 // #define LOOPER_EFFECT
 // #define OVERDRIVE_EFFECT
@@ -21,7 +14,7 @@
 // #define WAH_EFFECT
 // #define TEST_EFFECT
 
-// #define SINE_WAVE_PLAYER
+#define SINE_WAVE_PLAYER
 
 #include "../include/Application.h"
 

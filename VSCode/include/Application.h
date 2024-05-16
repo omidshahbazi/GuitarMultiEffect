@@ -6,8 +6,6 @@
 #include "ControlManager.h"
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
-#include <vector>
-#include <functional>
 
 #ifdef DEBUG
 #include "framework/DSP/SampleAmountMeter.h"
@@ -60,15 +58,16 @@ const uint8 FRAME_LENGTH = 4;
 const float GAIN = 1.7;
 
 typedef float SampleType;
+static_assert(ARE_TYPES_THE_SAME(SampleType, float) || ARE_TYPES_THE_SAME(SampleType, double), "SampleType must be float or double");
 
 class Application;
 Application *g_Application;
-std::function<void(const float *const *In, float **Out, uint32 Size)> g_ProcessorFunction;
+daisy::AudioHandle::AudioCallback g_ProcessorFunction;
 
 class Application : public DaisySeedHAL<256, 32>
 {
 private:
-	typedef std::vector<Effect<SampleType> *> EffectList;
+	// typedef std::vector<Effect<SampleType> *> EffectList;
 
 public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
@@ -193,13 +192,9 @@ public:
 
 		Delay(2000);
 
-		auto audioCallback = [](const float *const *In, float **Out, uint32 Size)
-		{
-			ASSERT(g_ProcessorFunction != nullptr, "g_ProcessorFunction cannot be null");
+		ASSERT(g_ProcessorFunction != nullptr, "g_ProcessorFunction cannot be null");
 
-			g_ProcessorFunction(In, Out, Size);
-		};
-		m_Hardware.StartAudio(audioCallback);
+		m_Hardware.StartAudio(g_ProcessorFunction);
 	}
 
 	void Update(void)
@@ -227,25 +222,24 @@ private:
 		new (oscillator) OscillatorFilter<SampleType>(SAMPLE_RATE);
 		oscillator->SetFrequency(NOTE_A4);
 
-		g_ProcessorFunction = [&, oscillator](const float *const *In, float **Out, uint32 Size)
+		g_ProcessorFunction = [oscillator](const float *const *In, float **Out, uint32 Size)
 		{
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
 				float value = oscillator->Process(1);
 
-				m_ProcessBufferL[i] = value;
+				g_Application->m_ProcessBufferL[i] = value;
 				Out[1][i] = value;
 			}
 
-			for (Effect<SampleType> *effect : m_Effects)
-				effect->Apply(m_ProcessBufferL, FRAME_LENGTH);
+			g_Application->m_Effect->Apply(g_Application->m_ProcessBufferL, FRAME_LENGTH);
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
 #ifdef DEBUG
-				m_OutputSampleAmountMeter.Record(m_ProcessBufferL[i]);
+				g_Application->m_OutputSampleAmountMeter.Record(g_Application->m_ProcessBufferL[i]);
 #endif
-				Out[0][i] = m_ProcessBufferL[i];
+				Out[0][i] = g_Application->m_ProcessBufferL[i];
 			}
 		};
 	}
@@ -254,27 +248,26 @@ private:
 	{
 		Log::WriteInfo("Starting Audio Passthrough");
 
-		g_ProcessorFunction = [&](const float *const *In, float **Out, uint32 Size)
+		g_ProcessorFunction = [](const float *const *In, float **Out, uint32 Size)
 		{
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				m_ProcessBufferL[i] = In[0][i] * GAIN;
+				g_Application->m_ProcessBufferL[i] = In[0][i] * GAIN;
 
 #ifdef DEBUG
-				m_InputSampleAmountMeter.Record(m_ProcessBufferL[i]);
+				g_Application->m_InputSampleAmountMeter.Record(g_Application->m_ProcessBufferL[i]);
 #endif
 			}
 
-			for (Effect<SampleType> *effect : m_Effects)
-				effect->Apply(m_ProcessBufferL, FRAME_LENGTH);
+			g_Application->m_Effect->Apply(g_Application->m_ProcessBufferL, FRAME_LENGTH);
 
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
 #ifdef DEBUG
-				m_OutputSampleAmountMeter.Record(m_ProcessBufferL[i]);
+				g_Application->m_OutputSampleAmountMeter.Record(g_Application->m_ProcessBufferL[i]);
 #endif
 
-				Out[0][i] = m_ProcessBufferL[i];
+				Out[0][i] = g_Application->m_ProcessBufferL[i];
 				Out[1][i] = In[0][i];
 			}
 		};
@@ -282,21 +275,17 @@ private:
 #endif
 
 	template <typename EffectType, typename... ArgsT>
-	EffectType *CreateEffect(ArgsT... Args)
+	void CreateEffect(ArgsT... Args)
 	{
-		EffectType *effect = Memory::Allocate<EffectType>();
+		m_Effect = Memory::Allocate<EffectType>();
 
-		new (effect) EffectType(Args...);
-
-		m_Effects.push_back(effect);
-
-		return effect;
+		new (m_Effect) EffectType(Args...);
 	}
 
 private:
 	daisy::DaisySeed m_Hardware;
 	ControlManager *m_ControlManager;
-	EffectList m_Effects;
+	Effect<SampleType> *m_Effect;
 	SampleType *m_ProcessBufferL;
 
 #ifdef DEBUG
