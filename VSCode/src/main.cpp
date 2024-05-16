@@ -1,13 +1,5 @@
-#define DEBUG_MODE
 // #define WAIT_FOR_DEBUGGER
-
-#ifdef DEBUG_MODE
-#ifndef _DEBUG
-#define _DEBUG
-#endif
-#else
-#undef _DEBUG
-#endif
+#define ENABLE_TYPE_CHECK
 
 #define AUTO_WAH_EFFECT
 // #define CHORUS_EFFECT
