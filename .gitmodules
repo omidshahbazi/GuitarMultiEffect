@@ -1,3 +1,5 @@
 [submodule "VSCode/include/framework"]
 	path = VSCode/include/framework
 	url = git@github.com:omidshahbazi/ESP32-A1S-ES8388-Framework.git
+	branch = master
+
