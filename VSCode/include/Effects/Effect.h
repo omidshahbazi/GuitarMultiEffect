@@ -19,11 +19,11 @@ public:
 		m_EnabledLED = ControlManager->CreateSingleLED("Enabled", LEDPin);
 
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);
-		m_EnabledSwitch->SetOnTurnedOnListener([this](void)
-											   { OnTurnedOn(); });
+		m_EnabledSwitch->SetOnTurnedOnListener({this, [](void *Context)
+												{ static_cast<Effect *>(Context)->OnTurnedOn(); }});
 
-		m_EnabledSwitch->SetOnTurnedOffListener([&](float heldTime)
-												{ OnTurnedOff(heldTime); });
+		m_EnabledSwitch->SetOnTurnedOffListener({this, [](void *Context, float HeldTime)
+												 { static_cast<Effect *>(Context)->OnTurnedOff(HeldTime); }});
 
 		UpdateEnabledState();
 	}

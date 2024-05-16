@@ -18,18 +18,16 @@ public:
 		  m_GainPot(nullptr)
 	{
 		m_DrivePot = ControlManager->CreatePotentiometer("Drive", GPIOPins::Pin14);
-		m_DrivePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetDrive(value);
-			});
+		m_DrivePot->SetOnChangedListener({this, [](void *Context, float Value)
+										  {
+											  static_cast<OverdriveEffect *>(Context)->m_Overdrive.SetDrive(Value);
+										  }});
 
 		m_GainPot = ControlManager->CreatePotentiometer("Gain", GPIOPins::Pin15);
-		m_GainPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetGain(value);
-			});
+		m_GainPot->SetOnChangedListener({this, [](void *Context, float Value)
+										 {
+											 static_cast<OverdriveEffect *>(Context)->m_Overdrive.SetGain(Value);
+										 }});
 	}
 
 protected:

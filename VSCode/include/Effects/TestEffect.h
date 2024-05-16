@@ -16,18 +16,16 @@ public:
 		  m_Test(SampleRate)
 	{
 		m_Pot1 = ControlManager->CreatePotentiometer("Pot 0", GPIOPins::Pin14);
-		m_Pot1->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Test.SetDrive(value);
-			});
+		m_Pot1->SetOnChangedListener({this, [](void *Context, float Value)
+									  {
+										  static_cast<TestEffect *>(Context)->m_Test.SetDrive(Value);
+									  }});
 
 		m_Pot2 = ControlManager->CreatePotentiometer("Pot 1", GPIOPins::Pin15);
-		m_Pot2->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Test.SetGain(value);
-			});
+		m_Pot2->SetOnChangedListener({this, [](void *Context, float Value)
+									  {
+										  static_cast<TestEffect *>(Context)->m_Test.SetGain(Value);
+									  }});
 	}
 
 protected:

@@ -17,11 +17,10 @@ public:
 		  m_RatioPot(nullptr)
 	{
 		m_RatioPot = ControlManager->CreatePotentiometer("Ratio", GPIOPins::Pin14);
-		m_RatioPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Wah.SetRatio(value);
-			});
+		m_RatioPot->SetOnChangedListener({this, [](void *Context, float Value)
+										  {
+											  static_cast<WahEffect *>(Context)->m_Wah.SetRatio(Value);
+										  }});
 	}
 
 protected:
