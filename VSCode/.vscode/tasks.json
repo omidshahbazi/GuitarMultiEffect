@@ -1,57 +1,11 @@
 {
   "tasks": [
     {
-      "command": "make clean; make; make program-dfu",
-      "label": "build_and_program_release",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": {
-          "owner": "cpp",
-          "fileLocation": [
-              "relative",
-              "${workspaceRoot}"
-          ],
-          "pattern": {
-              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-              "file": 1,
-              "line": 2,
-              "column": 3,
-              "severity": 4,
-              "message": 5
-          }
-      },
-      "type": "shell"
-    },
-    {
-      "command": "make clean; make; DEBUG=1 make program-dfu",
-      "label": "build_and_program_debug",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": {
-          "owner": "cpp",
-          "fileLocation": [
-              "relative",
-              "${workspaceRoot}"
-          ],
-          "pattern": {
-              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-              "file": 1,
-              "line": 2,
-              "column": 3,
-              "severity": 4,
-              "message": 5
-          }
-      },
-      "type": "shell"
-    },
-    {
       "command": "make clean; make",
       "dependsOn": [
-        "build_libdaisy"
+        "build libdaisy"
       ],
-      "label": "build_all_release",
+      "label": "build release",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -73,11 +27,115 @@
       "type": "shell"
     },
     {
-      "command": "make clean;DEBUG=1 make",
+      "command": "make clean; DEBUG=1 make",
       "dependsOn": [
-        "build_libdaisy"
+        "build libdaisy"
       ],
-      "label": "build_all_debug",
+      "label": "build debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
+      "type": "shell"
+    },
+    {
+      "command": "make clean; make; make program-dfu",
+      "dependsOn": [
+        "build libdaisy"
+      ],
+      "label": "build and program release",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
+      "type": "shell"
+    },
+    {
+      "command": "make clean; DEBUG=1 make; make program-dfu",
+      "dependsOn": [
+        "build libdaisy"
+      ],
+      "label": "build and program debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
+      "type": "shell"
+    },
+    {
+      "command": "make clean; make; make program",
+      "dependsOn": [
+        "build libdaisy"
+      ],
+      "label": "build and program release ST-Link",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+              "relative",
+              "${workspaceRoot}"
+          ],
+          "pattern": {
+              "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+          }
+      },
+      "type": "shell"
+    },
+    {
+      "command": "make clean; DEBUG=1 make; make program",
+      "dependsOn": [
+        "build libdaisy"
+      ],
+      "label": "build and program debug ST-Link",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -100,7 +158,7 @@
     },
     {
       "command": "make",
-      "label": "build_libdaisy",
+      "label": "build libdaisy",
       "options": {
         "cwd": "${workspaceFolder}/include/framework/libDaisy"
       },

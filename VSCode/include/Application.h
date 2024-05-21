@@ -6,6 +6,8 @@
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
 #include "framework/LCDCanvas.h"
+#include "Screens/Screen.h"
+#include "Screens/PlayScreen.h"
 
 const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
@@ -25,9 +27,8 @@ public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
 		: DaisySeedHAL(&m_Hardware, SDRAMAddress, SDRAMSize),
 		  m_ControlManager(this),
-
 		  m_ProcessBufferL(nullptr),
-		  m_Volume(0)
+		  m_MasterVolume(0)
 	{
 		Log::Initialize(this);
 		Memory::Initialize(this);
@@ -83,6 +84,8 @@ public:
 
 	void Initialize(void)
 	{
+		m_CurrentScreen = new PlayScreen();
+
 		Log::WriteInfo("Initializing");
 
 		m_ControlManager.Initialize();
@@ -94,10 +97,10 @@ public:
 												}});
 #endif
 
-		m_Volume = 1;
+		m_MasterVolume = 1;
 		m_ControlManager.SetVolumeCallback({this, [](void *Context, float Value)
 											{
-												static_cast<Application *>(Context)->m_Volume = Value;
+												static_cast<Application *>(Context)->m_MasterVolume = Value;
 											}});
 
 		m_ControlManager.SetDisplayallback({this, [](void *Context)
@@ -105,12 +108,14 @@ public:
 												Application *thisPtr = static_cast<Application *>(Context);
 
 												thisPtr->m_LCDCanvas.Clear({});
+
+												thisPtr->m_CurrentScreen->Draw(thisPtr->m_LCDCanvas);
 											}});
 
 		DaisySeedHAL::InitializeADC();
 
 		m_LCDCanvas.Initialize(m_ControlManager.GetDisplay());
-		m_LCDCanvas.SetStringSpacing(3, 4);
+		m_LCDCanvas.SetStringSpacing(-7, 4);
 
 		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
@@ -139,7 +144,7 @@ private:
 
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 		{
-			SampleType value = g_Application->m_ProcessBufferL[i] * g_Application->m_Volume;
+			SampleType value = g_Application->m_ProcessBufferL[i] * g_Application->m_MasterVolume;
 
 			Out[0][i] = value;
 			Out[1][i] = value;
@@ -149,11 +154,13 @@ private:
 private:
 	daisy::DaisySeed m_Hardware;
 	ControlManager m_ControlManager;
+
 	LCDCanvas m_LCDCanvas;
+	Screen *m_CurrentScreen;
 
 	SampleType *m_ProcessBufferL;
 
-	float m_Volume;
+	float m_MasterVolume;
 };
 
 #endif

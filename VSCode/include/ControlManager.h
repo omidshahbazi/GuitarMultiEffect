@@ -1,4 +1,6 @@
 #pragma once
+#pragma GCC push_options
+#pragma GCC optimize("Os")
 #ifndef CONTROL_MANAGER_H
 #define CONTROL_MANAGER_H
 
@@ -28,7 +30,7 @@ public:
 		m_VolumePotentiometer = CreatePotentiometer("Volume", AnalogPins ::Pin2);
 
 		m_Display.Initialize();
-		m_Display.SetTargetFrameRate(24);
+		m_Display.SetTargetFrameRate(25);
 	}
 
 #ifdef DEBUG
@@ -76,7 +78,10 @@ private:
 	{
 		Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
-		return m_Factory.CreatePotentiometer((uint8)Pin);
+		Potentiometer *pot = m_Factory.CreatePotentiometer((uint8)Pin);
+		pot->SetCalibrationValues(0.01, 0.99);
+
+		return pot;
 	}
 
 	RotaryButton *CreateRotaryButton(const char *Name, GPIOPins LeftPin, GPIOPins RightPin, GPIOPins ButtonPin)
@@ -105,3 +110,4 @@ private:
 };
 
 #endif
+#pragma GCC pop_options
