@@ -14,7 +14,7 @@ public:
 		: m_Enabled(false)
 	{
 		m_EnabledLED = ControlManager->CreateDualLED("Enabled", RedLEDPin, GreenLEDPin);
-		m_EnabledLED->SetColor(DUAL_LED_GREEN);
+		m_EnabledLED->SetColor({0, 255, 0});
 
 		m_EnabledSwitch = ControlManager->CreateSwitch("Enabled", EnableButtonPin);
 		m_EnabledSwitch->SetOnTurnedOnListener({this, [](void *Context)
