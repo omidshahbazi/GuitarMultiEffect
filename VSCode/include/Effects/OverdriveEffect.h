@@ -1,49 +1,42 @@
-#ifdef OVERDRIVE_EFFECT
-
 #pragma once
+#pragma GCC push_options
+#pragma GCC optimize("Os")
 #ifndef OVERDRIVE_EFFECT_H
 #define OVERDRIVE_EFFECT_H
 
 #include "Effect.h"
-#include "../framework/DSP/DSPs/Overdrive.h"
+#include "../framework/DSP/DSPs/Distortion.h"
 
-template <typename T>
-class OverdriveEffect : public Effect<T>
+class OverdriveEffect : public Effect
 {
 public:
-	OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
-		  m_Overdrive(SampleRate),
-		  m_DrivePot(nullptr),
-		  m_GainPot(nullptr)
+	struct Data
 	{
-		m_DrivePot = ControlManager->CreatePotentiometer("Drive", AnalogPins::Pin0);
-		m_DrivePot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetDrive(value);
-			});
+	public:
+		float Rate;
+		float Gain;
+	};
 
-		m_GainPot = ControlManager->CreatePotentiometer("Gain", AnalogPins::Pin1);
-		m_GainPot->SetOnChangedListener(
-			[&](float value)
-			{
-				m_Overdrive.SetGain(value);
-			});
+public:
+	OverdriveEffect(void)
+		: m_Distortion(SAMPLE_RATE)
+	{
 	}
 
-protected:
-	IDSP<T> *GetDSP(void)
+	void Process(SampleType *Buffer, uint8 Count) override
 	{
-		return &m_Overdrive;
+		m_Distortion.ProcessBuffer(Buffer, Count);
+	}
+
+	void SetData(const Data &Data)
+	{
+		m_Distortion.SetRate(Data.Rate);
+		m_Distortion.SetGain(Data.Gain);
 	}
 
 private:
-	Overdrive<T> m_Overdrive;
-	Potentiometer *m_DrivePot;
-	Potentiometer *m_GainPot;
+	Distortion<SampleType> m_Distortion;
 };
 
 #endif
-
-#endif
+#pragma GCC pop_options

@@ -3,19 +3,15 @@
 #define APPLICATION_H
 
 #include "ControlManager.h"
+#include "Effects/EffectManager.h"
+#include "Presets/PresetManager.h"
+#include "Screens/ScreenManager.h"
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
-#include "framework/LCDCanvas.h"
-#include "Screens/Screen.h"
-#include "Screens/PlayScreen.h"
-
-const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
 const uint8 FRAME_LENGTH = 4;
 
 const float GAIN = 1.7;
-
-typedef float SampleType;
 
 class Application;
 
@@ -27,6 +23,7 @@ public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
 		: DaisySeedHAL(&m_Hardware, SDRAMAddress, SDRAMSize),
 		  m_ControlManager(this),
+		  m_ScreenManager(&m_PresetManager),
 		  m_ProcessBufferL(nullptr),
 		  m_MasterVolume(0)
 	{
@@ -44,6 +41,7 @@ public:
 		m_Hardware.StartLog(false);
 #endif
 #endif
+
 		daisy::SaiHandle::Config::SampleRate daisySampleRate;
 		switch (SAMPLE_RATE)
 		{
@@ -84,8 +82,6 @@ public:
 
 	void Initialize(void)
 	{
-		m_CurrentScreen = new PlayScreen();
-
 		Log::WriteInfo("Initializing");
 
 		m_ControlManager.Initialize();
@@ -109,13 +105,21 @@ public:
 
 												thisPtr->m_LCDCanvas.Clear({});
 
-												thisPtr->m_CurrentScreen->Draw(thisPtr->m_LCDCanvas);
+												thisPtr->m_ScreenManager.Draw(thisPtr->m_LCDCanvas);
 											}});
 
 		DaisySeedHAL::InitializeADC();
 
+		PersistentBlobBase::Initialize(this);
+
 		m_LCDCanvas.Initialize(m_ControlManager.GetDisplay());
 		m_LCDCanvas.SetStringSpacing(-7, 4);
+
+		EffectManager::Initialize();
+
+		m_PresetManager.Initialize();
+
+		m_ScreenManager.Initialize();
 
 		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
@@ -139,8 +143,7 @@ private:
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			g_Application->m_ProcessBufferL[i] = In[0][i] * GAIN;
 
-		// for (Effect<SampleType> *effect : m_Effects)
-		// 	effect->Apply(m_ProcessBufferL, FRAME_LENGTH);
+		g_Application->m_PresetManager.GetCurrentPreset()->Process(g_Application->m_ProcessBufferL, FRAME_LENGTH);
 
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 		{
@@ -154,9 +157,10 @@ private:
 private:
 	daisy::DaisySeed m_Hardware;
 	ControlManager m_ControlManager;
+	PresetManager m_PresetManager;
+	ScreenManager m_ScreenManager;
 
 	LCDCanvas m_LCDCanvas;
-	Screen *m_CurrentScreen;
 
 	SampleType *m_ProcessBufferL;
 

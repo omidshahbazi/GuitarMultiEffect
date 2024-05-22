@@ -4,7 +4,7 @@
 #ifndef CONTROL_MANAGER_H
 #define CONTROL_MANAGER_H
 
-#include "framework/Common.h"
+#include "Common.h"
 #include "framework/DSP/Controls/ControlFactory.h"
 #include "framework/ILI9341_HAL.h"
 

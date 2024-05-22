@@ -131,7 +131,7 @@
       "type": "shell"
     },
     {
-      "command": "make clean; DEBUG=1 make; make program",
+      "command": "make clean;DEBUG=1 make; make program",
       "dependsOn": [
         "build libdaisy"
       ],

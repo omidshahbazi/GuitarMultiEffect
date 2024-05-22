@@ -1,4 +1,6 @@
 // #define ENABLE_TYPE_CHECK
+#define USE_BREAK_ONLY_ASSERT
+// #define WAIT_FOR_DEBUGGER
 
 #include "../include/Application.h"
 
