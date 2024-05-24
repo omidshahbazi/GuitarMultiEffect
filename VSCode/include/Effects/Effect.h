@@ -9,6 +9,14 @@
 class Effect
 {
 public:
+	struct Data
+	{
+	public:
+		uint8 Index;
+		bool Enabled;
+	};
+
+public:
 	Effect(void)
 		: m_Enabled(true)
 	{
@@ -20,6 +28,11 @@ public:
 			return;
 
 		Process(Buffer, Count);
+	}
+
+	void SetData(const Data &Data)
+	{
+		m_Enabled = Data.Enabled;
 	}
 
 protected:

@@ -6,13 +6,14 @@
 
 #include "Screen.h"
 #include "PlayScreen.h"
+#include "PresetScreen.h"
 #include "../Presets/PresetManager.h"
 #include "../framework/LCDCanvas.h"
 
 class ScreenManager
 {
 private:
-	static const uint8 MAX_ACTIVE_SCREEN_COUNT = 4;
+	static constexpr uint8 MAX_ACTIVE_SCREEN_COUNT = 4;
 
 public:
 	ScreenManager(PresetManager *PresetManager)
@@ -27,9 +28,9 @@ public:
 		m_ActiveScreens[m_ActiveScreenCount++] = new PlayScreen(m_PresetManager);
 	}
 
-	void Draw(LCDCanvas &Canvas)
+	void Render(LCDCanvas &Canvas)
 	{
-		m_ActiveScreens[m_ActiveScreenCount - 1]->Draw(Canvas);
+		m_ActiveScreens[m_ActiveScreenCount - 1]->Render(Canvas);
 	}
 
 private:

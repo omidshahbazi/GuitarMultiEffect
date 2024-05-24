@@ -5,7 +5,6 @@
 #define PLAY_SCREEN_H
 
 #include "Screen.h"
-#include <string>
 
 class PlayScreen : public Screen
 {
@@ -15,37 +14,39 @@ public:
 	{
 	}
 
+protected:
 	void Draw(LCDCanvas &Canvas) override
 	{
-		const Point &canvasDim = Canvas.GetDimension();
+		const uint8 HEADER_HEIGTH = 30;
 
-		const Preset::Data &data = GetPresetManager()->GetCurrentPreset()->GetData();
+		const Color &PRESET_BOX_COLOR = COLOR_GREEN;
+		const Font &PRESET_NUMBER_TEXT_FONT = FONT_64;
+		const Color &PRESET_NUMBER_TEXT_COLOR = COLOR_BLACK;
+		const Font &PRESET_NAME_TEXT_FONT = FONT_40;
+		const Color &PRESET_NAME_TEXT_COLOR = COLOR_BLACK;
 
-		// Volume
-		{
-			Rect rect(10, 10, 60, 30);
+		Screen::Draw(Canvas);
 
-			auto value = std::to_string((int8)(data.Volume * 100));
+		const uint8 presetIndex = GetPresetManager()->GetSelectedPresetIndex();
+		const Preset::Data &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
 
-			Canvas.DrawFilledRectangle(rect, PRESET_VOLUME_BOX_COLOR);
-			Canvas.DrawString(rect.Position, value.c_str(), value.length(), PRESET_VOLUME_TEXT_FONT, PRESET_INFO_TEXT_COLOR);
-		}
+		DrawHeader(Canvas, HEADER_HEIGTH,
+				   HEADER_DEFAULT_LEFT_BOX_COLOR, nullptr, {}, {},
+				   HEADER_DEFAULT_MIDDLE_BOX_COLOR, "PLAY", HEADER_DEFAULT_MIDDLE_TEXT_FONT, HEADER_DEFAULT_MIDDLE_TEXT_COLOR,
+				   HEADER_DEFAULT_RIGHT_BOX_COLOR, GetPresetVolume().c_str(), HEADER_DEFAULT_RIGHT_TEXT_FONT, HEADER_DEFAULT_RIGHT_TEXT_COLOR);
 
-		// Number/Name
-		{
-			Rect rect(10, 45, 300, 185);
+		auto &canvasDimension = Canvas.GetDimension();
 
-			Canvas.DrawFilledRectangle(rect, PRESET_INFO_BOX_COLOR);
+		Rect rect;
+		rect.Position = {0, HEADER_HEIGTH + (SPLITTER_THICKNESS * 10)};
+		rect.Dimension = {canvasDimension.X, canvasDimension.Y - rect.Position.Y};
+		Canvas.DrawFilledRectangle(rect, PRESET_BOX_COLOR);
 
-			Rect textRect = rect;
+		rect.Dimension.Y *= 0.5;
+		DrawStringJustified(Canvas, rect, GetPresetNumber().c_str(), PRESET_NUMBER_TEXT_FONT, PRESET_NUMBER_TEXT_COLOR);
 
-			uint8 len = GetStringLength(data.Name);
-
-			Point textDim = Canvas.MeasureStringDimension(data.Name, len, PRESET_INFO_TEXT_FONT);
-			textRect.Position.X = (canvasDim.X * 0.5) - (textDim.X * 0.5);
-			textRect.Position.Y += 30;
-			Canvas.DrawString(textRect.Position, data.Name, len, PRESET_INFO_TEXT_FONT, PRESET_INFO_TEXT_COLOR);
-		}
+		rect.Position.Y += rect.Dimension.Y;
+		DrawStringJustified(Canvas, rect, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR);
 	}
 };
 

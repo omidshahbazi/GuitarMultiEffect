@@ -10,7 +10,7 @@
 class OverdriveEffect : public Effect
 {
 public:
-	struct Data
+	struct Data : public Effect::Data
 	{
 	public:
 		float Rate;
@@ -19,23 +19,25 @@ public:
 
 public:
 	OverdriveEffect(void)
-		: m_Distortion(SAMPLE_RATE)
+		: m_DSP(SAMPLE_RATE)
 	{
 	}
 
 	void Process(SampleType *Buffer, uint8 Count) override
 	{
-		m_Distortion.ProcessBuffer(Buffer, Count);
+		m_DSP.ProcessBuffer(Buffer, Count);
 	}
 
 	void SetData(const Data &Data)
 	{
-		m_Distortion.SetRate(Data.Rate);
-		m_Distortion.SetGain(Data.Gain);
+		Effect::SetData(Data);
+
+		m_DSP.SetRate(Data.Rate);
+		m_DSP.SetGain(Data.Gain);
 	}
 
 private:
-	Distortion<SampleType> m_Distortion;
+	Distortion<SampleType> m_DSP;
 };
 
 #endif

@@ -12,8 +12,8 @@
 class Preset
 {
 public:
-	static const uint8 MAX_NAME_LENGTH = 10;
-	static const uint8 MAX_EFFECT_COUNT = 1;
+	static constexpr uint8 MAX_NAME_LENGTH = 10;
+	static constexpr uint8 EFFECT_COUNT = (uint8)EffectManager::Types::COUNT;
 
 	struct Data
 	{
@@ -22,18 +22,19 @@ public:
 		float Volume;
 
 		OverdriveEffect::Data OverdriveData;
+		ReverbEffect::Data ReverbData;
 	};
 
 public:
 	Preset(void)
 		: m_Data{},
-		  m_EffectCount(0)
+		  m_Effects{}
 	{
 	}
 
 	void Process(SampleType *Buffer, uint8 Count)
 	{
-		for (uint8 i = 0; i < m_EffectCount; ++i)
+		for (uint8 i = 0; i < EFFECT_COUNT; ++i)
 			m_Effects[i]->Apply(Buffer, Count);
 
 		for (uint8 i = 0; i < Count; ++i)
@@ -42,14 +43,19 @@ public:
 
 	void SetData(const Data &Data)
 	{
+#define SET_DATA(EffectName)                                                                                         \
+	{                                                                                                                \
+		EffectName##Effect *effect = EffectManager::GetEffect<EffectName##Effect>(EffectManager::Types::EffectName); \
+		effect->SetData(m_Data.EffectName##Data);                                                                    \
+		m_Effects[m_Data.EffectName##Data.Index] = effect;                                                           \
+	}
+
 		m_Data = Data;
 
-		// TODO: set each one
+		SET_DATA(Overdrive);
+		SET_DATA(Reverb);
 
-		OverdriveEffect *overdrive = EffectManager::GetEffect<OverdriveEffect>(EffectManager::Types::Overdrive);
-		overdrive->SetData(m_Data.OverdriveData);
-
-		m_Effects[m_EffectCount++] = overdrive;
+#undef SET_DATA
 	}
 
 	const Data &GetData(void) const
@@ -57,7 +63,7 @@ public:
 		return m_Data;
 	}
 
-	void SetName(const char *const Value)
+	void SetName(cstr Value)
 	{
 		SetName(m_Data, Value);
 	}
@@ -69,7 +75,7 @@ public:
 		m_Data.Volume = Value;
 	}
 
-	static void SetName(Data &Data, const char *const Value)
+	static void SetName(Data &Data, cstr Value)
 	{
 		uint8 length = GetStringLength(Value);
 
@@ -81,9 +87,7 @@ public:
 
 private:
 	Data m_Data;
-
-	Effect *m_Effects[MAX_EFFECT_COUNT];
-	uint8 m_EffectCount;
+	Effect *m_Effects[EFFECT_COUNT];
 };
 
 #endif

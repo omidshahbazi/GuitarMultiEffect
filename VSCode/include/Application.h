@@ -103,9 +103,7 @@ public:
 											{
 												Application *thisPtr = static_cast<Application *>(Context);
 
-												thisPtr->m_LCDCanvas.Clear({});
-
-												thisPtr->m_ScreenManager.Draw(thisPtr->m_LCDCanvas);
+												thisPtr->m_ScreenManager.Render(thisPtr->m_LCDCanvas);
 											}});
 
 		DaisySeedHAL::InitializeADC();
@@ -143,7 +141,7 @@ private:
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			g_Application->m_ProcessBufferL[i] = In[0][i] * GAIN;
 
-		g_Application->m_PresetManager.GetCurrentPreset()->Process(g_Application->m_ProcessBufferL, FRAME_LENGTH);
+		g_Application->m_PresetManager.Process(g_Application->m_ProcessBufferL, FRAME_LENGTH);
 
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 		{

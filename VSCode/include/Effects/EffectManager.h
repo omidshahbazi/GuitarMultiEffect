@@ -5,6 +5,7 @@
 #define EFFECT_MANAGER_H
 
 #include "OverdriveEffect.h"
+#include "ReverbEffect.h"
 #include "../framework/DSP/Memory.h"
 
 class EffectManager
@@ -13,6 +14,7 @@ public:
 	enum class Types
 	{
 		Overdrive = 0,
+		Reverb,
 
 		COUNT
 	};
@@ -21,6 +23,7 @@ public:
 	static void Initialize(void)
 	{
 		Add<OverdriveEffect>(Types::Overdrive);
+		Add<ReverbEffect>(Types::Reverb);
 	}
 
 	template <typename T>
@@ -43,7 +46,7 @@ private:
 	{
 		static Effect *effects[(uint8)Types::COUNT] = {};
 
-		return &effects[(uint8)Types::Overdrive];
+		return &effects[(uint8)Type];
 	}
 };
 

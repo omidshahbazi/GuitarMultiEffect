@@ -11,62 +11,57 @@
 class PresetManager
 {
 public:
-	static const uint8 PRESET_COUNT = 4;
+	static constexpr uint8 PRESET_COUNT = 1;
 
 private:
 	struct Data
 	{
 	public:
+		uint8 SelectedPresetIndex;
 		Preset::Data Data[PRESET_COUNT];
 	};
 
 public:
 	PresetManager(void)
-		: m_CurrentPresetIndex(0),
-		  m_PersistentData(0)
+		: m_PersistentData(0)
 	{
 	}
 
 	void Initialize(void)
 	{
-		static Data defaultData = {};
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
-		{
-			Preset::Data &data = defaultData.Data[i];
+			new (&m_Presets[i]) Preset();
 
-			Preset::SetName(data, ("PRESET " + std::to_string(i + 1)).c_str());
-			data.Volume = 1;
-
-			data.OverdriveData.Rate = 1;
-			data.OverdriveData.Gain = 0.5;
-		}
-
-		m_PersistentData.Initialize(defaultData);
-		const Data &data = m_PersistentData.Get();
-
-		for (uint8 i = 0; i < PRESET_COUNT; ++i)
-		{
-			Preset &preset = m_Presets[i];
-
-			new (&preset) Preset();
-
-			preset.SetData(data.Data[i]);
-		}
+		SetDataOnPresets();
 	}
 
-	Preset *GetCurrentPreset(void)
+	void Process(SampleType *Buffer, uint8 Count)
 	{
-		return &m_Presets[m_CurrentPresetIndex];
+		m_Presets[m_PersistentData.Get().SelectedPresetIndex].Process(Buffer, Count);
 	}
 
-	uint8 GetCurrentPresetIndex(void)
+	Preset *GetSelectedPreset(void)
 	{
-		return m_CurrentPresetIndex;
+		return &m_Presets[m_PersistentData.Get().SelectedPresetIndex];
+	}
+
+	uint8 GetSelectedPresetIndex(void)
+	{
+		return m_PersistentData.Get().SelectedPresetIndex;
+	}
+
+	void ChangeSelectedPreset(int8 Direction)
+	{
+		Data &data = m_PersistentData.Get();
+
+		data.SelectedPresetIndex = Math::Wrap((int16)data.SelectedPresetIndex + Direction, 0, PRESET_COUNT - 1);
 	}
 
 	void Save(void)
 	{
 		Data data;
+		data.SelectedPresetIndex = m_PersistentData.Get().SelectedPresetIndex;
+
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
 			data.Data[i] = m_Presets[i].GetData();
 
@@ -79,12 +74,49 @@ public:
 	{
 		PersistentBlobBase::EreasAll();
 
-		// TODO: what else?
+		SetDataOnPresets();
+	}
+
+private:
+	void SetDataOnPresets(void)
+	{
+		PersistentBlobBase::EreasAll();
+
+		static Data defaultData = {};
+		defaultData.SelectedPresetIndex = 0;
+
+		for (uint8 i = 0; i < PRESET_COUNT; ++i)
+		{
+			Preset::Data &data = defaultData.Data[i];
+
+			Preset::SetName(data, ("PRESET AA" + std::to_string(i + 1)).c_str());
+			data.Volume = 1;
+
+			uint8 effectIndex = 0;
+
+			data.OverdriveData.Index = effectIndex++;
+			data.OverdriveData.Enabled = true;
+			data.OverdriveData.Rate = 1;
+			data.OverdriveData.Gain = 0.5;
+
+			data.ReverbData.Index = effectIndex++;
+			data.ReverbData.Enabled = true;
+			data.ReverbData.DelayTime = 0.5;
+			data.ReverbData.Feedback = 0.6;
+			data.ReverbData.WetRate = 0.5;
+		}
+
+		m_PersistentData.Initialize(defaultData);
+		const Data &data = m_PersistentData.Get();
+
+		for (uint8 i = 0; i < PRESET_COUNT; ++i)
+			m_Presets[i].SetData(data.Data[i]);
+
+		// Save();
 	}
 
 private:
 	Preset m_Presets[PRESET_COUNT];
-	uint8 m_CurrentPresetIndex;
 
 	PersistentBlob<Data> m_PersistentData;
 };

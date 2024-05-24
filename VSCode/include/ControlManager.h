@@ -59,7 +59,7 @@ public:
 	}
 
 private:
-	DualLED *CreateDualLED(const char *Name, GPIOPins RedPin, GPIOPins GreenPin)
+	DualLED *CreateDualLED(cstr Name, GPIOPins RedPin, GPIOPins GreenPin)
 	{
 		Log::WriteInfo("Controls", "%s: LED %i", Name, RedPin);
 		Log::WriteInfo("Controls", "%s: LED %i", Name, GreenPin);
@@ -67,14 +67,14 @@ private:
 		return m_Factory.CreateDualLED((uint8)RedPin, (uint8)GreenPin);
 	}
 
-	Button *CreateButton(const char *Name, GPIOPins Pin)
+	Button *CreateButton(cstr Name, GPIOPins Pin)
 	{
 		Log::WriteInfo("Controls", "%s: Button %i", Name, Pin);
 
 		return m_Factory.CreateButton((uint8)Pin);
 	}
 
-	Potentiometer *CreatePotentiometer(const char *Name, AnalogPins Pin)
+	Potentiometer *CreatePotentiometer(cstr Name, AnalogPins Pin)
 	{
 		Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
@@ -84,7 +84,7 @@ private:
 		return pot;
 	}
 
-	RotaryButton *CreateRotaryButton(const char *Name, GPIOPins LeftPin, GPIOPins RightPin, GPIOPins ButtonPin)
+	RotaryButton *CreateRotaryButton(cstr Name, GPIOPins LeftPin, GPIOPins RightPin, GPIOPins ButtonPin)
 	{
 		Log::WriteInfo("Controls", "%s: RotaryButton %i", Name, LeftPin);
 		Log::WriteInfo("Controls", "%s: RotaryButton %i", Name, RightPin);
