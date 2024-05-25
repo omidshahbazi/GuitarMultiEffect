@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef SCREEN_MANAGER_H
 #define SCREEN_MANAGER_H
 
@@ -40,4 +38,3 @@ private:
 };
 
 #endif
-#pragma GCC pop_options

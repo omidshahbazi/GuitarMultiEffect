@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef REVERB_EFFECT_H
 #define REVERB_EFFECT_H
 
@@ -46,4 +44,3 @@ public:
 };
 
 #endif
-#pragma GCC pop_options

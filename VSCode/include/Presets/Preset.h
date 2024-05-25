@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef PRESET_H
 #define PRESET_H
 
@@ -91,4 +89,3 @@ private:
 };
 
 #endif
-#pragma GCC pop_options

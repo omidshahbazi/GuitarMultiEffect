@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef PLAY_SCREEN_H
 #define PLAY_SCREEN_H
 
@@ -25,9 +23,6 @@ protected:
 
 		Screen::Draw(Canvas);
 
-		const uint8 presetIndex = GetPresetManager()->GetSelectedPresetIndex();
-		const Preset::Data &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
-
 		DrawHeader(Canvas, HEADER_HEIGTH,
 				   HEADER_DEFAULT_LEFT_BOX_COLOR, nullptr, {}, {},
 				   HEADER_DEFAULT_MIDDLE_BOX_COLOR, "SAVE", HEADER_DEFAULT_MIDDLE_TEXT_FONT, HEADER_DEFAULT_MIDDLE_TEXT_COLOR,
@@ -36,4 +31,3 @@ protected:
 };
 
 #endif
-#pragma GCC pop_options

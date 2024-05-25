@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef OVERDRIVE_EFFECT_H
 #define OVERDRIVE_EFFECT_H
 
@@ -41,4 +39,3 @@ private:
 };
 
 #endif
-#pragma GCC pop_options

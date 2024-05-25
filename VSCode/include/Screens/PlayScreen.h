@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef PLAY_SCREEN_H
 #define PLAY_SCREEN_H
 
@@ -27,7 +25,6 @@ protected:
 
 		Screen::Draw(Canvas);
 
-		const uint8 presetIndex = GetPresetManager()->GetSelectedPresetIndex();
 		const Preset::Data &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
 
 		DrawHeader(Canvas, HEADER_HEIGTH,
@@ -51,4 +48,3 @@ protected:
 };
 
 #endif
-#pragma GCC pop_options

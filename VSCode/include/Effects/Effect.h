@@ -1,6 +1,4 @@
 #pragma once
-#pragma GCC push_options
-#pragma GCC optimize("Os")
 #ifndef EFFECT_H
 #define EFFECT_H
 
@@ -43,4 +41,3 @@ private:
 };
 
 #endif
-#pragma GCC pop_options
