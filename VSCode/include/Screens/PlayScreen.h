@@ -3,12 +3,13 @@
 #define PLAY_SCREEN_H
 
 #include "Screen.h"
+#include "ScreenManager.h"
 
 class PlayScreen : public Screen
 {
 public:
-	PlayScreen(PresetManager *PresetManager)
-		: Screen(PresetManager)
+	PlayScreen(PresetManager *PresetManager, ControlManager *ControlManager)
+		: Screen(PresetManager, ControlManager)
 	{
 	}
 
@@ -44,6 +45,50 @@ protected:
 
 		rect.Position.Y += rect.Dimension.Y;
 		DrawStringJustified(Canvas, rect, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR);
+	}
+
+	void Activate(void) override
+	{
+		Screen::Activate();
+
+		auto *controlManager = GetControlManager();
+
+		controlManager->SetUpButtonCallback({this,
+											 [](void *Context, float HeldTime)
+											 {
+												 auto *thisPtr = static_cast<PlayScreen *>(Context);
+
+												 thisPtr->GetPresetManager()->ChangeSelectedPreset(1);
+
+												 thisPtr->MarkAsDirty();
+											 }});
+
+		controlManager->SetDownButtonCallback({this,
+											   [](void *Context, float HeldTime)
+											   {
+												   auto *thisPtr = static_cast<PlayScreen *>(Context);
+
+												   thisPtr->GetPresetManager()->ChangeSelectedPreset(-1);
+
+												   thisPtr->MarkAsDirty();
+											   }});
+
+		controlManager->SetValueButtonCallback({this,
+												[](void *Context, float HeldTime)
+												{
+													static_cast<PlayScreen *>(Context)->SwitchScreen(Screens::Preset);
+												}});
+	}
+
+	void Deactivate(void) override
+	{
+		Screen::Deactivate();
+
+		auto *controlManager = GetControlManager();
+
+		controlManager->SetUpButtonCallback(nullptr);
+		controlManager->SetDownButtonCallback(nullptr);
+		controlManager->SetValueButtonCallback(nullptr);
 	}
 };
 

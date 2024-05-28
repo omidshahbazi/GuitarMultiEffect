@@ -3,9 +3,13 @@
 #define SCREEN_H
 
 #include "../Presets/PresetManager.h"
+#include "../ControlManager.h"
 #include "../framework/LCDCanvas.h"
 
 const Color COLOR_BLACK = {};
+const Color COLOR_GRAY = {128, 128, 128};
+const Color COLOR_WHITE = {255, 255, 255};
+const Color COLOR_RED = {180, 23, 42};
 const Color COLOR_GREEN = {122, 159, 55};
 const Color COLOR_LIGHT_PURPLE = {144, 104, 227};
 const Color COLOR_DARK_PURPLE = {118, 41, 255};
@@ -36,6 +40,10 @@ const Color &HEADER_DEFAULT_RIGHT_BOX_COLOR = COLOR_LIGHT_PURPLE;
 const Font &HEADER_DEFAULT_RIGHT_TEXT_FONT = FONT_16;
 const Color &HEADER_DEFAULT_RIGHT_TEXT_COLOR = COLOR_DARK_BLUE;
 
+const uint16 HEADER_LEFT_PART_WIDTH = 50;
+const uint16 HEADER_MIDDLE_PART_WIDTH = 170;
+const uint8 HEADER_TRI_EDGE_WIDTH = 20;
+
 class ScreenManager;
 
 class Screen
@@ -43,8 +51,12 @@ class Screen
 	friend class ScreenManager;
 
 public:
-	Screen(PresetManager *PresetManager)
+	typedef ContextCallback<void, Screens> SwitchScreenEventHandler;
+
+public:
+	Screen(PresetManager *PresetManager, ControlManager *ControlManager)
 		: m_PresetManager(PresetManager),
+		  m_ControlManager(ControlManager),
 		  m_IsDirty(true)
 	{
 	}
@@ -59,15 +71,19 @@ public:
 		m_IsDirty = false;
 	}
 
-	PresetManager *GetPresetManager(void) const
-	{
-		return m_PresetManager;
-	}
-
 protected:
 	virtual void Draw(LCDCanvas &Canvas)
 	{
 		Canvas.Clear(BACKGROUND_FILL_COLOR);
+	}
+
+	virtual void Activate(void)
+	{
+		MarkAsDirty();
+	}
+
+	virtual void Deactivate(void)
+	{
 	}
 
 	void MarkAsDirty(void)
@@ -83,6 +99,26 @@ protected:
 	std::string GetPresetVolume(void) const
 	{
 		return ("VOL" + std::to_string((uint8)(GetPresetManager()->GetSelectedPreset()->GetData().Volume * 100)));
+	}
+
+	PresetManager *GetPresetManager(void) const
+	{
+		return m_PresetManager;
+	}
+
+	ControlManager *GetControlManager(void) const
+	{
+		return m_ControlManager;
+	}
+
+	void SetOnSwitchChange(SwitchScreenEventHandler Listener)
+	{
+		m_OnSwitchScreen = Listener;
+	}
+
+	void SwitchScreen(Screens Screen)
+	{
+		m_OnSwitchScreen(Screen);
 	}
 
 	static void DrawStringJustified(LCDCanvas &Canvas, Rect Rect, cstr Text, const Font &Font, Color Color)
@@ -102,15 +138,12 @@ protected:
 						   Color MiddlePartColor, cstr MiddlePartText, const Font &MiddlePartTextFont, Color MiddlePartTextColor,
 						   Color RightPartColor, cstr RightPartText, const Font &RightPartTextFont, Color RightPartTextColor)
 	{
-		const uint16 LEFT_PART_WIDTH = 50;
-		const uint16 MIDDLE_PART_WIDTH = 170;
-		const uint8 TRI_EDGE_WIDTH = 20;
 
 		Rect rect;
 
 		// Left Part
 		{
-			rect = {0, 0, LEFT_PART_WIDTH, Height};
+			rect = {0, 0, HEADER_LEFT_PART_WIDTH, Height};
 
 			Canvas.DrawFilledRectangle(rect, LeftPartColor);
 
@@ -120,13 +153,13 @@ protected:
 
 		// Middle Part
 		{
-			rect.Position.X += LEFT_PART_WIDTH + SPLITTER_THICKNESS;
-			rect.Dimension.X = MIDDLE_PART_WIDTH;
+			rect.Position.X += HEADER_LEFT_PART_WIDTH + SPLITTER_THICKNESS;
+			rect.Dimension.X = HEADER_MIDDLE_PART_WIDTH;
 
 			Canvas.DrawFilledParallelogram(
 				rect.Position,
 				{rect.Position.X, rect.Position.Y + rect.Dimension.Y},
-				{rect.Position.X + rect.Dimension.X + TRI_EDGE_WIDTH, rect.Position.Y},
+				{rect.Position.X + rect.Dimension.X + HEADER_TRI_EDGE_WIDTH, rect.Position.Y},
 				{rect.Position.X + rect.Dimension.X, rect.Position.Y + rect.Dimension.Y},
 				MiddlePartColor);
 
@@ -136,12 +169,12 @@ protected:
 
 		// Right Part
 		{
-			rect.Position.X += rect.Dimension.X + TRI_EDGE_WIDTH + (SPLITTER_THICKNESS * 2);
+			rect.Position.X += rect.Dimension.X + HEADER_TRI_EDGE_WIDTH + (SPLITTER_THICKNESS * 2);
 			rect.Dimension.X = (Canvas.GetDimension().X - rect.Position.X);
 
 			Canvas.DrawFilledParallelogram(
 				rect.Position,
-				{rect.Position.X - TRI_EDGE_WIDTH, rect.Position.Y + rect.Dimension.Y},
+				{rect.Position.X - HEADER_TRI_EDGE_WIDTH, rect.Position.Y + rect.Dimension.Y},
 				{rect.Position.X + rect.Dimension.X, rect.Position.Y},
 				{rect.Position.X + rect.Dimension.X, rect.Position.Y + rect.Dimension.Y},
 				RightPartColor);
@@ -153,7 +186,9 @@ protected:
 
 private:
 	PresetManager *m_PresetManager;
+	ControlManager *m_ControlManager;
 	bool m_IsDirty;
+	SwitchScreenEventHandler m_OnSwitchScreen;
 };
 
 #endif

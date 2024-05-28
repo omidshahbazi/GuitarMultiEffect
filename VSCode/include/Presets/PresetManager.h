@@ -9,7 +9,7 @@
 class PresetManager
 {
 public:
-	static constexpr uint8 PRESET_COUNT = 1;
+	static constexpr uint8 PRESET_COUNT = 5;
 
 private:
 	struct Data
@@ -78,8 +78,6 @@ public:
 private:
 	void SetDataOnPresets(void)
 	{
-		PersistentBlobBase::EreasAll();
-
 		static Data defaultData = {};
 		defaultData.SelectedPresetIndex = 0;
 
@@ -87,7 +85,7 @@ private:
 		{
 			Preset::Data &data = defaultData.Data[i];
 
-			Preset::SetName(data, ("PRESET AA" + std::to_string(i + 1)).c_str());
+			Preset::SetName(data, ("PRESET " + std::to_string(i + 1)).c_str());
 			data.Volume = 1;
 
 			uint8 effectIndex = 0;

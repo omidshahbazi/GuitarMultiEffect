@@ -16,13 +16,13 @@ public:
 
 public:
 	Effect(void)
-		: m_Enabled(true)
+		: m_IsEnabled(true)
 	{
 	}
 
 	void Apply(SampleType *Buffer, uint8 Count)
 	{
-		if (!m_Enabled)
+		if (!m_IsEnabled)
 			return;
 
 		Process(Buffer, Count);
@@ -30,14 +30,21 @@ public:
 
 	void SetData(const Data &Data)
 	{
-		m_Enabled = Data.Enabled;
+		m_IsEnabled = Data.Enabled;
 	}
+
+	bool GetIsEnabled(void) const
+	{
+		return m_IsEnabled;
+	}
+
+	virtual cstr GetName(void) const = 0;
 
 protected:
 	virtual void Process(SampleType *Buffer, uint8 Count) = 0;
 
 private:
-	bool m_Enabled;
+	bool m_IsEnabled;
 };
 
 #endif

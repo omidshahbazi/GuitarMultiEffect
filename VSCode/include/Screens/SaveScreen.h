@@ -1,14 +1,14 @@
 #pragma once
-#ifndef PLAY_SCREEN_H
-#define PLAY_SCREEN_H
+#ifndef SAVE_SCREEN_H
+#define SAVE_SCREEN_H
 
 #include "Screen.h"
 
-class PlayScreen : public Screen
+class SaveScreen : public Screen
 {
 public:
-	PlayScreen(PresetManager *PresetManager)
-		: Screen(PresetManager)
+	SaveScreen(PresetManager *PresetManager, ControlManager *ControlManager)
+		: Screen(PresetManager, ControlManager)
 	{
 	}
 

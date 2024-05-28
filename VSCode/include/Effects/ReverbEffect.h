@@ -36,6 +36,11 @@ public:
 		m_DSP.SetWetRate(Data.WetRate);
 	}
 
+	cstr GetName(void) const override
+	{
+		return "REV";
+	}
+
 private:
 	Reverb<SampleType> m_DSP;
 

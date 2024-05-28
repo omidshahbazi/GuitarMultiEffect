@@ -15,20 +15,28 @@ public:
 		  m_BootButton(nullptr),
 #endif
 		  m_VolumePotentiometer(nullptr),
-		  m_Display(HAL, GPIOPins::Pin8, GPIOPins::Pin10, GPIOPins::Pin7, GPIOPins::Pin6, GPIOPins::Pin9, I_LCD_HAL::Orientations::ToLeft)
+		  m_Display(HAL, GPIOPins::Pin8, GPIOPins::Pin10, GPIOPins::Pin7, GPIOPins::Pin6, GPIOPins::Pin9, I_LCD_HAL::Orientations::ToRight),
+		  m_UpButton(nullptr),
+		  m_DownButon(nullptr),
+		  m_ValueControl(nullptr)
 	{
 	}
 
 	void Initialize(void)
 	{
 #ifdef DEBUG
-		m_BootButton = CreateButton("Boot Mode Button", GPIOPins::Pin30);
+		m_BootButton = CreateButton("Boot Mode", GPIOPins::Pin30);
 #endif
 
-		m_VolumePotentiometer = CreatePotentiometer("Volume", AnalogPins ::Pin2);
+		m_VolumePotentiometer = CreatePotentiometer("Master Volume", AnalogPins ::Pin2);
 
 		m_Display.Initialize();
 		m_Display.SetTargetFrameRate(25);
+
+		m_UpButton = CreateButton("Up", GPIOPins::Pin26);
+		m_DownButon = CreateButton("Down", GPIOPins::Pin27);
+
+		m_ValueControl = CreateRotaryButton("Value", GPIOPins::Pin1, GPIOPins::Pin2, GPIOPins::Pin0);
 	}
 
 #ifdef DEBUG
@@ -43,10 +51,30 @@ public:
 		m_VolumePotentiometer->SetOnChangedListener(Listener);
 	}
 
-	void SetDisplayallback(ILI9341_HAL_320_240::RenderEventHandler Listener)
+	void SetDisplayCallback(ILI9341_HAL_320_240::RenderEventHandler Listener)
 	{
 		m_Display.SetOnRender(Listener);
 		m_Display.SetTargetFrameRate(24);
+	}
+
+	void SetUpButtonCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_UpButton->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetDownButtonCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_DownButon->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetValueRotatedCallback(RotaryButton::RotatedEventHandler Listener)
+	{
+		m_ValueControl->SetOnRotatedListener(Listener);
+	}
+
+	void SetValueButtonCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_ValueControl->SetOnTurnedOffListener(Listener);
 	}
 
 	void Update(void)
@@ -77,7 +105,7 @@ private:
 		Log::WriteInfo("Controls", "%s: Pot %i", Name, Pin);
 
 		Potentiometer *pot = m_Factory.CreatePotentiometer((uint8)Pin);
-		pot->SetCalibrationValues(0.01, 0.99);
+		pot->SetCalibrationValues(0.001, 0.96);
 
 		return pot;
 	}
@@ -105,6 +133,9 @@ private:
 #endif
 	Potentiometer *m_VolumePotentiometer;
 	ILI9341_HAL_320_240 m_Display;
+	Button *m_UpButton;
+	Button *m_DownButon;
+	RotaryButton *m_ValueControl;
 };
 
 #endif

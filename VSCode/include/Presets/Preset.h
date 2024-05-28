@@ -73,6 +73,11 @@ public:
 		m_Data.Volume = Value;
 	}
 
+	Effect **GetEffects(void)
+	{
+		return m_Effects;
+	}
+
 	static void SetName(Data &Data, cstr Value)
 	{
 		uint8 length = GetStringLength(Value);

@@ -34,6 +34,11 @@ public:
 		m_DSP.SetGain(Data.Gain);
 	}
 
+	cstr GetName(void) const override
+	{
+		return "OD";
+	}
+
 private:
 	Distortion<SampleType> m_DSP;
 };

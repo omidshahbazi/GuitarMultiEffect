@@ -23,7 +23,7 @@ public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
 		: DaisySeedHAL(&m_Hardware, SDRAMAddress, SDRAMSize),
 		  m_ControlManager(this),
-		  m_ScreenManager(&m_PresetManager),
+		  m_ScreenManager(&m_PresetManager, &m_ControlManager),
 		  m_ProcessBufferL(nullptr),
 		  m_MasterVolume(0)
 	{
@@ -99,12 +99,12 @@ public:
 												static_cast<Application *>(Context)->m_MasterVolume = Value;
 											}});
 
-		m_ControlManager.SetDisplayallback({this, [](void *Context)
-											{
-												Application *thisPtr = static_cast<Application *>(Context);
+		m_ControlManager.SetDisplayCallback({this, [](void *Context)
+											 {
+												 auto *thisPtr = static_cast<Application *>(Context);
 
-												thisPtr->m_ScreenManager.Render(thisPtr->m_LCDCanvas);
-											}});
+												 thisPtr->m_ScreenManager.Render(thisPtr->m_LCDCanvas);
+											 }});
 
 		DaisySeedHAL::InitializeADC();
 
@@ -121,15 +121,11 @@ public:
 
 		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
-		Delay(2000);
-
 		m_Hardware.StartAudio(AudioPassthrough);
 	}
 
 	void Update(void)
 	{
-		DaisySeedHAL::Delay(10);
-
 		DaisySeedHAL::Update();
 
 		m_ControlManager.Update();
