@@ -42,10 +42,6 @@
 #include "Effects/WahEffect.h"
 #endif
 
-#ifdef TEST_EFFECT
-#include "Effects/TestEffect.h"
-#endif
-
 #ifdef PLAY_SINE_WAVE
 #include "framework/DSP/Filters/OscillatorFilter.h"
 #include "framework/DSP/Notes.h"
@@ -146,38 +142,34 @@ public:
 #endif
 
 #ifdef AUTO_WAH_EFFECT
-		CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<AutoWahEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef CHORUS_EFFECT
-		CreateEffect<ChorusEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<ChorusEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef DISTORTION_EFFECT
-		CreateEffect<DistortionEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<DistortionEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef FLANGER_EFFECT
-		CreateEffect<FlangerEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<FlangerEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef LOOPER_EFFECT
-		CreateEffect<LooperEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<LooperEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef OVERDRIVE_EFFECT
-		CreateEffect<OverdriveEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<OverdriveEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef PHASER_EFFECT
-		CreateEffect<PhaserEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<PhaserEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef REVERB_EFFECT
-		CreateEffect<ReverbEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<ReverbEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef TREMOLO_EFFECT
-		CreateEffect<TremoloEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<TremoloEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef WAH_EFFECT
-		CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
-#endif
-
-#ifdef TEST_EFFECT
-		CreateEffect<TestEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<WahEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 
 		DaisySeedHAL::InitializeADC();
@@ -285,7 +277,7 @@ private:
 private:
 	daisy::DaisySeed m_Hardware;
 	ControlManager *m_ControlManager;
-	Effect<SampleType> *m_Effect;
+	Effect<SampleType, SAMPLE_RATE> *m_Effect;
 	SampleType *m_ProcessBufferL;
 
 #ifdef DEBUG

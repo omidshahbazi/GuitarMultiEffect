@@ -7,13 +7,12 @@
 #include "Effect.h"
 #include "../framework/DSP/DSPs/Flanger.h"
 
-template <typename T>
-class FlangerEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class FlangerEffect : public Effect<T, SampleRate>
 {
 public:
-	FlangerEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
-		  m_Flanger(SampleRate),
+	FlangerEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_FeedbackPot(nullptr),
 		  m_WetRatePot(nullptr),
 		  m_DepthPot(nullptr),
@@ -34,7 +33,7 @@ public:
 		m_DepthPot = ControlManager->CreatePotentiometer("Depth", AnalogPins::Pin2);
 		m_DepthPot->SetOnChangedListener({this, [](void *Context, float Value)
 										  {
-											  static_cast<FlangerEffect *>(Context)->m_Flanger.SetDepth(Math::Lerp(0.0, Flanger<T>::MAX_DEPTH, Value));
+											  static_cast<FlangerEffect *>(Context)->m_Flanger.SetDepth(Math::Lerp(0.0, Flanger<T, SampleRate>::MAX_DEPTH, Value));
 										  }});
 
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin3);
@@ -45,13 +44,13 @@ public:
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Flanger;
 	}
 
 private:
-	Flanger<T> m_Flanger;
+	Flanger<T, SampleRate> m_Flanger;
 	Potentiometer *m_FeedbackPot;
 	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DepthPot;

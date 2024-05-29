@@ -12,7 +12,6 @@
 // #define REVERB_EFFECT
 // #define TREMOLO_EFFECT
 // #define WAH_EFFECT
-// #define TEST_EFFECT
 
 #define SINE_WAVE_PLAYER
 

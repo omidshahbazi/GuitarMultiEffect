@@ -6,7 +6,7 @@
 #include "../framework/Common.h"
 #include "../framework/DSP/DSPs/IDSP.h"
 
-template <typename T>
+template <typename T, uint32 SampleRate>
 class Effect
 {
 public:
@@ -64,7 +64,7 @@ protected:
 		SetEnabled(m_Enabled);
 	}
 
-	virtual IDSP<T> *GetDSP(void) = 0;
+	virtual IDSP<T, SampleRate> *GetDSP(void) = 0;
 
 private:
 	bool m_Enabled;

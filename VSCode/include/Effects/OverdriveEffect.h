@@ -5,13 +5,12 @@
 #include "Effect.h"
 #include "../framework/DSP/DSPs/Overdrive.h"
 
-template <typename T>
-class OverdriveEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class OverdriveEffect : public Effect<T, SampleRate>
 {
 public:
-	OverdriveEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
-		  m_Overdrive(SampleRate),
+	OverdriveEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_DrivePot(nullptr),
 		  m_GainPot(nullptr)
 	{
@@ -29,13 +28,13 @@ public:
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Overdrive;
 	}
 
 private:
-	Overdrive<T> m_Overdrive;
+	Overdrive<T, SampleRate> m_Overdrive;
 	Potentiometer *m_DrivePot;
 	Potentiometer *m_GainPot;
 };

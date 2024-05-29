@@ -7,24 +7,23 @@
 #include "Effect.h"
 #include "../framework/DSP/DSPs/AutoWah.h"
 
-template <typename T>
-class AutoWahEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class AutoWahEffect : public Effect<T, SampleRate>
 {
 public:
-	AutoWahEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
-		  m_AutoWah(SampleRate)
+	AutoWahEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12)
 	{
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
-		return reinterpret_cast<IDSP<T> *>(&m_AutoWah);
+		return reinterpret_cast<IDSP<T, SampleRate> *>(&m_AutoWah);
 	}
 
 private:
-	AutoWah<T> m_AutoWah;
+	AutoWah<T, SampleRate> m_AutoWah;
 };
 
 #endif

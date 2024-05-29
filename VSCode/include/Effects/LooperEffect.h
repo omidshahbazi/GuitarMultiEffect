@@ -7,16 +7,18 @@
 #include "Effect.h"
 #include "../framework/DSP/DSPs/Looper.h"
 
-template <typename T>
-class LooperEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class LooperEffect : public Effect<T, SampleRate>
 {
+private:
+	static constexpr uint8 MAX_DELAY_TIME = 300;
+
 public:
-	LooperEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin10, GPIOPins::Pin11, GPIOPins::Pin29),
-		  m_Looper(SampleRate, MAX_DELAY_TIME),
+	LooperEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin10, GPIOPins::Pin11, GPIOPins::Pin29),
 		  m_VolumePot(nullptr)
 	{
-		Effect<T>::SetEnabled(true);
+		Effect<T, SampleRate>::SetEnabled(true);
 
 		m_VolumePot = ControlManager->CreatePotentiometer("Volume", AnalogPins::Pin11);
 		m_VolumePot->SetOnChangedListener({this, [](void *Context, float Value)
@@ -30,12 +32,12 @@ protected:
 	{
 		m_Looper.SetRecordMode();
 
-		Effect<T>::ChangeEnabledLEDBlinkingRate(2);
+		Effect<T, SampleRate>::ChangeEnabledLEDBlinkingRate(2);
 	}
 
 	void OnButtonUp(float HeldTime) override
 	{
-		Effect<T>::ChangeEnabledLEDBlinkingRate();
+		Effect<T, SampleRate>::ChangeEnabledLEDBlinkingRate();
 
 		if (HeldTime < 2)
 		{
@@ -47,16 +49,14 @@ protected:
 		m_Looper.SetReplayMode(Math::Min(MAX_DELAY_TIME, HeldTime));
 	}
 
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Looper;
 	}
 
 private:
-	Looper<T> m_Looper;
+	Looper<T, SampleRate, MAX_DELAY_TIME> m_Looper;
 	Potentiometer *m_VolumePot;
-
-	static constexpr float MAX_DELAY_TIME = 300;
 };
 
 #endif

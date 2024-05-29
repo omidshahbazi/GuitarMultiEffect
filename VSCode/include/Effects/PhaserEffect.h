@@ -7,13 +7,12 @@
 #include "Effect.h"
 #include "../framework/DSP/DSPs/Phaser.h"
 
-template <typename T>
-class PhaserEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class PhaserEffect : public Effect<T, SampleRate>
 {
 public:
-	PhaserEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
-		  m_Phaser(SampleRate),
+	PhaserEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin0, GPIOPins::Pin1, GPIOPins::Pin12),
 		  m_WetRatePot(nullptr),
 		  m_DepthPot(nullptr),
 		  m_RatePot(nullptr)
@@ -27,7 +26,7 @@ public:
 		m_DepthPot = ControlManager->CreatePotentiometer("Depth", AnalogPins::Pin1);
 		m_DepthPot->SetOnChangedListener({this, [](void *Context, float Value)
 										  {
-											  static_cast<PhaserEffect *>(Context)->m_Phaser.SetDepth(Math::Lerp(0.0, Phaser<T>::MAX_DEPTH, Value));
+											  static_cast<PhaserEffect *>(Context)->m_Phaser.SetDepth(Math::Lerp(0.0, Phaser<T, SampleRate>::MAX_DEPTH, Value));
 										  }});
 
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin2);
@@ -38,13 +37,13 @@ public:
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Phaser;
 	}
 
 private:
-	Phaser<T> m_Phaser;
+	Phaser<T, SampleRate> m_Phaser;
 	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DepthPot;
 	Potentiometer *m_RatePot;
