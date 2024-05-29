@@ -5,6 +5,7 @@
 #include "../Presets/PresetManager.h"
 #include "../ControlManager.h"
 #include "../framework/LCDCanvas.h"
+#include <string>
 
 const Color COLOR_BLACK = {};
 const Color COLOR_GRAY = {128, 128, 128};
@@ -111,7 +112,7 @@ protected:
 		return m_ControlManager;
 	}
 
-	void SetOnSwitchChange(SwitchScreenEventHandler Listener)
+	void SetOnSwitchScreen(SwitchScreenEventHandler Listener)
 	{
 		m_OnSwitchScreen = Listener;
 	}

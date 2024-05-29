@@ -16,11 +16,6 @@ public:
 	};
 
 public:
-	OverdriveEffect(void)
-		: m_DSP(SAMPLE_RATE)
-	{
-	}
-
 	void Process(SampleType *Buffer, uint8 Count) override
 	{
 		m_DSP.ProcessBuffer(Buffer, Count);
@@ -40,7 +35,7 @@ public:
 	}
 
 private:
-	Distortion<SampleType> m_DSP;
+	Distortion<SampleType, SAMPLE_RATE> m_DSP;
 };
 
 #endif

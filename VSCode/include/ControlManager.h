@@ -18,6 +18,7 @@ public:
 		  m_Display(HAL, GPIOPins::Pin8, GPIOPins::Pin10, GPIOPins::Pin7, GPIOPins::Pin6, GPIOPins::Pin9, I_LCD_HAL::Orientations::ToRight),
 		  m_UpButton(nullptr),
 		  m_DownButon(nullptr),
+		  m_BackButon(nullptr),
 		  m_ValueControl(nullptr)
 	{
 	}
@@ -35,6 +36,8 @@ public:
 
 		m_UpButton = CreateButton("Up", GPIOPins::Pin26);
 		m_DownButon = CreateButton("Down", GPIOPins::Pin27);
+
+		m_BackButon = CreateButton("Back", GPIOPins::Pin5);
 
 		m_ValueControl = CreateRotaryButton("Value", GPIOPins::Pin1, GPIOPins::Pin2, GPIOPins::Pin0);
 	}
@@ -67,12 +70,22 @@ public:
 		m_DownButon->SetOnTurnedOffListener(Listener);
 	}
 
+	void SetBackButtonCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_BackButon->SetOnTurnedOffListener(Listener);
+	}
+
 	void SetValueRotatedCallback(RotaryButton::RotatedEventHandler Listener)
 	{
 		m_ValueControl->SetOnRotatedListener(Listener);
 	}
 
-	void SetValueButtonCallback(Button::TurnedOffEventHandler Listener)
+	void SetValueButtonHoldCallback(Button::HoldEventHandler Listener)
+	{
+		m_ValueControl->SetOnHoldListener(Listener);
+	}
+
+	void SetValueButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_ValueControl->SetOnTurnedOffListener(Listener);
 	}
@@ -135,6 +148,7 @@ private:
 	ILI9341_HAL_320_240 m_Display;
 	Button *m_UpButton;
 	Button *m_DownButon;
+	Button *m_BackButon;
 	RotaryButton *m_ValueControl;
 };
 

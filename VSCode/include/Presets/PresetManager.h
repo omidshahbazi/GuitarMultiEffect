@@ -53,6 +53,8 @@ public:
 		Data &data = m_PersistentData.Get();
 
 		data.SelectedPresetIndex = Math::Wrap((int16)data.SelectedPresetIndex + Direction, 0, PRESET_COUNT - 1);
+
+		m_Presets[data.SelectedPresetIndex].UpdateData();
 	}
 
 	void Save(void)

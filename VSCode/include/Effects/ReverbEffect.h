@@ -8,6 +8,9 @@
 class ReverbEffect : public Effect
 {
 public:
+	static constexpr uint8 MAX_DELAY_TIME = 1;
+
+public:
 	struct Data : public Effect::Data
 	{
 	public:
@@ -17,11 +20,6 @@ public:
 	};
 
 public:
-	ReverbEffect(void)
-		: m_DSP(SAMPLE_RATE, MAX_DELAY_TIME)
-	{
-	}
-
 	void Process(SampleType *Buffer, uint8 Count) override
 	{
 		m_DSP.ProcessBuffer(Buffer, Count);
@@ -42,10 +40,7 @@ public:
 	}
 
 private:
-	Reverb<SampleType> m_DSP;
-
-public:
-	static constexpr uint8 MAX_DELAY_TIME = 1;
+	Reverb<SampleType, SAMPLE_RATE, MAX_DELAY_TIME> m_DSP;
 };
 
 #endif

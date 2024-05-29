@@ -23,3 +23,12 @@ int main()
 
 	return 0;
 }
+
+// SaveScreen with reset factory, A separated button?
+// Enabled disable using the same button for Looper
+// Add new effects
+// Rename Screen
+// Preset volume
+// Looper
+// Drum Machine
+// TODO: Preset Variation

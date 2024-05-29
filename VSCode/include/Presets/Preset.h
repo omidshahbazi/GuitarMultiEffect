@@ -21,6 +21,8 @@ public:
 
 		OverdriveEffect::Data OverdriveData;
 		ReverbEffect::Data ReverbData;
+
+		Effect::Data *EffectsData[EFFECT_COUNT];
 	};
 
 public:
@@ -53,12 +55,25 @@ public:
 		SET_DATA(Overdrive);
 		SET_DATA(Reverb);
 
+		for (uint8 i = 0; i < EFFECT_COUNT; ++i)
+		{
+			if (i == m_Data.OverdriveData.Index)
+				m_Data.EffectsData[i] = &m_Data.OverdriveData;
+			else if (i == m_Data.ReverbData.Index)
+				m_Data.EffectsData[i] = &m_Data.ReverbData;
+		}
+
 #undef SET_DATA
 	}
 
-	const Data &GetData(void) const
+	Data &GetData(void)
 	{
 		return m_Data;
+	}
+
+	void UpdateData(void)
+	{
+		SetData(GetData());
 	}
 
 	void SetName(cstr Value)

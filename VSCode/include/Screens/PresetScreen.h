@@ -3,25 +3,18 @@
 #define PRESET_SCREEN_H
 
 #include "Screen.h"
-#include <string>
 
-#pragma GCC pop_options
+uint8 g_SelectedEffectIndex;
 
 class PresetScreen : public Screen
 {
-private:
-	enum class SelectionTypes
-	{
-		Name = 0,
-		Volume,
-		Effect
-	};
-
 public:
 	PresetScreen(PresetManager *PresetManager, ControlManager *ControlManager)
 		: Screen(PresetManager, ControlManager),
-		  m_SelectionType(SelectionTypes::Name),
-		  m_SelectedEffectIndex(0)
+		  m_SelectableItemCount(Preset::EFFECT_COUNT + 2),
+		  m_PointerItemIndex(0),
+		  m_IsEffectReordering(false),
+		  m_ReorderingJustStarted(false)
 	{
 	}
 
@@ -45,6 +38,7 @@ protected:
 		const Color LINE_COLOR = COLOR_LIGHT_BLUE;
 		const Color ENABLED_EFFECT_COLOR = COLOR_DARK_BLUE;
 		const Color DISABLED_EFFECT_COLOR = COLOR_GRAY;
+		const Color SELECTED_EFFECT_COLOR = COLOR_RED;
 		const Font &EFFECT_NAME_FONT = FONT_20;
 		Color EFFECT_NAME_COLOR = COLOR_LIGHT_BLUE;
 		const uint16 START_HEIGHT = DEFAULT_HEADER_HEIGHT + 50;
@@ -61,17 +55,17 @@ protected:
 
 		Preset *preset = GetPresetManager()->GetSelectedPreset();
 
-		const Preset::Data &presetData = preset->GetData();
+		auto &presetData = preset->GetData();
 		DrawHeader(Canvas, DEFAULT_HEADER_HEIGHT,
 				   PRESET_INDEX_BOX_COLOR, GetPresetNumber().c_str(), PRESET_INDEX_TEXT_FONT, PRESET_INDEX_TEXT_COLOR,
 				   PRESET_NAME_BOX_COLOR, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR,
 				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, PRESET_VOLUME_TEXT_COLOR);
 
-		if (m_SelectionType == SelectionTypes::Name)
+		if (m_PointerItemIndex == Preset::EFFECT_COUNT)
 		{
 			DrawSelectionSign(Canvas, {HEADER_LEFT_PART_WIDTH + (uint16)(HEADER_MIDDLE_PART_WIDTH * 0.5), DEFAULT_HEADER_HEIGHT + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
 		}
-		else if (m_SelectionType == SelectionTypes::Volume)
+		else if (m_PointerItemIndex == Preset::EFFECT_COUNT + 1)
 		{
 			uint16 leftAndRightWidth = HEADER_LEFT_PART_WIDTH + HEADER_MIDDLE_PART_WIDTH;
 			DrawSelectionSign(Canvas, {leftAndRightWidth + (uint16)((canvasDimensions.X - leftAndRightWidth) * 0.5), DEFAULT_HEADER_HEIGHT + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
@@ -106,11 +100,22 @@ protected:
 		{
 			Effect *effect = effects[i];
 
-			if (m_SelectionType == SelectionTypes::Effect && i == m_SelectedEffectIndex)
+			if (i == m_PointerItemIndex)
 				DrawSelectionSign(Canvas, {effectPoint.X + HALF_EFFECT_DIMENSIONS.X, effectPoint.Y - SELECTION_SIGN_OFFSET}, -1, COLOR_WHITE);
 
-			Canvas.DrawFilledRectangle({effectPoint, EFFECT_DIMENSIONS}, (effect->GetIsEnabled() ? ENABLED_EFFECT_COLOR : DISABLED_EFFECT_COLOR));
-			Canvas.DrawFilledCircle({effectPoint.X + HALF_EFFECT_DIMENSIONS.X, effectPoint.Y + (EFFECT_DIMENSIONS.Y / 3)}, EFFECT_DIMENSIONS.X / 5, BACKGROUND_FILL_COLOR);
+			// Pedal Shape
+			{
+				Color color = ENABLED_EFFECT_COLOR;
+				if (m_IsEffectReordering && i == m_PointerItemIndex)
+					color = SELECTED_EFFECT_COLOR;
+				else if (!effect->GetIsEnabled())
+					color = DISABLED_EFFECT_COLOR;
+
+				Canvas.DrawFilledRectangle({effectPoint, EFFECT_DIMENSIONS}, color);
+				Canvas.DrawFilledCircle({effectPoint.X + HALF_EFFECT_DIMENSIONS.X, effectPoint.Y + (EFFECT_DIMENSIONS.Y / 4)}, EFFECT_DIMENSIONS.X / 6, BACKGROUND_FILL_COLOR);
+				Canvas.DrawFilledCircle({effectPoint.X + HALF_EFFECT_DIMENSIONS.X, effectPoint.Y + (3 * EFFECT_DIMENSIONS.Y / 4)}, EFFECT_DIMENSIONS.X / 10, BACKGROUND_FILL_COLOR);
+			}
+
 			DrawStringJustified(Canvas, {effectPoint.X - HALF_EFFECT_DIMENSIONS.X, effectPoint.Y + EFFECT_DIMENSIONS.Y + 5, EFFECT_DIMENSIONS.X * 2, 20}, effect->GetName(), EFFECT_NAME_FONT, EFFECT_NAME_COLOR);
 
 			effectPoint.X += EFFECTS_OFFSET;
@@ -131,8 +136,9 @@ protected:
 	{
 		Screen::Activate();
 
-		m_SelectionType = SelectionTypes::Name;
-		m_SelectedEffectIndex = 0;
+		m_PointerItemIndex = m_SelectableItemCount - 1;
+		m_IsEffectReordering = false;
+		m_ReorderingJustStarted = false;
 
 		auto *controlManager = GetControlManager();
 
@@ -141,53 +147,72 @@ protected:
 												 {
 													 auto thisPtr = static_cast<PresetScreen *>(Context);
 
-													 thisPtr->value += Direction;
-													 Log::WriteInfo("%i", thisPtr->value);
+													 if (thisPtr->m_IsEffectReordering)
+													 {
+														 Preset *preset = thisPtr->GetPresetManager()->GetSelectedPreset();
+														 auto &presetData = preset->GetData();
 
-													 if (thisPtr->m_SelectionType == SelectionTypes::Effect)
-													 {
-														 int8 newIndex = thisPtr->m_SelectedEffectIndex + Direction;
+														 uint8 oldIndex = thisPtr->m_PointerItemIndex;
 
-														 if (newIndex < 0)
-														 {
-															 thisPtr->m_SelectionType = SelectionTypes::Volume;
-														 }
-														 else if (newIndex < 0 || Preset::EFFECT_COUNT <= newIndex)
-														 {
-															 thisPtr->m_SelectionType = SelectionTypes::Name;
-														 }
-														 else
-															 thisPtr->m_SelectedEffectIndex = newIndex;
+														 thisPtr->m_PointerItemIndex = Math::Clamp(thisPtr->m_PointerItemIndex + Direction, 0, Preset::EFFECT_COUNT - 1);
+
+														 presetData.EffectsData[thisPtr->m_PointerItemIndex]->Index = oldIndex;
+														 presetData.EffectsData[oldIndex]->Index = thisPtr->m_PointerItemIndex;
+
+														 preset->UpdateData();
 													 }
-													 else if (thisPtr->m_SelectionType == SelectionTypes::Name)
-													 {
-														 if (Direction > 1)
-															 thisPtr->m_SelectionType = SelectionTypes::Volume;
-														 else
-														 {
-															 thisPtr->m_SelectionType = SelectionTypes::Effect;
-															 thisPtr->m_SelectedEffectIndex = Preset::EFFECT_COUNT - 1;
-														 }
-													 }
-													 else if (thisPtr->m_SelectionType == SelectionTypes::Volume)
-													 {
-														 if (Direction > 1)
-														 {
-															 thisPtr->m_SelectionType = SelectionTypes::Effect;
-															 thisPtr->m_SelectedEffectIndex = 0;
-														 }
-														 else
-															 thisPtr->m_SelectionType = SelectionTypes::Name;
-													 }
+													 else
+														 thisPtr->m_PointerItemIndex = Math::Wrap(thisPtr->m_PointerItemIndex + Direction, 0, (int32)thisPtr->m_SelectableItemCount - 1);
 
 													 thisPtr->MarkAsDirty();
 												 }});
 
-		controlManager->SetValueButtonCallback({this,
-												[](void *Context, float HeldTime)
-												{
-													auto *thisPtr = static_cast<PlayScreen *>(Context);
-												}});
+		controlManager->SetValueButtonHoldCallback({this,
+													[](void *Context, float HeldTime)
+													{
+														if (HeldTime < 2)
+															return;
+
+														auto *thisPtr = static_cast<PresetScreen *>(Context);
+
+														if (thisPtr->m_IsEffectReordering)
+															return;
+
+														if (thisPtr->m_PointerItemIndex >= Preset::EFFECT_COUNT)
+															return;
+
+														thisPtr->m_ReorderingJustStarted = true;
+														thisPtr->m_IsEffectReordering = true;
+
+														thisPtr->MarkAsDirty();
+													}});
+
+		controlManager->SetValueButtonTunedOffCallback({this,
+														[](void *Context, float HeldTime)
+														{
+															auto *thisPtr = static_cast<PresetScreen *>(Context);
+
+															if (thisPtr->m_ReorderingJustStarted)
+															{
+																thisPtr->m_ReorderingJustStarted = false;
+																return;
+															}
+															else if (thisPtr->m_IsEffectReordering)
+																thisPtr->m_IsEffectReordering = false;
+															else if (thisPtr->m_PointerItemIndex < Preset::EFFECT_COUNT)
+															{
+																g_SelectedEffectIndex = thisPtr->m_PointerItemIndex;
+																thisPtr->SwitchScreen(Screens::Effect);
+															}
+															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT)
+															{
+															}
+															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT + 1)
+															{
+															}
+
+															thisPtr->MarkAsDirty();
+														}});
 	}
 
 	void Deactivate(void) override
@@ -196,11 +221,12 @@ protected:
 
 		auto *controlManager = GetControlManager();
 
-		controlManager->SetUpButtonCallback(nullptr);
-		controlManager->SetDownButtonCallback(nullptr);
-		controlManager->SetValueButtonCallback(nullptr);
+		controlManager->SetValueRotatedCallback(nullptr);
+		controlManager->SetValueButtonHoldCallback(nullptr);
+		controlManager->SetValueButtonTunedOffCallback(nullptr);
 	}
 
+private:
 	static void DrawSelectionSign(LCDCanvas &Canvas, Point Position, int8 UpDirection, Color Color)
 	{
 		const int8 POSITIVE_OFFSET_FROM_CENTER = UpDirection * 4;
@@ -213,9 +239,10 @@ protected:
 	}
 
 private:
-	SelectionTypes m_SelectionType;
-	uint8 m_SelectedEffectIndex;
-	int32 value;
+	uint8 m_SelectableItemCount;
+	uint8 m_PointerItemIndex;
+	bool m_IsEffectReordering;
+	bool m_ReorderingJustStarted;
 };
 
 #endif

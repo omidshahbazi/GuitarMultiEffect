@@ -26,7 +26,7 @@ protected:
 
 		Screen::Draw(Canvas);
 
-		const Preset::Data &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
+		auto &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
 
 		DrawHeader(Canvas, HEADER_HEIGTH,
 				   HEADER_DEFAULT_LEFT_BOX_COLOR, nullptr, {}, {},
@@ -73,11 +73,11 @@ protected:
 												   thisPtr->MarkAsDirty();
 											   }});
 
-		controlManager->SetValueButtonCallback({this,
-												[](void *Context, float HeldTime)
-												{
-													static_cast<PlayScreen *>(Context)->SwitchScreen(Screens::Preset);
-												}});
+		controlManager->SetValueButtonTunedOffCallback({this,
+														[](void *Context, float HeldTime)
+														{
+															static_cast<PlayScreen *>(Context)->SwitchScreen(Screens::Preset);
+														}});
 	}
 
 	void Deactivate(void) override
@@ -88,7 +88,7 @@ protected:
 
 		controlManager->SetUpButtonCallback(nullptr);
 		controlManager->SetDownButtonCallback(nullptr);
-		controlManager->SetValueButtonCallback(nullptr);
+		controlManager->SetValueButtonTunedOffCallback(nullptr);
 	}
 };
 
