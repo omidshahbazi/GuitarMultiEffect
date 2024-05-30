@@ -30,5 +30,5 @@ int main()
 // Rename Screen
 // Preset volume
 // Looper
-// Drum Machine
+// Drum Machine (Daisy has an example)
 // TODO: Preset Variation
