@@ -7,13 +7,12 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Distortion.h>
 
-template <typename T>
-class DistortionEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class DistortionEffect : public Effect<T, SampleRate>
 {
 public:
-	DistortionEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
-		  m_Distortion(SampleRate),
+	DistortionEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_RatePot(nullptr),
 		  m_GainPot(nullptr)
 	{
@@ -31,13 +30,13 @@ public:
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Distortion;
 	}
 
 private:
-	Distortion<T> m_Distortion;
+	Distortion<T, SampleRate> m_Distortion;
 	Potentiometer *m_RatePot;
 	Potentiometer *m_GainPot;
 };

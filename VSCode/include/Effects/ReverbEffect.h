@@ -7,13 +7,15 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Reverb.h>
 
-template <typename T>
-class ReverbEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class ReverbEffect : public Effect<T, SampleRate>
 {
+private:
+	static constexpr uint8 MAX_DELAY_TIME = 1;
+
 public:
-	ReverbEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
-		  m_Reverb(SampleRate, MAX_DELAY_TIME),
+	ReverbEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_WetRatePot(nullptr),
 		  m_DelayTimePot(nullptr),
 		  m_FeedbackPot(nullptr)
@@ -38,18 +40,16 @@ public:
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Reverb;
 	}
 
 private:
-	Reverb<T> m_Reverb;
+	Reverb<T, SampleRate, MAX_DELAY_TIME> m_Reverb;
 	Potentiometer *m_WetRatePot;
 	Potentiometer *m_DelayTimePot;
 	Potentiometer *m_FeedbackPot;
-
-	static constexpr float MAX_DELAY_TIME = 1;
 };
 
 #endif

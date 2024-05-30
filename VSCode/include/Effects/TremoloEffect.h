@@ -7,13 +7,12 @@
 #include "Effect.h"
 #include <framework/include/DSP/DSPs/Tremolo.h>
 
-template <typename T>
-class TremoloEffect : public Effect<T>
+template <typename T, uint32 SampleRate>
+class TremoloEffect : public Effect<T, SampleRate>
 {
 public:
-	TremoloEffect(ControlManager *ControlManager, uint32 SampleRate)
-		: Effect<T>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
-		  m_Tremolo(SampleRate),
+	TremoloEffect(ControlManager *ControlManager)
+		: Effect<T, SampleRate>(ControlManager, GPIOPins::Pin22, GPIOPins::Pin19),
 		  m_RatePot(nullptr),
 		  m_DepthPot(nullptr)
 	{
@@ -31,13 +30,13 @@ public:
 	}
 
 protected:
-	IDSP<T> *GetDSP(void)
+	IDSP<T, SampleRate> *GetDSP(void)
 	{
 		return &m_Tremolo;
 	}
 
 private:
-	Tremolo<T> m_Tremolo;
+	Tremolo<T, SampleRate> m_Tremolo;
 	Potentiometer *m_RatePot;
 	Potentiometer *m_DepthPot;
 };

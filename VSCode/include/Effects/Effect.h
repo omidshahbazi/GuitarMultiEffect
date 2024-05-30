@@ -9,7 +9,7 @@
 #include <framework/include/DSP/Controls/SingleLED.h>
 #include <framework/include/DSP/Controls/Potentiometer.h>
 
-template <typename T>
+template <typename T, uint32 SampleRate>
 class Effect
 {
 public:
@@ -72,7 +72,7 @@ protected:
 		return m_EnabledSwitch->GetTurnedOn();
 	}
 
-	virtual IDSP<T> *GetDSP(void) = 0;
+	virtual IDSP<T, SampleRate> *GetDSP(void) = 0;
 
 private:
 	bool m_Enabled;

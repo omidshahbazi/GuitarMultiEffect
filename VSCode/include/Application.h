@@ -66,7 +66,7 @@ typedef float SampleType;
 class Application : public ESP32HAL<0, 0>
 {
 private:
-	typedef std::vector<Effect<SampleType> *> EffectList;
+	typedef std::vector<Effect<SampleType, SAMPLE_RATE> *> EffectList;
 
 public:
 	Application(void)
@@ -111,31 +111,31 @@ public:
 		new (m_ControlManager) ControlManager(this);
 
 #ifdef AUTO_WAH_EFFECT
-		CreateEffect<AutoWahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<AutoWahEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef CHORUS_EFFECT
-		CreateEffect<ChorusEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<ChorusEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef DISTORTION_EFFECT
-		CreateEffect<DistortionEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<DistortionEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef FLANGER_EFFECT
-		CreateEffect<FlangerEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<FlangerEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef OVERDRIVE_EFFECT
-		CreateEffect<OverdriveEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<OverdriveEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef PHASER_EFFECT
-		CreateEffect<PhaserEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<PhaserEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef REVERB_EFFECT
-		CreateEffect<ReverbEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<ReverbEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef TREMOLO_EFFECT
-		CreateEffect<TremoloEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<TremoloEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 #ifdef WAH_EFFECT
-		CreateEffect<WahEffect<SampleType>>(m_ControlManager, SAMPLE_RATE);
+		CreateEffect<WahEffect<SampleType, SAMPLE_RATE>>(m_ControlManager);
 #endif
 
 #ifdef TEST_EFFECT
@@ -169,7 +169,7 @@ private:
 	{
 		Log::WriteInfo("Starting SineWavePlayer Task");
 
-		OscillatorFilter<SampleType> oscillator(SAMPLE_RATE);
+		OscillatorFilter<SampleType, SAMPLE_RATE> oscillator;
 		oscillator.SetFrequency(NOTE_A4);
 
 		int32 *outBuffer = Memory::Allocate<int32>(SAMPLE_COUNT);
@@ -182,7 +182,7 @@ private:
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
 				SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, outBuffer, true, 1);
 
-			for (Effect<SampleType> *effect : m_Effects)
+			for (Effect<SampleType, SAMPLE_RATE> *effect : m_Effects)
 				effect->Apply(processBufferL, FRAME_LENGTH);
 
 			for (uint16 i = 0; i < FRAME_LENGTH; ++i)
@@ -237,7 +237,7 @@ private:
 					SCALE_NORMALIZED_DOUBLE_TO_INT32(processBufferL, i, ioBuffer, true, 1);
 				}
 
-				for (Effect<SampleType> *effect : m_Effects)
+				for (Effect<SampleType, SAMPLE_RATE> *effect : m_Effects)
 					effect->Apply(processBufferL, FRAME_LENGTH);
 			}
 
