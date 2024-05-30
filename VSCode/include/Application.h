@@ -210,11 +210,11 @@ private:
 	{
 		Log::WriteInfo("Starting Sine Wave Player");
 
-		OscillatorFilter<SampleType> *oscillator = Memory::Allocate<OscillatorFilter<SampleType>>();
-		new (oscillator) OscillatorFilter<SampleType>(SAMPLE_RATE);
+		static OscillatorFilter<SampleType, SAMPLE_RATE> *oscillator = Memory::Allocate<OscillatorFilter<SampleType, SAMPLE_RATE>>();
+		new (oscillator) OscillatorFilter<SampleType, SAMPLE_RATE>();
 		oscillator->SetFrequency(NOTE_A4);
 
-		g_ProcessorFunction = [oscillator](const float *const *In, float **Out, uint32 Size)
+		g_ProcessorFunction = [](const float *const *In, float **Out, uint32 Size)
 		{
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{

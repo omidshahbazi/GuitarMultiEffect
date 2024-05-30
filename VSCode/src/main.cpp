@@ -13,7 +13,7 @@
 // #define TREMOLO_EFFECT
 // #define WAH_EFFECT
 
-#define SINE_WAVE_PLAYER
+#define PLAY_SINE_WAVE
 
 #include "../include/Application.h"
 
