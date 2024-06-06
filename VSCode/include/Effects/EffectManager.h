@@ -2,8 +2,11 @@
 #ifndef EFFECT_MANAGER_H
 #define EFFECT_MANAGER_H
 
-#include "OverdriveEffect.h"
-#include "ReverbEffect.h"
+#include "FXEffect.h"
+#include "DSEffect.h"
+#include "EqEffect.h"
+#include "RevEffect.h"
+#include "ModEffect.h"
 #include "../framework/DSP/Memory.h"
 
 class EffectManager
@@ -11,8 +14,13 @@ class EffectManager
 public:
 	enum class Types
 	{
-		Overdrive = 0,
-		Reverb,
+		FX = 0,
+		Ds,
+		// Amp,
+		Eq,
+		Mod,
+		// Del,
+		Rev,
 
 		COUNT
 	};
@@ -20,8 +28,11 @@ public:
 public:
 	static void Initialize(void)
 	{
-		Add<OverdriveEffect>(Types::Overdrive);
-		Add<ReverbEffect>(Types::Reverb);
+		Add<FXEffect>(Types::FX);
+		Add<DsEffect>(Types::Ds);
+		Add<EqEffect>(Types::Eq);
+		Add<RevEffect>(Types::Rev);
+		Add<ModEffect>(Types::Mod);
 	}
 
 	template <typename T>

@@ -20,6 +20,8 @@ const Color COLOR_DARK_BLUE = {41, 57, 106};
 
 const Font &FONT_16 = Font_DUBAI_BOLD_16;
 const Font &FONT_20 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font_DUBAI_BOLD_16.Data, 1.25};
+const Font &FONT_24 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font_DUBAI_BOLD_16.Data, 1.5};
+const Font &FONT_30 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font_DUBAI_BOLD_16.Data, 1.875};
 const Font &FONT_32 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font_DUBAI_BOLD_16.Data, 2};
 const Font &FONT_40 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font_DUBAI_BOLD_16.Data, 2.5};
 const Font &FONT_64 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font_DUBAI_BOLD_16.Data, 4};
@@ -53,6 +55,7 @@ class Screen
 
 public:
 	typedef ContextCallback<void, Screens> SwitchScreenEventHandler;
+	typedef ContextCallback<void> ClearScreensHistoryEventHandler;
 
 public:
 	Screen(PresetManager *PresetManager, ControlManager *ControlManager)
@@ -117,21 +120,34 @@ protected:
 		m_OnSwitchScreen = Listener;
 	}
 
+	void SetOnClearScreensHistory(ClearScreensHistoryEventHandler Listener)
+	{
+		m_OnClearScreensHistory = Listener;
+	}
+
 	void SwitchScreen(Screens Screen)
 	{
 		m_OnSwitchScreen(Screen);
 	}
 
+	void ClearScreensHistory(void)
+	{
+		m_OnClearScreensHistory();
+	}
+
 	static void DrawStringJustified(LCDCanvas &Canvas, Rect Rect, cstr Text, const Font &Font, Color Color)
 	{
-		uint8 len = GetStringLength(Text);
+		DrawStringJustified(Canvas, Rect, Text, GetStringLength(Text), Font, Color);
+	}
 
-		Point textDim = Canvas.MeasureStringDimension(Text, len, Font);
+	static void DrawStringJustified(LCDCanvas &Canvas, Rect Rect, cstr Text, uint16 Length, const Font &Font, Color Color)
+	{
+		Point textDim = Canvas.MeasureStringDimension(Text, Length, Font);
 
 		Rect.Position.X += (Rect.Dimension.X * 0.5) - (textDim.X * 0.5);
 		Rect.Position.Y += (Rect.Dimension.Y * 0.5) - (textDim.Y * 0.5);
 
-		Canvas.DrawString(Rect.Position, Text, len, Font, Color);
+		Canvas.DrawString(Rect.Position, Text, Length, Font, Color);
 	}
 
 	static void DrawHeader(LCDCanvas &Canvas, uint16 Height,
@@ -190,6 +206,7 @@ private:
 	ControlManager *m_ControlManager;
 	bool m_IsDirty;
 	SwitchScreenEventHandler m_OnSwitchScreen;
+	ClearScreensHistoryEventHandler m_OnClearScreensHistory;
 };
 
 #endif

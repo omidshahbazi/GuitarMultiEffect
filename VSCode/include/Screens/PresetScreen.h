@@ -31,7 +31,8 @@ protected:
 
 		const Color &PRESET_VOLUME_BOX_COLOR = HEADER_DEFAULT_RIGHT_BOX_COLOR;
 		const Font &PRESET_VOLUME_TEXT_FONT = HEADER_DEFAULT_RIGHT_TEXT_FONT;
-		const Color &PRESET_VOLUME_TEXT_COLOR = HEADER_DEFAULT_RIGHT_TEXT_COLOR;
+		const Color &PRESET_NORMAL_VOLUME_TEXT_COLOR = HEADER_DEFAULT_RIGHT_TEXT_COLOR;
+		const Color &PRESET_SELECTED_VOLUME_TEXT_COLOR = COLOR_YELLOW;
 
 		auto &canvasDimensions = Canvas.GetDimension();
 
@@ -40,7 +41,7 @@ protected:
 		const Color DISABLED_EFFECT_COLOR = COLOR_GRAY;
 		const Color SELECTED_EFFECT_COLOR = COLOR_RED;
 		const Font &EFFECT_NAME_FONT = FONT_20;
-		Color EFFECT_NAME_COLOR = COLOR_LIGHT_BLUE;
+		const Color EFFECT_NAME_COLOR = COLOR_LIGHT_BLUE;
 		const uint16 START_HEIGHT = DEFAULT_HEADER_HEIGHT + 50;
 		const uint16 LINES_OFFSET = 70;
 		const Point EFFECT_DIMENSIONS = {20, 30};
@@ -55,11 +56,15 @@ protected:
 
 		Preset *preset = GetPresetManager()->GetSelectedPreset();
 
+		Color volumeColor = PRESET_NORMAL_VOLUME_TEXT_COLOR;
+		if (m_IsVolumeChanging)
+			volumeColor = PRESET_SELECTED_VOLUME_TEXT_COLOR;
+
 		auto &presetData = preset->GetData();
 		DrawHeader(Canvas, DEFAULT_HEADER_HEIGHT,
 				   PRESET_INDEX_BOX_COLOR, GetPresetNumber().c_str(), PRESET_INDEX_TEXT_FONT, PRESET_INDEX_TEXT_COLOR,
 				   PRESET_NAME_BOX_COLOR, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR,
-				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, PRESET_VOLUME_TEXT_COLOR);
+				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, volumeColor);
 
 		if (m_PointerItemIndex == Preset::EFFECT_COUNT)
 		{
@@ -134,13 +139,20 @@ protected:
 
 	void Activate(void) override
 	{
+#define GET_PRESET_DATA() thisPtr->GetPresetManager()->GetSelectedPreset()->GetData()
+#define UPDATE_PRESET() thisPtr->GetPresetManager()->GetSelectedPreset()->UpdateData()
+#define GET_EFFECT_DATA(Index) GET_PRESET_DATA().EffectsData[Index]
+#define UPDATE_ENABLED_LED(Index) thisPtr->GetControlManager()->SetLooperLEDConstantBrightness(GET_EFFECT_DATA(Index)->Enabled ? COLOR_GREEN : COLOR_BLACK)
+
 		Screen::Activate();
+
+		auto *controlManager = GetControlManager();
 
 		m_PointerItemIndex = m_SelectableItemCount - 1;
 		m_IsEffectReordering = false;
 		m_ReorderingJustStarted = false;
 
-		auto *controlManager = GetControlManager();
+		controlManager->SetLooperLEDConstantBrightness(COLOR_BLACK);
 
 		controlManager->SetValueRotatedCallback({this,
 												 [](void *Context, int8 Direction)
@@ -149,20 +161,31 @@ protected:
 
 													 if (thisPtr->m_IsEffectReordering)
 													 {
-														 Preset *preset = thisPtr->GetPresetManager()->GetSelectedPreset();
-														 auto &presetData = preset->GetData();
-
 														 uint8 oldIndex = thisPtr->m_PointerItemIndex;
 
 														 thisPtr->m_PointerItemIndex = Math::Clamp(thisPtr->m_PointerItemIndex + Direction, 0, Preset::EFFECT_COUNT - 1);
 
-														 presetData.EffectsData[thisPtr->m_PointerItemIndex]->Index = oldIndex;
-														 presetData.EffectsData[oldIndex]->Index = thisPtr->m_PointerItemIndex;
+														 GET_EFFECT_DATA(thisPtr->m_PointerItemIndex)->Index = oldIndex;
+														 GET_EFFECT_DATA(oldIndex)->Index = thisPtr->m_PointerItemIndex;
 
-														 preset->UpdateData();
+														 UPDATE_PRESET();
+													 }
+													 else if (thisPtr->m_IsVolumeChanging)
+													 {
+														 auto &preset = GET_PRESET_DATA();
+														 preset.Volume = Math::Clamp01(preset.Volume + (Direction * 0.01));
+
+														 thisPtr->MarkAsDirty();
 													 }
 													 else
+													 {
 														 thisPtr->m_PointerItemIndex = Math::Wrap(thisPtr->m_PointerItemIndex + Direction, 0, (int32)thisPtr->m_SelectableItemCount - 1);
+
+														 if (thisPtr->m_PointerItemIndex >= Preset::EFFECT_COUNT)
+															 thisPtr->GetControlManager()->SetLooperLEDConstantBrightness(COLOR_BLACK);
+														 else
+															 UPDATE_ENABLED_LED(thisPtr->m_PointerItemIndex);
+													 }
 
 													 thisPtr->MarkAsDirty();
 												 }});
@@ -206,13 +229,38 @@ protected:
 															}
 															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT)
 															{
+																thisPtr->SwitchScreen(Screens::Rename);
 															}
 															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT + 1)
 															{
+																thisPtr->m_IsVolumeChanging = !thisPtr->m_IsVolumeChanging;
 															}
 
 															thisPtr->MarkAsDirty();
 														}});
+
+		controlManager->SetLooperButtonTunedOffCallback({this,
+														 [](void *Context, float HeldTime)
+														 {
+															 auto *thisPtr = static_cast<PresetScreen *>(Context);
+
+															 if (thisPtr->m_PointerItemIndex >= Preset::EFFECT_COUNT)
+																 return;
+
+															 auto *effectData = GET_EFFECT_DATA(thisPtr->m_PointerItemIndex);
+
+															 effectData->Enabled = !effectData->Enabled;
+
+															 UPDATE_ENABLED_LED(thisPtr->m_PointerItemIndex);
+
+															 UPDATE_PRESET();
+
+															 thisPtr->MarkAsDirty();
+														 }});
+
+#undef GET_PRESET_DATA
+#undef UPDATE_PRESET
+#undef GET_EFFECT_DATA
 	}
 
 	void Deactivate(void) override
@@ -224,6 +272,8 @@ protected:
 		controlManager->SetValueRotatedCallback(nullptr);
 		controlManager->SetValueButtonHoldCallback(nullptr);
 		controlManager->SetValueButtonTunedOffCallback(nullptr);
+		controlManager->SetLooperLEDConstantBrightness(COLOR_BLACK);
+		controlManager->SetLooperButtonTunedOffCallback(nullptr);
 	}
 
 private:
@@ -243,6 +293,7 @@ private:
 	uint8 m_PointerItemIndex;
 	bool m_IsEffectReordering;
 	bool m_ReorderingJustStarted;
+	bool m_IsVolumeChanging;
 };
 
 #endif

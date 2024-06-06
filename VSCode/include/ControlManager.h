@@ -11,66 +11,57 @@ class ControlManager
 public:
 	ControlManager(IHAL *HAL)
 		: m_Factory(HAL),
-#ifdef DEBUG
-		  m_BootButton(nullptr),
-#endif
-		  m_VolumePotentiometer(nullptr),
 		  m_Display(HAL, GPIOPins::Pin8, GPIOPins::Pin10, GPIOPins::Pin7, GPIOPins::Pin6, GPIOPins::Pin9, I_LCD_HAL::Orientations::ToRight),
+		  m_BootButton(nullptr),
+		  m_SaveButon(nullptr),
+		  m_BackButon(nullptr),
+		  m_ValueControl(nullptr),
+		  m_VolumePotentiometer(nullptr),
 		  m_UpButton(nullptr),
 		  m_DownButon(nullptr),
-		  m_BackButon(nullptr),
-		  m_ValueControl(nullptr)
+		  m_LooperLED(nullptr),
+		  m_LooperButon(nullptr)
 	{
 	}
 
 	void Initialize(void)
 	{
-#ifdef DEBUG
-		m_BootButton = CreateButton("Boot Mode", GPIOPins::Pin30);
-#endif
-
-		m_VolumePotentiometer = CreatePotentiometer("Master Volume", AnalogPins ::Pin2);
-
 		m_Display.Initialize();
-		m_Display.SetTargetFrameRate(25);
+		m_Display.SetTargetFrameRate(24);
 
-		m_UpButton = CreateButton("Up", GPIOPins::Pin26);
-		m_DownButon = CreateButton("Down", GPIOPins::Pin27);
+		m_BootButton = CreateButton("Boot Mode", GPIOPins::Pin3);
+
+		m_SaveButon = CreateButton("Save", GPIOPins::Pin4);
 
 		m_BackButon = CreateButton("Back", GPIOPins::Pin5);
 
 		m_ValueControl = CreateRotaryButton("Value", GPIOPins::Pin1, GPIOPins::Pin2, GPIOPins::Pin0);
-	}
 
-#ifdef DEBUG
-	void SetBootButtonCallback(Button::TurnedOffEventHandler Listener)
-	{
-		m_BootButton->SetOnTurnedOffListener(Listener);
-	}
-#endif
+		m_VolumePotentiometer = CreatePotentiometer("Master Volume", AnalogPins ::Pin2);
 
-	void SetVolumeCallback(Potentiometer::EventHandler Listener)
-	{
-		m_VolumePotentiometer->SetOnChangedListener(Listener);
+		m_UpButton = CreateButton("Up", GPIOPins::Pin26);
+		m_DownButon = CreateButton("Down", GPIOPins::Pin27);
+
+		m_LooperLED = CreateDualLED("Looper", GPIOPins::Pin24, GPIOPins::Pin25);
+		m_LooperButon = CreateButton("Looper", GPIOPins::Pin30);
 	}
 
 	void SetDisplayCallback(ILI9341_HAL_320_240::RenderEventHandler Listener)
 	{
 		m_Display.SetOnRender(Listener);
-		m_Display.SetTargetFrameRate(24);
 	}
 
-	void SetUpButtonCallback(Button::TurnedOffEventHandler Listener)
+	void SetBootButtonCallback(Button::TurnedOffEventHandler Listener)
 	{
-		m_UpButton->SetOnTurnedOffListener(Listener);
+		m_BootButton->SetOnTurnedOffListener(Listener);
 	}
 
-	void SetDownButtonCallback(Button::TurnedOffEventHandler Listener)
+	void SetSaveButonCallback(Button::TurnedOffEventHandler Listener)
 	{
-		m_DownButon->SetOnTurnedOffListener(Listener);
+		m_SaveButon->SetOnTurnedOffListener(Listener);
 	}
 
-	void SetBackButtonCallback(Button::TurnedOffEventHandler Listener)
+	void SetBackButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_BackButon->SetOnTurnedOffListener(Listener);
 	}
@@ -88,6 +79,32 @@ public:
 	void SetValueButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_ValueControl->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetVolumeCallback(Potentiometer::EventHandler Listener)
+	{
+		m_VolumePotentiometer->SetOnChangedListener(Listener);
+	}
+
+	void SetUpButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_UpButton->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetDownButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_DownButon->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetLooperLEDConstantBrightness(Color Color)
+	{
+		m_LooperLED->SetConstantBrighness(1);
+		m_LooperLED->SetColor(Color);
+	}
+
+	void SetLooperButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_LooperButon->SetOnTurnedOffListener(Listener);
 	}
 
 	void Update(void)
@@ -141,15 +158,17 @@ public:
 private:
 	ControlFactory<(uint8)GPIOPins::COUNT, 100> m_Factory;
 
-#ifdef DEBUG
-	Button *m_BootButton;
-#endif
-	Potentiometer *m_VolumePotentiometer;
 	ILI9341_HAL_320_240 m_Display;
-	Button *m_UpButton;
-	Button *m_DownButon;
+
+	Button *m_BootButton;
+	Button *m_SaveButon;
 	Button *m_BackButon;
 	RotaryButton *m_ValueControl;
+	Potentiometer *m_VolumePotentiometer;
+	Button *m_UpButton;
+	Button *m_DownButon;
+	DualLED *m_LooperLED;
+	Button *m_LooperButon;
 };
 
 #endif

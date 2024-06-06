@@ -1,11 +1,11 @@
 #pragma once
-#ifndef REVERB_EFFECT_H
-#define REVERB_EFFECT_H
+#ifndef REV_EFFECT_H
+#define REV_EFFECT_H
 
 #include "Effect.h"
 #include "../framework/DSP/DSPs/Reverb.h"
 
-class ReverbEffect : public Effect
+class RevEffect : public Effect
 {
 public:
 	static constexpr uint8 MAX_DELAY_TIME = 1;
@@ -14,8 +14,19 @@ public:
 	struct Data : public Effect::Data
 	{
 	public:
+		Data(void)
+			: DelayTime(0.5),
+			  Feedback(0.6),
+			  WetRate(0.5)
+		{
+		}
+
+	public:
+		// [0, MAX_DELAY_TIME]
 		float DelayTime;
+		// [0, 1]
 		float Feedback;
+		// [0, 1]
 		float WetRate;
 	};
 

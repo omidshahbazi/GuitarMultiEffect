@@ -16,11 +16,21 @@ public:
 	struct Data
 	{
 	public:
+		Data(void)
+			: Volume(1),
+			  EffectsData{}
+		{
+			Preset::SetName(*this, "EMPTY");
+		}
+
 		char Name[MAX_NAME_LENGTH + 1];
 		float Volume;
 
-		OverdriveEffect::Data OverdriveData;
-		ReverbEffect::Data ReverbData;
+		FXEffect::Data FXData;
+		DsEffect::Data DsData;
+		EqEffect::Data EqData;
+		RevEffect::Data RevData;
+		ModEffect::Data ModData;
 
 		Effect::Data *EffectsData[EFFECT_COUNT];
 	};
@@ -52,15 +62,24 @@ public:
 
 		m_Data = Data;
 
-		SET_DATA(Overdrive);
-		SET_DATA(Reverb);
+		SET_DATA(FX);
+		SET_DATA(Ds);
+		SET_DATA(Eq);
+		SET_DATA(Rev);
+		SET_DATA(Mod);
 
 		for (uint8 i = 0; i < EFFECT_COUNT; ++i)
 		{
-			if (i == m_Data.OverdriveData.Index)
-				m_Data.EffectsData[i] = &m_Data.OverdriveData;
-			else if (i == m_Data.ReverbData.Index)
-				m_Data.EffectsData[i] = &m_Data.ReverbData;
+			if (i == m_Data.FXData.Index)
+				m_Data.EffectsData[i] = &m_Data.FXData;
+			else if (i == m_Data.DsData.Index)
+				m_Data.EffectsData[i] = &m_Data.DsData;
+			else if (i == m_Data.EqData.Index)
+				m_Data.EffectsData[i] = &m_Data.EqData;
+			else if (i == m_Data.RevData.Index)
+				m_Data.EffectsData[i] = &m_Data.RevData;
+			else if (i == m_Data.ModData.Index)
+				m_Data.EffectsData[i] = &m_Data.ModData;
 		}
 
 #undef SET_DATA

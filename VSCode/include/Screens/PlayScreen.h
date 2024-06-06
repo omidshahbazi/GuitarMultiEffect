@@ -53,25 +53,25 @@ protected:
 
 		auto *controlManager = GetControlManager();
 
-		controlManager->SetUpButtonCallback({this,
-											 [](void *Context, float HeldTime)
-											 {
-												 auto *thisPtr = static_cast<PlayScreen *>(Context);
+		controlManager->SetUpButtonTunedOffCallback({this,
+													 [](void *Context, float HeldTime)
+													 {
+														 auto *thisPtr = static_cast<PlayScreen *>(Context);
 
-												 thisPtr->GetPresetManager()->ChangeSelectedPreset(1);
+														 thisPtr->GetPresetManager()->ChangeSelectedPreset(1);
 
-												 thisPtr->MarkAsDirty();
-											 }});
+														 thisPtr->MarkAsDirty();
+													 }});
 
-		controlManager->SetDownButtonCallback({this,
-											   [](void *Context, float HeldTime)
-											   {
-												   auto *thisPtr = static_cast<PlayScreen *>(Context);
+		controlManager->SetDownButtonTunedOffCallback({this,
+													   [](void *Context, float HeldTime)
+													   {
+														   auto *thisPtr = static_cast<PlayScreen *>(Context);
 
-												   thisPtr->GetPresetManager()->ChangeSelectedPreset(-1);
+														   thisPtr->GetPresetManager()->ChangeSelectedPreset(-1);
 
-												   thisPtr->MarkAsDirty();
-											   }});
+														   thisPtr->MarkAsDirty();
+													   }});
 
 		controlManager->SetValueButtonTunedOffCallback({this,
 														[](void *Context, float HeldTime)
@@ -86,8 +86,8 @@ protected:
 
 		auto *controlManager = GetControlManager();
 
-		controlManager->SetUpButtonCallback(nullptr);
-		controlManager->SetDownButtonCallback(nullptr);
+		controlManager->SetUpButtonTunedOffCallback(nullptr);
+		controlManager->SetDownButtonTunedOffCallback(nullptr);
 		controlManager->SetValueButtonTunedOffCallback(nullptr);
 	}
 };

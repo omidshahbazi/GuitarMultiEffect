@@ -4,32 +4,42 @@
 
 #include "Screen.h"
 #include "PresetScreen.h"
-#include "../Effects/ReverbEffect.h"
-
-// #pragma GCC pop_options
 
 class EffectScreen : public Screen
 {
 private:
-	struct PotentiometerData
+	struct ChoiceData
+	{
+	public:
+		static constexpr uint8 MAX_TYPE_COUNT = 6;
+
+		int32 *SelectedItem;
+		cstr Items[MAX_TYPE_COUNT];
+		uint8 ItemCount;
+	};
+
+	struct ValueData
 	{
 	public:
 		float *Value;
 		float MinValue;
 		float MaxValue;
 		float DisplayMultiplier;
-		bool DisplayAsFloat;
+		bool AsInteger;
 		cstr Title;
 	};
 
-	static constexpr uint8 MAX_POTENTIOMENTER_COUNT = 6;
+	static constexpr uint8 MAX_CHOICE_DATA_COUNT = 2;
+	static constexpr uint8 MAX_VALUE_DATA_COUNT = 6;
 
 public:
 	EffectScreen(PresetManager *PresetManager, ControlManager *ControlManager)
 		: Screen(PresetManager, ControlManager),
-		  m_PotentiometerData{},
-		  m_PotentiometerCount(0),
-		  m_SelectedPotentiometerIndex(0),
+		  m_ChoiceData{},
+		  m_ChoiceDataCount(0),
+		  m_ValueData{},
+		  m_ValueDataCount(0),
+		  m_SelectedDataIndex(0),
 		  m_IsSelected(false)
 	{
 	}
@@ -39,20 +49,22 @@ protected:
 	{
 		Screen::Draw(Canvas);
 
-		const Point &canvasDimensions = Canvas.GetDimension();
+		auto &canvasDimensions = Canvas.GetDimension();
 
-		const Color NORMAL_POTENTIOMETER_COLOR = COLOR_WHITE;
-		const Color HOVERED_POTENTIOMETER_COLOR = COLOR_LIGHT_BLUE;
-		const Color SELECTED_POTENTIOMETER_COLOR = COLOR_YELLOW;
-
+		const Color NORMAL_COLOR = COLOR_WHITE;
+		const Color HOVERED_COLOR = COLOR_LIGHT_BLUE;
+		const Color SELECTED_COLOR = COLOR_YELLOW;
 		const uint8 HEADER_HEIGTH = 30;
-		const Point POTENTIOMETER_DIMENSIONS = {90, 90};
-		const uint8 MAX_LINE_COUNT = 2;
-		const uint8 MAX_PER_LINE = MAX_POTENTIOMENTER_COUNT / MAX_LINE_COUNT;
-		const uint8 PER_LINE_COUNT = Math::Min(MAX_PER_LINE, m_PotentiometerCount);
-		const uint8 LINE_COUNT = Math::Ceil((float)m_PotentiometerCount / MAX_PER_LINE);
-		const uint8 HORIZONTAL_OFFSET = canvasDimensions.X / PER_LINE_COUNT;
-		const uint8 VERTICAL_OFFSET = (canvasDimensions.Y - HEADER_HEIGTH) / Math::Min(MAX_LINE_COUNT, LINE_COUNT);
+
+		const Point REFERENCE_CHOICE_DIMENSIONS = {120, 50};
+		const uint16 CHOICE_DIVISION_WIDTH = canvasDimensions.X / m_ChoiceDataCount;
+		const uint16 CHOICE_WIDTH = Math::Min(REFERENCE_CHOICE_DIMENSIONS.X, CHOICE_DIVISION_WIDTH);
+		const uint16 CHOICE_HEIGTH = (CHOICE_WIDTH / REFERENCE_CHOICE_DIMENSIONS.X) * REFERENCE_CHOICE_DIMENSIONS.Y;
+
+		const Point REFERENCE_VALUE_DIMENSIONS = {90, 90};
+		const uint16 VALUE_DIVISION_WIDTH = canvasDimensions.X / m_ValueDataCount;
+		const uint16 VALUE_WIDTH = Math::Min(REFERENCE_VALUE_DIMENSIONS.X, VALUE_DIVISION_WIDTH);
+		const uint16 VALUE_HEIGTH = (VALUE_WIDTH / REFERENCE_VALUE_DIMENSIONS.X) * REFERENCE_VALUE_DIMENSIONS.Y;
 
 		auto preset = GetPresetManager()->GetSelectedPreset();
 		DrawHeader(Canvas, HEADER_HEIGTH,
@@ -60,24 +72,38 @@ protected:
 				   HEADER_DEFAULT_MIDDLE_BOX_COLOR, preset->GetEffects()[g_SelectedEffectIndex]->GetName(), HEADER_DEFAULT_MIDDLE_TEXT_FONT, HEADER_DEFAULT_MIDDLE_TEXT_COLOR,
 				   HEADER_DEFAULT_RIGHT_BOX_COLOR, nullptr, {}, {});
 
-		Rect potRect = {{}, POTENTIOMETER_DIMENSIONS};
-		for (uint8 i = 0; i < m_PotentiometerCount; ++i)
+		Rect rect = {{0, HEADER_HEIGTH + 20}, {CHOICE_WIDTH, CHOICE_HEIGTH}};
+		for (uint8 i = 0; i < m_ChoiceDataCount; ++i)
 		{
-			const auto &data = m_PotentiometerData[i];
+			const auto &data = m_ChoiceData[i];
 
-			potRect.Position.X = (HORIZONTAL_OFFSET * (i % PER_LINE_COUNT)) + ((HORIZONTAL_OFFSET * 0.5) - (POTENTIOMETER_DIMENSIONS.X * 0.5));
-			potRect.Position.Y = HEADER_HEIGTH + (VERTICAL_OFFSET * (i % LINE_COUNT)) + ((VERTICAL_OFFSET * 0.5) - (POTENTIOMETER_DIMENSIONS.Y * 0.5));
+			rect.Position.X = (i * CHOICE_DIVISION_WIDTH) + ((CHOICE_DIVISION_WIDTH * 0.5) - (CHOICE_WIDTH * 0.5));
 
-			Color color = NORMAL_POTENTIOMETER_COLOR;
-			if (i == m_SelectedPotentiometerIndex)
+			Color color = NORMAL_COLOR;
+			if (i == m_SelectedDataIndex)
 				if (m_IsSelected)
-					color = SELECTED_POTENTIOMETER_COLOR;
+					color = SELECTED_COLOR;
 				else
-					color = HOVERED_POTENTIOMETER_COLOR;
+					color = HOVERED_COLOR;
 
-			DrawPotentiometer(Canvas, potRect, data, FONT_16, color);
+			DrawChoiceData(Canvas, rect, data, FONT_16, color);
+		}
 
-			potRect.Position.X += potRect.Dimension.X;
+		rect = {{0, HEADER_HEIGTH + 100}, {VALUE_WIDTH, VALUE_HEIGTH}};
+		for (uint8 i = 0; i < m_ValueDataCount; ++i)
+		{
+			const auto &data = m_ValueData[i];
+
+			rect.Position.X = (i * VALUE_DIVISION_WIDTH) + ((VALUE_DIVISION_WIDTH * 0.5) - (VALUE_WIDTH * 0.5));
+
+			Color color = NORMAL_COLOR;
+			if (i + m_ChoiceDataCount == m_SelectedDataIndex)
+				if (m_IsSelected)
+					color = SELECTED_COLOR;
+				else
+					color = HOVERED_COLOR;
+
+			DrawValueData(Canvas, rect, data, FONT_16, color);
 		}
 	}
 
@@ -87,61 +113,10 @@ protected:
 
 		static const float VALUE_SPEEED = 0.01;
 
-		m_PotentiometerCount = 0;
-		m_SelectedPotentiometerIndex = 0;
+		m_SelectedDataIndex = 0;
 		m_IsSelected = false;
 
-		auto &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
-		auto effectData = presetData.EffectsData[g_SelectedEffectIndex];
-
-		if (effectData->Index == presetData.OverdriveData.Index)
-		{
-			auto &effect = presetData.OverdriveData;
-
-			PotentiometerData &rateData = m_PotentiometerData[m_PotentiometerCount++];
-			rateData.Value = &effect.Rate;
-			rateData.MinValue = 0;
-			rateData.MaxValue = 1;
-			rateData.DisplayMultiplier = 100;
-			rateData.DisplayAsFloat = false;
-			rateData.Title = "Rate";
-
-			PotentiometerData &gainData = m_PotentiometerData[m_PotentiometerCount++];
-			gainData.Value = &effect.Gain;
-			gainData.MinValue = 0;
-			gainData.MaxValue = 1;
-			gainData.DisplayMultiplier = 100;
-			rateData.DisplayAsFloat = false;
-			gainData.Title = "Gain";
-		}
-		else if (effectData->Index == presetData.ReverbData.Index)
-		{
-			auto &effect = presetData.ReverbData;
-
-			PotentiometerData &delayTimeData = m_PotentiometerData[m_PotentiometerCount++];
-			delayTimeData.Value = &effect.DelayTime;
-			delayTimeData.MinValue = 0;
-			delayTimeData.MaxValue = ReverbEffect::MAX_DELAY_TIME;
-			delayTimeData.DisplayMultiplier = 1;
-			delayTimeData.DisplayAsFloat = true;
-			delayTimeData.Title = "Length";
-
-			PotentiometerData &feedbackData = m_PotentiometerData[m_PotentiometerCount++];
-			feedbackData.Value = &effect.Feedback;
-			feedbackData.MinValue = 0;
-			feedbackData.MaxValue = 1;
-			feedbackData.DisplayMultiplier = 100;
-			feedbackData.DisplayAsFloat = false;
-			feedbackData.Title = "Feedback";
-
-			PotentiometerData &wetData = m_PotentiometerData[m_PotentiometerCount++];
-			wetData.Value = &effect.WetRate;
-			wetData.MinValue = 0;
-			wetData.MaxValue = 1;
-			wetData.DisplayMultiplier = 100;
-			wetData.DisplayAsFloat = false;
-			wetData.Title = "Wet";
-		}
+		RefreshData();
 
 		auto *controlManager = GetControlManager();
 
@@ -152,15 +127,33 @@ protected:
 
 													 if (thisPtr->m_IsSelected)
 													 {
-														 PotentiometerData &data = thisPtr->m_PotentiometerData[thisPtr->m_SelectedPotentiometerIndex];
+														 if (thisPtr->m_SelectedDataIndex < thisPtr->m_ChoiceDataCount)
+														 {
+															 auto &data = thisPtr->m_ChoiceData[thisPtr->m_SelectedDataIndex];
 
-														 auto &value = *data.Value;
-														 value = Math::Clamp(value + (Direction * VALUE_SPEEED), data.MinValue, data.MaxValue);
+															 auto &value = *data.SelectedItem;
+
+															 value = Math::Wrap(value + Direction, 0, data.ItemCount - 1);
+
+															 thisPtr->RefreshData();
+														 }
+														 else
+														 {
+															 auto &data = thisPtr->m_ValueData[thisPtr->m_SelectedDataIndex - thisPtr->m_ChoiceDataCount];
+
+															 auto &value = *data.Value;
+															 if (data.AsInteger)
+																 value += Direction / data.DisplayMultiplier;
+															 else
+																 value += (Direction * VALUE_SPEEED);
+
+															 value = Math::Clamp(value, data.MinValue, data.MaxValue);
+														 }
 
 														 thisPtr->GetPresetManager()->GetSelectedPreset()->UpdateData();
 													 }
 													 else
-														 thisPtr->m_SelectedPotentiometerIndex = Math::Wrap(thisPtr->m_SelectedPotentiometerIndex + Direction, 0, thisPtr->m_PotentiometerCount - 1);
+														 thisPtr->m_SelectedDataIndex = Math::Wrap(thisPtr->m_SelectedDataIndex + Direction, 0, (thisPtr->m_ChoiceDataCount + thisPtr->m_ValueDataCount) - 1);
 
 													 thisPtr->MarkAsDirty();
 												 }});
@@ -187,7 +180,91 @@ protected:
 	}
 
 private:
-	static void DrawPotentiometer(LCDCanvas &Canvas, Rect Rect, const PotentiometerData &Data, const Font &Font, Color Color)
+	void RefreshData(void)
+	{
+		m_ChoiceDataCount = 0;
+		m_ValueDataCount = 0;
+
+		auto &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
+		auto effectData = presetData.EffectsData[g_SelectedEffectIndex];
+
+#define ADD_CHOICE_DATA_2(effectName, parameterName, item1, item2)                                 \
+	{                                                                                              \
+		ASSERT(m_ChoiceDataCount < MAX_VALUE_DATA_COUNT, "Out of ChoiceData slots");               \
+		auto &data = m_ChoiceData[m_ChoiceDataCount++];                                            \
+		data.SelectedItem = reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName); \
+		data.ItemCount = 0;                                                                        \
+		data.Items[data.ItemCount++] = item1;                                                      \
+		data.Items[data.ItemCount++] = item2;                                                      \
+	}
+
+#define ADD_VALUE_DATA(effectName, parameterName, minValue, maxValue, displayMultiplier, asInteger, title) \
+	{                                                                                                      \
+		ASSERT(m_ValueDataCount < MAX_VALUE_DATA_COUNT, "Out of ValueData slots");                         \
+		auto &data = m_ValueData[m_ValueDataCount++];                                                      \
+		data.Value = &presetData.effectName##Data.parameterName;                                           \
+		data.MinValue = minValue;                                                                          \
+		data.MaxValue = maxValue;                                                                          \
+		data.DisplayMultiplier = displayMultiplier;                                                        \
+		data.AsInteger = asInteger;                                                                        \
+		data.Title = title;                                                                                \
+	}
+		if (effectData->Index == presetData.FXData.Index)
+		{
+			ADD_CHOICE_DATA_2(FX, Type, "AUTO WAH", "CRY BABY");
+
+			if (presetData.FXData.Type == FXEffect::Data::Types::CryBaby)
+				ADD_VALUE_DATA(FX, WahRatio, 0, 1, 100, true, "RATIO");
+		}
+		else if (effectData->Index == presetData.DsData.Index)
+		{
+			ADD_CHOICE_DATA_2(Ds, Type, "OVERDRIVE", "DISTORTION");
+
+			if (presetData.DsData.Type == DsEffect::Data::Types::Overdrive)
+			{
+				ADD_VALUE_DATA(Ds, OverdriveDrive, 0, 1, 100, true, "DRIVE");
+				ADD_VALUE_DATA(Ds, OverdriveGain, 0, 1, 100, true, "GAIN");
+			}
+			else if (presetData.DsData.Type == DsEffect::Data::Types::Distortion)
+			{
+				ADD_VALUE_DATA(Ds, DistortionRate, 0, 1, 100, true, "RATE");
+				ADD_VALUE_DATA(Ds, DistortionGain, 0, 1, 100, true, "GAIN");
+			}
+		}
+		else if (effectData->Index == presetData.EqData.Index)
+		{
+			ADD_VALUE_DATA(Eq, LowTone, -20, 20, 1, true, "LOW");
+			ADD_VALUE_DATA(Eq, MidTone, -20, 20, 1, true, "MID");
+			ADD_VALUE_DATA(Eq, HighTone, -20, 20, 1, true, "HIGH");
+		}
+		else if (effectData->Index == presetData.RevData.Index)
+		{
+			ADD_VALUE_DATA(Rev, DelayTime, 0, RevEffect::MAX_DELAY_TIME, 1, false, "LENGTH");
+			ADD_VALUE_DATA(Rev, Feedback, 0, 1, 100, true, "FEEDBACK");
+			ADD_VALUE_DATA(Rev, WetRate, 0, 1, 100, true, "WET");
+		}
+		else if (effectData->Index == presetData.ModData.Index)
+		{
+			ADD_VALUE_DATA(Mod, Depth, 0, ModEffect::Data::MAX_DEPTH, 1, true, "DEPTH");
+			ADD_VALUE_DATA(Mod, Rate, 0.01, 4, 1, false, "RATE");
+			ADD_VALUE_DATA(Mod, Feedback, 0, 1, 100, true, "FEEDBACK");
+			ADD_VALUE_DATA(Mod, Wet, 0, 1, 100, true, "WET");
+		}
+
+#undef ADD_CHOICE_DATA_2
+#undef ADD_VALUE_DATA
+	}
+
+private:
+	static void
+	DrawChoiceData(LCDCanvas &Canvas, Rect Rect, const ChoiceData &Data, const Font &Font, Color Color)
+	{
+		Canvas.DrawRectangle(Rect, Color);
+
+		DrawStringJustified(Canvas, Rect, Data.Items[*Data.SelectedItem], Font, Color);
+	}
+
+	static void DrawValueData(LCDCanvas &Canvas, Rect Rect, const ValueData &Data, const Font &Font, Color Color)
 	{
 		const uint8 CIRCLE_RADIUS = Rect.Dimension.X * 0.5;
 		const uint8 LINE_LENGTH = CIRCLE_RADIUS - 5;
@@ -207,14 +284,21 @@ private:
 
 		cutOffRect.Position.Y -= 16;
 
-		std::string valueText;
 		float value = *Data.Value * Data.DisplayMultiplier;
-		if (Data.DisplayAsFloat)
-			valueText = std::to_string(value);
+
+		std::string valueText;
+		if (value < 0)
+		{
+			valueText = "-";
+			value *= -1;
+		}
+
+		if (Data.AsInteger)
+			valueText += std::to_string((uint32)value);
 		else
 		{
-			valueText = std::to_string((uint8)value);
-			// valueText.erase(valueText.begin() + (valueText.length() - 4));
+			valueText += std::to_string(value);
+			valueText.erase(valueText.begin() + (valueText.length() - 4));
 		}
 
 		DrawStringJustified(Canvas, cutOffRect, valueText.c_str(), Font, Color);
@@ -229,9 +313,11 @@ private:
 	}
 
 private:
-	PotentiometerData m_PotentiometerData[MAX_POTENTIOMENTER_COUNT];
-	uint8 m_PotentiometerCount;
-	uint8 m_SelectedPotentiometerIndex;
+	ChoiceData m_ChoiceData[MAX_CHOICE_DATA_COUNT];
+	uint8 m_ChoiceDataCount;
+	ValueData m_ValueData[MAX_VALUE_DATA_COUNT];
+	uint8 m_ValueDataCount;
+	uint8 m_SelectedDataIndex;
 	bool m_IsSelected;
 };
 

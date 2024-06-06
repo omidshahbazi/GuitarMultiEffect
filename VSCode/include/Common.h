@@ -10,6 +10,7 @@ enum class Screens
 {
 	Play = 0,
 	Preset,
+	Rename,
 	Effect,
 	Save,
 

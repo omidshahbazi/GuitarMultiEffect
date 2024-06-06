@@ -5,7 +5,11 @@
 #include "ControlManager.h"
 #include "Effects/EffectManager.h"
 #include "Presets/PresetManager.h"
+
+#ifdef USE_DISPLAY
 #include "Screens/ScreenManager.h"
+#endif
+
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
 
@@ -17,13 +21,15 @@ class Application;
 
 Application *g_Application;
 
-class Application : public DaisySeedHAL<256, 32>
+class Application : public DaisySeedHAL<1, 1024>
 {
 public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
 		: DaisySeedHAL(&m_Hardware, SDRAMAddress, SDRAMSize),
 		  m_ControlManager(this),
+#ifdef USE_DISPLAY
 		  m_ScreenManager(&m_PresetManager, &m_ControlManager),
+#endif
 		  m_ProcessBufferL(nullptr),
 		  m_MasterVolume(0)
 	{
@@ -86,12 +92,16 @@ public:
 
 		m_ControlManager.Initialize();
 
-#ifdef DEBUG
 		m_ControlManager.SetBootButtonCallback({[](void *Context, float HeldTime)
 												{
-													daisy::System::ResetToBootloader();
-												}});
+													daisy::System::ResetToBootloader(
+#ifdef USE_SRAM
+														daisy::System::BootloaderMode::DAISY_INFINITE_TIMEOUT
+#else
+														daisy::System::BootloaderMode::STM
 #endif
+													);
+												}});
 
 		m_MasterVolume = 1;
 		m_ControlManager.SetVolumeCallback({this, [](void *Context, float Value)
@@ -99,25 +109,31 @@ public:
 												static_cast<Application *>(Context)->m_MasterVolume = Value;
 											}});
 
+#ifdef USE_DISPLAY
 		m_ControlManager.SetDisplayCallback({this, [](void *Context)
 											 {
 												 auto *thisPtr = static_cast<Application *>(Context);
 
 												 thisPtr->m_ScreenManager.Render(thisPtr->m_LCDCanvas);
 											 }});
+#endif
 
 		DaisySeedHAL::InitializeADC();
 
 		PersistentBlobBase::Initialize(this);
 
+#ifdef USE_DISPLAY
 		m_LCDCanvas.Initialize(m_ControlManager.GetDisplay());
 		m_LCDCanvas.SetStringSpacing(-7, 4);
+#endif
 
 		EffectManager::Initialize();
 
 		m_PresetManager.Initialize();
 
+#ifdef USE_DISPLAY
 		m_ScreenManager.Initialize();
+#endif
 
 		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
@@ -152,9 +168,12 @@ private:
 	daisy::DaisySeed m_Hardware;
 	ControlManager m_ControlManager;
 	PresetManager m_PresetManager;
+
+#ifdef USE_DISPLAY
 	ScreenManager m_ScreenManager;
 
 	LCDCanvas m_LCDCanvas;
+#endif
 
 	SampleType *m_ProcessBufferL;
 

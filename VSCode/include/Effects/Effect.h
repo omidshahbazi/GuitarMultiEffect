@@ -10,13 +10,18 @@ public:
 	struct Data
 	{
 	public:
+		Data(void)
+			: Index(0),
+			  Enabled(true)
+		{
+		}
+
 		uint8 Index;
 		bool Enabled;
 	};
 
 public:
 	Effect(void)
-		: m_IsEnabled(true)
 	{
 	}
 

@@ -9,14 +9,21 @@
 class PresetManager
 {
 public:
-	static constexpr uint8 PRESET_COUNT = 5;
+	static constexpr uint8 PRESET_COUNT = 2;
 
 private:
 	struct Data
 	{
 	public:
+		Data(void)
+			: Size(sizeof(Data)),
+			  SelectedPresetIndex(0)
+		{
+		}
+
 		uint8 SelectedPresetIndex;
-		Preset::Data Data[PRESET_COUNT];
+		Preset::Data PresetData[PRESET_COUNT];
+		uint16 Size;
 	};
 
 public:
@@ -31,6 +38,8 @@ public:
 			new (&m_Presets[i]) Preset();
 
 		SetDataOnPresets();
+
+		UpdatePresetData();
 	}
 
 	void Process(SampleType *Buffer, uint8 Count)
@@ -54,7 +63,7 @@ public:
 
 		data.SelectedPresetIndex = Math::Wrap((int16)data.SelectedPresetIndex + Direction, 0, PRESET_COUNT - 1);
 
-		m_Presets[data.SelectedPresetIndex].UpdateData();
+		UpdatePresetData();
 	}
 
 	void Save(void)
@@ -63,7 +72,7 @@ public:
 		data.SelectedPresetIndex = m_PersistentData.Get().SelectedPresetIndex;
 
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
-			data.Data[i] = m_Presets[i].GetData();
+			data.PresetData[i] = m_Presets[i].GetData();
 
 		m_PersistentData.Set(data);
 
@@ -78,39 +87,36 @@ public:
 	}
 
 private:
+	void UpdatePresetData(void)
+	{
+		m_Presets[m_PersistentData.Get().SelectedPresetIndex].UpdateData();
+	}
+
 	void SetDataOnPresets(void)
 	{
 		static Data defaultData = {};
-		defaultData.SelectedPresetIndex = 0;
 
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
 		{
-			Preset::Data &data = defaultData.Data[i];
-
-			Preset::SetName(data, ("PRESET " + std::to_string(i + 1)).c_str());
-			data.Volume = 1;
+			Preset::Data &data = defaultData.PresetData[i];
 
 			uint8 effectIndex = 0;
 
-			data.OverdriveData.Index = effectIndex++;
-			data.OverdriveData.Enabled = true;
-			data.OverdriveData.Rate = 1;
-			data.OverdriveData.Gain = 0.5;
-
-			data.ReverbData.Index = effectIndex++;
-			data.ReverbData.Enabled = true;
-			data.ReverbData.DelayTime = 0.5;
-			data.ReverbData.Feedback = 0.6;
-			data.ReverbData.WetRate = 0.5;
+			data.FXData.Index = effectIndex++;
+			data.DsData.Index = effectIndex++;
+			data.EqData.Index = effectIndex++;
+			data.RevData.Index = effectIndex++;
+			data.ModData.Index = effectIndex++;
 		}
 
 		m_PersistentData.Initialize(defaultData);
 		const Data &data = m_PersistentData.Get();
 
-		for (uint8 i = 0; i < PRESET_COUNT; ++i)
-			m_Presets[i].SetData(data.Data[i]);
+		if (data.Size != defaultData.Size)
+			m_PersistentData.Set(defaultData);
 
-		// Save();
+		for (uint8 i = 0; i < PRESET_COUNT; ++i)
+			m_Presets[i].SetData(data.PresetData[i]);
 	}
 
 private:

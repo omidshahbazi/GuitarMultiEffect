@@ -1,9 +1,11 @@
 // #define ENABLE_TYPE_CHECK
 #define USE_BREAK_ONLY_ASSERT
 // #define WAIT_FOR_DEBUGGER
+#define USE_DISPLAY
 
-#pragma GCC push_options
-#pragma GCC optimize("Os")
+#ifndef USE_SRAM
+#undef USE_DISPLAY
+#endif
 
 #include "../include/Application.h"
 
@@ -24,11 +26,9 @@ int main()
 	return 0;
 }
 
-// SaveScreen with reset factory, A separated button?
-// Enabled disable using the same button for Looper
-// Add new effects
-// Rename Screen
-// Preset volume
+// Mod?
+// Amp?
+// Delay
 // Looper
 // Drum Machine (Daisy has an example)
-// TODO: Preset Variation
+// TODO: Preset Variation like P1A P1B P1C
