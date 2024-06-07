@@ -46,22 +46,22 @@ public:
 	{
 		Effect::SetData(Data);
 
-		m_Wah.SetRatio(Data.WahRatio);
-
 		switch (Data.Type)
 		{
 		case Data::Types::AutoWah:
-			m_DSP = reinterpret_cast<Wah<SampleType, SAMPLE_RATE> *>(&m_AutoWah);
+			m_DSP = reinterpret_cast<Wah<SampleType, SAMPLE_RATE> *>(&m_AutoWahDSP);
 			break;
 
 		case Data::Types::CryBaby:
-			m_Wah.SetType(Wah<SampleType, SAMPLE_RATE>::Types::CryBaby);
-			m_DSP = &m_Wah;
+			m_WahDSP.SetType(Wah<SampleType, SAMPLE_RATE>::Types::CryBaby);
+			m_DSP = &m_WahDSP;
 			break;
 
 		default:
 			ASSERT(false, "Unhandled Type");
 		}
+
+		m_WahDSP.SetRatio(Data.WahRatio);
 	}
 
 	cstr GetName(void) const override
@@ -70,8 +70,8 @@ public:
 	}
 
 private:
-	Wah<SampleType, SAMPLE_RATE> m_Wah;
-	AutoWah<SampleType, SAMPLE_RATE> m_AutoWah;
+	Wah<SampleType, SAMPLE_RATE> m_WahDSP;
+	AutoWah<SampleType, SAMPLE_RATE> m_AutoWahDSP;
 	IDSP<SampleType, SAMPLE_RATE> *m_DSP;
 };
 

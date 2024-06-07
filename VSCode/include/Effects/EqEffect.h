@@ -30,16 +30,16 @@ public:
 public:
 	void Process(SampleType *Buffer, uint8 Count) override
 	{
-		m_DSP.ProcessBuffer(Buffer, Count);
+		m_ToneControlFilter.ProcessBuffer(Buffer, Count);
 	}
 
 	void SetData(const Data &Data)
 	{
 		Effect::SetData(Data);
 
-		m_DSP.SetLowTone(Data.LowTone);
-		m_DSP.SetMidTone(Data.MidTone);
-		m_DSP.SetHighTone(Data.HighTone);
+		m_ToneControlFilter.SetLowTone(Data.LowTone);
+		m_ToneControlFilter.SetMidTone(Data.MidTone);
+		m_ToneControlFilter.SetHighTone(Data.HighTone);
 	}
 
 	cstr GetName(void) const override
@@ -48,7 +48,7 @@ public:
 	}
 
 private:
-	TripleToneControlFilter<SampleType, SAMPLE_RATE> m_DSP;
+	TripleToneControlFilter<SampleType, SAMPLE_RATE> m_ToneControlFilter;
 };
 
 #endif

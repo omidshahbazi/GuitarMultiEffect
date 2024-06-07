@@ -198,6 +198,29 @@ private:
 		data.Items[data.ItemCount++] = item2;                                                      \
 	}
 
+#define ADD_CHOICE_DATA_3(effectName, parameterName, item1, item2, item3)                          \
+	{                                                                                              \
+		ASSERT(m_ChoiceDataCount < MAX_VALUE_DATA_COUNT, "Out of ChoiceData slots");               \
+		auto &data = m_ChoiceData[m_ChoiceDataCount++];                                            \
+		data.SelectedItem = reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName); \
+		data.ItemCount = 0;                                                                        \
+		data.Items[data.ItemCount++] = item1;                                                      \
+		data.Items[data.ItemCount++] = item2;                                                      \
+		data.Items[data.ItemCount++] = item3;                                                      \
+	}
+
+#define ADD_CHOICE_DATA_4(effectName, parameterName, item1, item2, item3, item4)                   \
+	{                                                                                              \
+		ASSERT(m_ChoiceDataCount < MAX_VALUE_DATA_COUNT, "Out of ChoiceData slots");               \
+		auto &data = m_ChoiceData[m_ChoiceDataCount++];                                            \
+		data.SelectedItem = reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName); \
+		data.ItemCount = 0;                                                                        \
+		data.Items[data.ItemCount++] = item1;                                                      \
+		data.Items[data.ItemCount++] = item2;                                                      \
+		data.Items[data.ItemCount++] = item3;                                                      \
+		data.Items[data.ItemCount++] = item4;                                                      \
+	}
+
 #define ADD_VALUE_DATA(effectName, parameterName, minValue, maxValue, displayMultiplier, asInteger, title) \
 	{                                                                                                      \
 		ASSERT(m_ValueDataCount < MAX_VALUE_DATA_COUNT, "Out of ValueData slots");                         \
@@ -227,9 +250,18 @@ private:
 			}
 			else if (presetData.DsData.Type == DsEffect::Data::Types::Distortion)
 			{
-				ADD_VALUE_DATA(Ds, DistortionRate, 0, 1, 100, true, "RATE");
-				ADD_VALUE_DATA(Ds, DistortionGain, 0, 1, 100, true, "GAIN");
+				ADD_VALUE_DATA(Ds, DistortionLevel, 0, 1, 100, true, "LEVEL");
+				ADD_VALUE_DATA(Ds, DistortionGain, -10, 10, 1, true, "GAIN");
 			}
+		}
+		else if (effectData->Index == presetData.AmpData.Index)
+		{
+			ADD_VALUE_DATA(Amp, Gain, -20, 40, 1, true, "GAIN");
+			ADD_VALUE_DATA(Amp, LowTone, -20, 20, 1, true, "LOW");
+			ADD_VALUE_DATA(Amp, MidTone, -20, 20, 1, true, "MID");
+			ADD_VALUE_DATA(Amp, HighTone, -20, 20, 1, true, "HIGH");
+			ADD_VALUE_DATA(Amp, PresenceRatio, 0, 1, 100, true, "PRESENCE");
+			ADD_VALUE_DATA(Amp, Master, 0, 1, 100, true, "Master");
 		}
 		else if (effectData->Index == presetData.EqData.Index)
 		{
@@ -237,20 +269,53 @@ private:
 			ADD_VALUE_DATA(Eq, MidTone, -20, 20, 1, true, "MID");
 			ADD_VALUE_DATA(Eq, HighTone, -20, 20, 1, true, "HIGH");
 		}
+		else if (effectData->Index == presetData.ModData.Index)
+		{
+			ADD_CHOICE_DATA_4(Mod, Type, "CHORUS", "FLANGER", "PHASER", "TREMOLO");
+
+			if (presetData.ModData.Type == ModEffect::Data::Types::Chorus)
+			{
+				ADD_VALUE_DATA(Mod, ChorusDepth, 0, 100, 1, true, "DEPTH");
+				ADD_VALUE_DATA(Mod, ChorusRate, 0.01, 4, 1, false, "RATE");
+				ADD_VALUE_DATA(Mod, ChorusWetRate, 0, 1, 100, true, "WET");
+			}
+			else if (presetData.ModData.Type == ModEffect::Data::Types::Flanger)
+			{
+				ADD_VALUE_DATA(Mod, FlangerDepth, 0, 100, 1, true, "DEPTH");
+				ADD_VALUE_DATA(Mod, FlangerRate, 0.01, 4, 1, false, "RATE");
+				ADD_VALUE_DATA(Mod, FlangerFeedback, 0, 1, 100, true, "FEEDBACK");
+				ADD_VALUE_DATA(Mod, FlangerWetRate, 0, 1, 100, true, "WET");
+			}
+			else if (presetData.ModData.Type == ModEffect::Data::Types::Phaser)
+			{
+				ADD_VALUE_DATA(Mod, PhaserDepth, 0, 100, 1, true, "DEPTH");
+				ADD_VALUE_DATA(Mod, PhaserRate, 0.1, 3.7, 1, false, "RATE");
+				ADD_VALUE_DATA(Mod, PhaserWetRate, 0, 1, 100, true, "WET");
+			}
+			else if (presetData.ModData.Type == ModEffect::Data::Types::Tremolo)
+			{
+				ADD_VALUE_DATA(Mod, TremoloDepth, 0, 1, 1, true, "DEPTH");
+				ADD_VALUE_DATA(Mod, TremoloRate, 1, 25, 1, true, "RATE");
+				ADD_VALUE_DATA(Mod, TremoloWetRate, 0, 1, 100, true, "WET");
+			}
+		}
+		else if (effectData->Index == presetData.DelData.Index)
+		{
+			ADD_CHOICE_DATA_3(Del, Type, "NORMAL", "REVERSE", "PING PONG");
+
+			if (presetData.DelData.Type == DelEffect::Data::Types::Normal)
+			{
+			}
+		}
 		else if (effectData->Index == presetData.RevData.Index)
 		{
-			ADD_VALUE_DATA(Rev, DelayTime, 0, RevEffect::MAX_DELAY_TIME, 1, false, "LENGTH");
+			ADD_VALUE_DATA(Rev, DelayTime, 0, RevEffect::Data::MAX_DELAY_TIME, 1, false, "LENGTH");
 			ADD_VALUE_DATA(Rev, Feedback, 0, 1, 100, true, "FEEDBACK");
 			ADD_VALUE_DATA(Rev, WetRate, 0, 1, 100, true, "WET");
 		}
-		else if (effectData->Index == presetData.ModData.Index)
-		{
-			ADD_VALUE_DATA(Mod, Depth, 0, ModEffect::Data::MAX_DEPTH, 1, true, "DEPTH");
-			ADD_VALUE_DATA(Mod, Rate, 0.01, 4, 1, false, "RATE");
-			ADD_VALUE_DATA(Mod, Feedback, 0, 1, 100, true, "FEEDBACK");
-			ADD_VALUE_DATA(Mod, Wet, 0, 1, 100, true, "WET");
-		}
 
+#undef ADD_CHOICE_DATA_4
+#undef ADD_CHOICE_DATA_3
 #undef ADD_CHOICE_DATA_2
 #undef ADD_VALUE_DATA
 	}

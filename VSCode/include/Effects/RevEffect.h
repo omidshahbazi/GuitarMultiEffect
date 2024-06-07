@@ -8,11 +8,11 @@
 class RevEffect : public Effect
 {
 public:
-	static constexpr uint8 MAX_DELAY_TIME = 1;
-
-public:
 	struct Data : public Effect::Data
 	{
+	public:
+		static constexpr uint8 MAX_DELAY_TIME = 1;
+
 	public:
 		Data(void)
 			: DelayTime(0.5),
@@ -22,27 +22,27 @@ public:
 		}
 
 	public:
-		// [0, MAX_DELAY_TIME]
+		//[0, MAX_DELAY_TIME]
 		float DelayTime;
-		// [0, 1]
+		//[0, 1]
 		float Feedback;
-		// [0, 1]
+		//[0, 1]
 		float WetRate;
 	};
 
 public:
 	void Process(SampleType *Buffer, uint8 Count) override
 	{
-		m_DSP.ProcessBuffer(Buffer, Count);
+		m_ReverbDSP.ProcessBuffer(Buffer, Count);
 	}
 
 	void SetData(const Data &Data)
 	{
 		Effect::SetData(Data);
 
-		m_DSP.SetDelayTime(Data.DelayTime);
-		m_DSP.SetFeedback(Data.Feedback);
-		m_DSP.SetWetRate(Data.WetRate);
+		m_ReverbDSP.SetDelayTime(Data.DelayTime);
+		m_ReverbDSP.SetFeedback(Data.Feedback);
+		m_ReverbDSP.SetWetRate(Data.WetRate);
 	}
 
 	cstr GetName(void) const override
@@ -51,7 +51,7 @@ public:
 	}
 
 private:
-	Reverb<SampleType, SAMPLE_RATE, MAX_DELAY_TIME> m_DSP;
+	Reverb<SampleType, SAMPLE_RATE, Data::MAX_DELAY_TIME> m_ReverbDSP;
 };
 
 #endif

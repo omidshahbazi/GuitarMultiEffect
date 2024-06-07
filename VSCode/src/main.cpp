@@ -26,9 +26,8 @@ int main()
 	return 0;
 }
 
-// Mod?
-// Amp?
 // Delay
 // Looper
+// Add more Effects like what is listed in the Mooer GE200 manual
 // Drum Machine (Daisy has an example)
 // TODO: Preset Variation like P1A P1B P1C

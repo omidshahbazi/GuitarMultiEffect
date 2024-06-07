@@ -4,9 +4,11 @@
 
 #include "FXEffect.h"
 #include "DSEffect.h"
+#include "AmpEffect.h"
 #include "EqEffect.h"
-#include "RevEffect.h"
 #include "ModEffect.h"
+#include "DelEffect.h"
+#include "RevEffect.h"
 #include "../framework/DSP/Memory.h"
 
 class EffectManager
@@ -16,10 +18,10 @@ public:
 	{
 		FX = 0,
 		Ds,
-		// Amp,
+		Amp,
 		Eq,
 		Mod,
-		// Del,
+		Del,
 		Rev,
 
 		COUNT
@@ -30,9 +32,11 @@ public:
 	{
 		Add<FXEffect>(Types::FX);
 		Add<DsEffect>(Types::Ds);
+		Add<AmpEffect>(Types::Amp);
 		Add<EqEffect>(Types::Eq);
-		Add<RevEffect>(Types::Rev);
 		Add<ModEffect>(Types::Mod);
+		Add<DelEffect>(Types::Del);
+		Add<RevEffect>(Types::Rev);
 	}
 
 	template <typename T>

@@ -15,8 +15,6 @@
 
 const uint8 FRAME_LENGTH = 4;
 
-const float GAIN = 1.7;
-
 class Application;
 
 Application *g_Application;
@@ -151,7 +149,7 @@ private:
 	static void AudioPassthrough(const float *const *In, float **Out, uint32 Size)
 	{
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
-			g_Application->m_ProcessBufferL[i] = In[0][i] * GAIN;
+			g_Application->m_ProcessBufferL[i] = In[0][i];
 
 		g_Application->m_PresetManager.Process(g_Application->m_ProcessBufferL, FRAME_LENGTH);
 

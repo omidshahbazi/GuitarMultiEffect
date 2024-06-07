@@ -28,9 +28,11 @@ public:
 
 		FXEffect::Data FXData;
 		DsEffect::Data DsData;
+		AmpEffect::Data AmpData;
 		EqEffect::Data EqData;
-		RevEffect::Data RevData;
 		ModEffect::Data ModData;
+		DelEffect::Data DelData;
+		RevEffect::Data RevData;
 
 		Effect::Data *EffectsData[EFFECT_COUNT];
 	};
@@ -64,9 +66,11 @@ public:
 
 		SET_DATA(FX);
 		SET_DATA(Ds);
+		SET_DATA(Amp);
 		SET_DATA(Eq);
-		SET_DATA(Rev);
 		SET_DATA(Mod);
+		SET_DATA(Del);
+		SET_DATA(Rev);
 
 		for (uint8 i = 0; i < EFFECT_COUNT; ++i)
 		{
@@ -74,12 +78,16 @@ public:
 				m_Data.EffectsData[i] = &m_Data.FXData;
 			else if (i == m_Data.DsData.Index)
 				m_Data.EffectsData[i] = &m_Data.DsData;
+			else if (i == m_Data.AmpData.Index)
+				m_Data.EffectsData[i] = &m_Data.AmpData;
 			else if (i == m_Data.EqData.Index)
 				m_Data.EffectsData[i] = &m_Data.EqData;
-			else if (i == m_Data.RevData.Index)
-				m_Data.EffectsData[i] = &m_Data.RevData;
 			else if (i == m_Data.ModData.Index)
 				m_Data.EffectsData[i] = &m_Data.ModData;
+			else if (i == m_Data.DelData.Index)
+				m_Data.EffectsData[i] = &m_Data.DelData;
+			else if (i == m_Data.RevData.Index)
+				m_Data.EffectsData[i] = &m_Data.RevData;
 		}
 
 #undef SET_DATA

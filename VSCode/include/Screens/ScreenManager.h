@@ -33,7 +33,7 @@ public:
 		Create<EffectScreen>(Screens::Effect);
 		Create<SaveScreen>(Screens::Save);
 
-		SwitchTo(Screens::Effect);
+		SwitchTo(Screens::Play);
 
 		m_ControlManager->SetSaveButonCallback({this,
 												[](void *Context, float HeldTime)

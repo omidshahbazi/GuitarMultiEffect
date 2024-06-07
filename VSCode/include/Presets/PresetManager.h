@@ -16,8 +16,9 @@ private:
 	{
 	public:
 		Data(void)
-			: Size(sizeof(Data)),
-			  SelectedPresetIndex(0)
+			: SelectedPresetIndex(0),
+			  PresetData{},
+			  Size(sizeof(Data))
 		{
 		}
 
@@ -105,8 +106,10 @@ private:
 			data.FXData.Index = effectIndex++;
 			data.DsData.Index = effectIndex++;
 			data.EqData.Index = effectIndex++;
-			data.RevData.Index = effectIndex++;
+			data.AmpData.Index = effectIndex++;
 			data.ModData.Index = effectIndex++;
+			data.DelData.Index = effectIndex++;
+			data.RevData.Index = effectIndex++;
 		}
 
 		m_PersistentData.Initialize(defaultData);

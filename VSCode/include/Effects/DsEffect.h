@@ -21,9 +21,11 @@ public:
 	public:
 		Data(void)
 			: Type(Types::Distortion),
+
 			  OverdriveDrive(1),
 			  OverdriveGain(1),
-			  DistortionRate(1),
+
+			  DistortionLevel(1),
 			  DistortionGain(1)
 		{
 		}
@@ -31,14 +33,14 @@ public:
 	public:
 		Types Type;
 
-		// [0, 1]
+		//[0, 1]
 		float OverdriveDrive;
-		// [0, 1]
+		//[0, 1]
 		float OverdriveGain;
 
-		// [0, 1]
-		float DistortionRate;
-		// [0, 1]
+		//[0, 1]
+		float DistortionLevel;
+		//[-10dB, 10dB]
 		float DistortionGain;
 	};
 
@@ -57,12 +59,6 @@ public:
 	{
 		Effect::SetData(Data);
 
-		m_OverdriveDSP.SetDrive(Data.OverdriveDrive);
-		m_OverdriveDSP.SetGain(Data.OverdriveGain);
-
-		m_DistortionDSP.SetRate(Data.DistortionRate);
-		m_DistortionDSP.SetGain(Data.DistortionGain);
-
 		switch (Data.Type)
 		{
 		case Data::Types::Overdrive:
@@ -76,6 +72,12 @@ public:
 		default:
 			ASSERT(false, "Unhandled Type");
 		}
+
+		m_OverdriveDSP.SetDrive(Data.OverdriveDrive);
+		m_OverdriveDSP.SetGain(Data.OverdriveGain);
+
+		m_DistortionDSP.SetLevel(Data.DistortionLevel);
+		m_DistortionDSP.SetGain(Data.DistortionGain);
 	}
 
 	cstr GetName(void) const override
