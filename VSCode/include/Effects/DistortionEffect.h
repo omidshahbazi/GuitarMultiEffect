@@ -19,7 +19,7 @@ public:
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin0);
 		m_RatePot->SetOnChangedListener({this, [](void *Context, float Value)
 										 {
-											 static_cast<DistortionEffect *>(Context)->m_Distortion.SetRate(Value);
+											 static_cast<DistortionEffect *>(Context)->m_Distortion.SetLevel(Value);
 										 }});
 
 		m_GainPot = ControlManager->CreatePotentiometer("Gain", AnalogPins::Pin1);

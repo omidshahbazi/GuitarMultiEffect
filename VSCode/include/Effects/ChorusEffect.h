@@ -26,7 +26,7 @@ public:
 		m_DepthPot = ControlManager->CreatePotentiometer("Depth", AnalogPins::Pin1);
 		m_DepthPot->SetOnChangedListener({this, [](void *Context, float Value)
 										  {
-											  static_cast<ChorusEffect *>(Context)->m_Chorus.SetDepth(Math::Lerp(0.0, Chorus<T, SampleRate>::MAX_DEPTH, Value));
+											  static_cast<ChorusEffect *>(Context)->m_Chorus.SetDepth(Math::Lerp(0.0, 100, Value));
 										  }});
 
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin2);

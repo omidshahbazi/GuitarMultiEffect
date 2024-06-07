@@ -33,7 +33,7 @@ public:
 		m_DepthPot = ControlManager->CreatePotentiometer("Depth", AnalogPins::Pin2);
 		m_DepthPot->SetOnChangedListener({this, [](void *Context, float Value)
 										  {
-											  static_cast<FlangerEffect *>(Context)->m_Flanger.SetDepth(Math::Lerp(0.0, Flanger<T, SampleRate>::MAX_DEPTH, Value));
+											  static_cast<FlangerEffect *>(Context)->m_Flanger.SetDepth(Math::Lerp(0.0, 100, Value));
 										  }});
 
 		m_RatePot = ControlManager->CreatePotentiometer("Rate", AnalogPins::Pin3);

@@ -51,8 +51,6 @@ const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
 const uint8 FRAME_LENGTH = 4;
 
-const float GAIN = 1.7;
-
 typedef float SampleType;
 static_assert(ARE_TYPES_THE_SAME(SampleType, float) || ARE_TYPES_THE_SAME(SampleType, double), "SampleType must be float or double");
 
@@ -60,7 +58,7 @@ class Application;
 Application *g_Application;
 daisy::AudioHandle::AudioCallback g_ProcessorFunction;
 
-class Application : public DaisySeedHAL<256, 32>
+class Application : public DaisySeedHAL<0, 0>
 {
 private:
 	// typedef std::vector<Effect<SampleType> *> EffectList;
@@ -244,7 +242,7 @@ private:
 		{
 			for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 			{
-				g_Application->m_ProcessBufferL[i] = In[0][i] * GAIN;
+				g_Application->m_ProcessBufferL[i] = In[0][i];
 
 #ifdef DEBUG
 				g_Application->m_InputSampleAmountMeter.Record(g_Application->m_ProcessBufferL[i]);
