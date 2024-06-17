@@ -12,7 +12,7 @@ public:
 	public:
 		Data(void)
 			: Index(0),
-			  Enabled(true)
+			  Enabled(false)
 		{
 		}
 

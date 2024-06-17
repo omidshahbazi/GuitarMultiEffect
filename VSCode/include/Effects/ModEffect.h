@@ -1,3 +1,5 @@
+#ifdef ADD_MOD_EFFECT
+
 #pragma once
 #ifndef MOD_EFFECT_H
 #define MOD_EFFECT_H
@@ -146,5 +148,7 @@ private:
 	Tremolo<SampleType, SAMPLE_RATE> m_TremoloDSP;
 	IDSP<SampleType, SAMPLE_RATE> *m_DSP;
 };
+
+#endif
 
 #endif

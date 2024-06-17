@@ -5,7 +5,6 @@ TARGET = GuitarMultiEffect
 # https://github.com/bkshepherd/DaisySeedProjects/blob/main/Software/GuitarPedal/Makefile
 # https://forum.electro-smith.com/t/out-of-flash-memory-walkthrough-with-samples/4370
 ifeq ($(DEBUG), 1)
-# OPT = -Og
 OPT = -Os
 else
 OPT = -O3

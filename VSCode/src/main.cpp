@@ -7,6 +7,14 @@
 #undef USE_DISPLAY
 #endif
 
+// #define ADD_FX_EFFECT
+#define ADD_DS_EFFECT
+// #define ADD_AMP_EFFECT
+// #define ADD_EQ_EFFECT
+// #define ADD_MOD_EFFECT
+// #define ADD_DEL_EFFECT
+// #define ADD_REV_EFFECT
+
 #include "../include/Application.h"
 
 static constexpr uint32 TOTAL_SDRAM_SIZE = 64 * 1024 * 1024;
@@ -26,8 +34,32 @@ int main()
 	return 0;
 }
 
+// Drum Machine (Daisy has an example)
+// Level visualizer
+// Tuner
 // Delay
 // Looper
 // Add more Effects like what is listed in the Mooer GE200 manual
-// Drum Machine (Daisy has an example)
-// TODO: Preset Variation like P1A P1B P1C
+// Preset Variation like P1A P1B P1C
+
+// #include "../include/framework/DSP/Filters./WaveShaperFilter.h"
+
+// int main()
+// {
+// 	WaveShaperFilter<float> waveShaper;
+
+// 	static typename WaveShaperFilter<float>::TablePoints points[] = {{-1, -0.8}, {-0.6, -0.8}, {0, 0}, {0.4, 1}, {1, 1}};
+// 	waveShaper.SetTable(points, 5);
+
+// 	float value = waveShaper.Process(-1.5);
+// 	value = waveShaper.Process(-1);
+// 	value = waveShaper.Process(-0.8);
+// 	value = waveShaper.Process(-0.6);
+// 	value = waveShaper.Process(0);
+// 	value = waveShaper.Process(0.1);
+// 	value = waveShaper.Process(0.4);
+// 	value = waveShaper.Process(0.4);
+// 	value = waveShaper.Process(0.6);
+// 	value = waveShaper.Process(1);
+// 	value = waveShaper.Process(1.2);
+// }

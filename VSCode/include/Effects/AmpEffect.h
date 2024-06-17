@@ -1,3 +1,5 @@
+#ifdef ADD_AMP_EFFECT
+
 #pragma once
 #ifndef AMP_EFFECT_H
 #define AMP_EFFECT_H
@@ -85,5 +87,7 @@ private:
 	float m_GainMultiplier;
 	float m_Master;
 };
+
+#endif
 
 #endif

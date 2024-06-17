@@ -1,3 +1,5 @@
+#ifdef ADD_FX_EFFECT
+
 #pragma once
 #ifndef FX_EFFECT_H
 #define FX_EFFECT_H
@@ -74,5 +76,7 @@ private:
 	AutoWah<SampleType, SAMPLE_RATE> m_AutoWahDSP;
 	IDSP<SampleType, SAMPLE_RATE> *m_DSP;
 };
+
+#endif
 
 #endif

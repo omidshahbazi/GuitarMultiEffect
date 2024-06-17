@@ -1,3 +1,5 @@
+#ifdef ADD_DEL_EFFECT
+
 #pragma once
 #ifndef DEL_EFFECT_H
 #define DEL_EFFECT_H
@@ -67,5 +69,7 @@ public:
 private:
 	Filter<SampleType, SAMPLE_RATE> *m_Filter;
 };
+
+#endif
 
 #endif

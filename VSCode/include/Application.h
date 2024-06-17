@@ -12,6 +12,7 @@
 
 #include "framework/DSP/Memory.h"
 #include "framework/DaisySeedHAL.h"
+#include "framework/DSP/Filters/LowPassFilter.h"
 
 const uint8 FRAME_LENGTH = 4;
 
@@ -19,7 +20,7 @@ class Application;
 
 Application *g_Application;
 
-class Application : public DaisySeedHAL<1, 1024>
+class Application : public DaisySeedHAL<1, 2048>
 {
 public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
@@ -29,6 +30,7 @@ public:
 		  m_ScreenManager(&m_PresetManager, &m_ControlManager),
 #endif
 		  m_ProcessBufferL(nullptr),
+		  m_LowPassFilter(nullptr),
 		  m_MasterVolume(0)
 	{
 		Log::Initialize(this);
@@ -135,6 +137,10 @@ public:
 
 		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
 
+		m_LowPassFilter = Memory::Allocate<LowPassFilter<SampleType, SAMPLE_RATE>>();
+		new (m_LowPassFilter) LowPassFilter<SampleType, SAMPLE_RATE>;
+		m_LowPassFilter->SetCutoffFrequency(1 * KHz);
+
 		m_Hardware.StartAudio(AudioPassthrough);
 	}
 
@@ -148,8 +154,10 @@ public:
 private:
 	static void AudioPassthrough(const float *const *In, float **Out, uint32 Size)
 	{
+		const uint8 INPUT_INDEX = 1;
+
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
-			g_Application->m_ProcessBufferL[i] = In[0][i];
+			g_Application->m_ProcessBufferL[i] = g_Application->m_LowPassFilter->Process(In[INPUT_INDEX][i]);
 
 		g_Application->m_PresetManager.Process(g_Application->m_ProcessBufferL, FRAME_LENGTH);
 
@@ -158,7 +166,7 @@ private:
 			SampleType value = g_Application->m_ProcessBufferL[i] * g_Application->m_MasterVolume;
 
 			Out[0][i] = value;
-			Out[1][i] = value;
+			Out[1][i] = In[INPUT_INDEX][i] * g_Application->m_MasterVolume;
 		}
 	}
 
@@ -174,6 +182,8 @@ private:
 #endif
 
 	SampleType *m_ProcessBufferL;
+
+	LowPassFilter<SampleType, SAMPLE_RATE> *m_LowPassFilter;
 
 	float m_MasterVolume;
 };

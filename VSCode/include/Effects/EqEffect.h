@@ -1,3 +1,5 @@
+#ifdef ADD_EQ_EFFECT
+
 #pragma once
 #ifndef EQ_EFFECT_H
 #define EQ_EFFECT_H
@@ -50,5 +52,7 @@ public:
 private:
 	TripleToneControlFilter<SampleType, SAMPLE_RATE> m_ToneControlFilter;
 };
+
+#endif
 
 #endif

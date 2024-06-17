@@ -1,3 +1,5 @@
+#ifdef ADD_REV_EFFECT
+
 #pragma once
 #ifndef REV_EFFECT_H
 #define REV_EFFECT_H
@@ -53,5 +55,7 @@ public:
 private:
 	Reverb<SampleType, SAMPLE_RATE, Data::MAX_DELAY_TIME> m_ReverbDSP;
 };
+
+#endif
 
 #endif
