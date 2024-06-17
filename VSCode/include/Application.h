@@ -26,6 +26,7 @@ public:
 	Application(uint8 *SDRAMAddress = nullptr, uint32 SDRAMSize = 0)
 		: DaisySeedHAL(&m_Hardware, SDRAMAddress, SDRAMSize),
 		  m_ControlManager(this),
+		  m_PresetManager(this),
 #ifdef USE_DISPLAY
 		  m_ScreenManager(&m_PresetManager, &m_ControlManager),
 #endif
@@ -149,6 +150,8 @@ public:
 		DaisySeedHAL::Update();
 
 		m_ControlManager.Update();
+
+		m_PresetManager.Update();
 	}
 
 private:

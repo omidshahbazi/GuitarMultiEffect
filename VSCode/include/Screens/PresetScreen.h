@@ -47,7 +47,7 @@ protected:
 		const Point EFFECT_DIMENSIONS = {20, 30};
 		const Point HALF_EFFECT_DIMENSIONS = {EFFECT_DIMENSIONS.X * 0.5, EFFECT_DIMENSIONS.Y * 0.5};
 		const uint8 LINE_COUNT = 2;
-		const uint8 MAX_EFFECT_PER_LINE = Math::Ceil(Preset::EFFECT_COUNT + 1 / (float)LINE_COUNT);
+		const uint8 MAX_EFFECT_PER_LINE = Math::Ceil((Preset::EFFECT_COUNT + 1) / (float)LINE_COUNT);
 		const uint8 EFFECTS_OFFSET = canvasDimensions.X / MAX_EFFECT_PER_LINE;
 		const uint8 HALF_EFFECTS_OFFSET = EFFECTS_OFFSET * 0.5;
 		const uint8 SELECTION_SIGN_OFFSET = 8;
@@ -94,7 +94,7 @@ protected:
 			Canvas.DrawLine(to, {canvasDimensions.X - lineStartPoint.X, lineStartPoint.Y}, LINE_COLOR);
 		}
 
-		uint8 effectCountInCurrentLine = 0;
+		uint8 effectCountInCurrentLine = 1;
 
 		Point effectPoint = {effectAreaPoint.X, lineStartPoint.Y - HALF_EFFECT_DIMENSIONS.Y};
 

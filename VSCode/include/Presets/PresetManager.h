@@ -3,13 +3,19 @@
 #define PRESET_MANAGER_H
 
 #include "Preset.h"
+#include "../framework/DSP/IHAL.h"
 #include "../framework/DSP/PersistentBlob.h"
-#include <string>
+#include "../framework/DSP/Drums/DrumsMachine.h"
 
 class PresetManager
 {
 public:
 	static constexpr uint8 PRESET_COUNT = 4;
+
+	enum class Rhythms
+	{
+		QuarterNote1 = 0
+	};
 
 private:
 	struct Data
@@ -18,18 +24,27 @@ private:
 		Data(void)
 			: SelectedPresetIndex(0),
 			  PresetData{},
+			  RhythmEnabled(true),
+			  RhythmVolume(1),
 			  Size(sizeof(Data))
 		{
 		}
 
 		uint8 SelectedPresetIndex;
 		Preset::Data PresetData[PRESET_COUNT];
+
+		bool RhythmEnabled;
+		Rhythms Rhythm;
+		float RhythmBMP;
+		float RhythmVolume;
+
 		uint16 Size;
 	};
 
 public:
-	PresetManager(void)
-		: m_PersistentData(0)
+	PresetManager(IHAL *HAL)
+		: m_PersistentData(0),
+		  m_DrumsMachine(HAL)
 	{
 	}
 
@@ -45,9 +60,24 @@ public:
 		UpdatePresetData();
 	}
 
+	void Update(void)
+	{
+		if (m_PersistentData.Get().RhythmEnabled)
+			m_DrumsMachine.Update();
+	}
+
 	void Process(SampleType *Buffer, uint8 Count)
 	{
-		m_Presets[m_PersistentData.Get().SelectedPresetIndex].Process(Buffer, Count);
+		auto &data = m_PersistentData.Get();
+
+		m_Presets[data.SelectedPresetIndex].Process(Buffer, Count);
+
+		for (uint8 i = 0; i < Count; ++i)
+		{
+			SampleType rhythm = m_DrumsMachine.Process() * data.RhythmVolume;
+
+			Buffer[i] = Math::Lerp(Buffer[i], rhythm, 0.5);
+		}
 	}
 
 	Preset *GetSelectedPreset(void)
@@ -170,6 +200,8 @@ private:
 	Preset m_Presets[PRESET_COUNT];
 
 	PersistentBlob<Data> m_PersistentData;
+
+	DrumsMachine<SampleType, SAMPLE_RATE> m_DrumsMachine;
 };
 
 #endif

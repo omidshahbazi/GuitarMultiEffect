@@ -7,13 +7,13 @@
 #undef USE_DISPLAY
 #endif
 
-// #define ADD_FX_EFFECT
+#define ADD_FX_EFFECT
 #define ADD_DS_EFFECT
 // #define ADD_AMP_EFFECT
-// #define ADD_EQ_EFFECT
-// #define ADD_MOD_EFFECT
-// #define ADD_DEL_EFFECT
-// #define ADD_REV_EFFECT
+#define ADD_EQ_EFFECT
+#define ADD_MOD_EFFECT
+#define ADD_DEL_EFFECT
+#define ADD_REV_EFFECT
 
 #include "../include/Application.h"
 
