@@ -9,7 +9,7 @@
 class PresetManager
 {
 public:
-	static constexpr uint8 PRESET_COUNT = 2;
+	static constexpr uint8 PRESET_COUNT = 4;
 
 private:
 	struct Data
@@ -35,6 +35,8 @@ public:
 
 	void Initialize(void)
 	{
+		PersistentBlobBase::EreasAll();
+
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
 			new (&m_Presets[i]) Preset();
 
@@ -97,19 +99,61 @@ private:
 	{
 		static Data defaultData = {};
 
-		for (uint8 i = 0; i < PRESET_COUNT; ++i)
+		uint8 presetIndex = 0;
+
+		// CLEAN
 		{
-			Preset::Data &data = defaultData.PresetData[i];
+			Preset::Data &data = defaultData.PresetData[presetIndex++];
+			Preset::SetName(data, "CLEAN");
 
-			uint8 effectIndex = 0;
+#ifdef ADD_REV_EFFECT
+			data.RevData.Enabled = true;
+#endif
+		}
 
-			data.FXData.Index = effectIndex++;
-			data.DsData.Index = effectIndex++;
-			data.EqData.Index = effectIndex++;
-			data.AmpData.Index = effectIndex++;
-			data.ModData.Index = effectIndex++;
-			data.DelData.Index = effectIndex++;
-			data.RevData.Index = effectIndex++;
+		// OVERDRIVE
+		{
+			Preset::Data &data = defaultData.PresetData[presetIndex++];
+			Preset::SetName(data, "OVERDRIVE");
+
+#ifdef ADD_DS_EFFECT
+			data.DsData.Enabled = true;
+			data.DsData.Type = DsEffect::Data::Types::Overdrive;
+#endif
+
+#ifdef ADD_REV_EFFECT
+			data.RevData.Enabled = true;
+#endif
+		}
+
+		// DISTORTION
+		{
+			Preset::Data &data = defaultData.PresetData[presetIndex++];
+			Preset::SetName(data, "DISTORTION");
+
+#ifdef ADD_DS_EFFECT
+			data.DsData.Enabled = true;
+			data.DsData.Type = DsEffect::Data::Types::Distortion;
+#endif
+
+#ifdef ADD_REV_EFFECT
+			data.RevData.Enabled = true;
+#endif
+		}
+
+		// FUZZ
+		{
+			Preset::Data &data = defaultData.PresetData[presetIndex++];
+			Preset::SetName(data, "FUZZ");
+
+#ifdef ADD_DS_EFFECT
+			data.DsData.Enabled = true;
+			data.DsData.Type = DsEffect::Data::Types::Fuzz;
+#endif
+
+#ifdef ADD_REV_EFFECT
+			data.RevData.Enabled = true;
+#endif
 		}
 
 		m_PersistentData.Initialize(defaultData);
