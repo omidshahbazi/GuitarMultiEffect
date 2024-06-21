@@ -12,6 +12,7 @@ enum class Screens
 	Preset,
 	Rename,
 	Effect,
+	Rhythm,
 	Save,
 
 	COUNT

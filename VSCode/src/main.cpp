@@ -35,7 +35,8 @@ int main()
 }
 
 // Drum Machine (Daisy has an example)
-// Level visualizer
+// Add Reset function for effects that uses delay?
+// Level visualizer in a screen for setting input-gain, output-gain, preset volume
 // Tuner
 // Delay
 // Looper

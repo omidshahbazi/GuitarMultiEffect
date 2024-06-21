@@ -7,6 +7,7 @@
 #include "PresetScreen.h"
 #include "RenameScreen.h"
 #include "EffectScreen.h"
+#include "RhythmScreen.h"
 #include "SaveScreen.h"
 #include "../framework/LCDCanvas.h"
 
@@ -31,21 +32,31 @@ public:
 		Create<PresetScreen>(Screens::Preset);
 		Create<RenameScreen>(Screens::Rename);
 		Create<EffectScreen>(Screens::Effect);
+		Create<RhythmScreen>(Screens::Rhythm);
 		Create<SaveScreen>(Screens::Save);
 
 		SwitchTo(Screens::Play);
 
-		m_ControlManager->SetSaveButonCallback({this,
-												[](void *Context, float HeldTime)
-												{
-													static_cast<ScreenManager *>(Context)->SwitchTo(Screens::Save);
-												}});
+		m_ControlManager->SetSaveButtonCallback({this,
+												 [](void *Context, float HeldTime)
+												 {
+													 static_cast<ScreenManager *>(Context)->SwitchTo(Screens::Save);
+												 }});
 
 		m_ControlManager->SetBackButtonTunedOffCallback({this,
 														 [](void *Context, float HeldTime)
 														 {
 															 static_cast<ScreenManager *>(Context)->GoBack();
 														 }});
+
+		m_ControlManager->SetLooperButtonHoldCallback({this,
+													   [](void *Context, float HeldTime)
+													   {
+														   if (HeldTime < 2)
+															   return;
+
+														   static_cast<ScreenManager *>(Context)->SwitchTo(Screens::Rhythm);
+													   }});
 	}
 
 	void Render(LCDCanvas &Canvas)
@@ -58,14 +69,14 @@ private:
 	{
 		ASSERT(m_ActiveScreenIndex < MAX_ACTIVE_SCREEN_COUNT, "Out active screen array size");
 
+		::Screen *screen = m_Screens[(uint8)Screen];
+		if (m_ScreensHistory[m_ActiveScreenIndex] == screen)
+			return;
+
 		if (m_ActiveScreenIndex != -1)
 			m_ScreensHistory[m_ActiveScreenIndex]->Deactivate();
 
-		::Screen *screen = m_Screens[(uint8)Screen];
-
 		++m_ActiveScreenIndex;
-
-		ASSERT(m_ScreensHistory[m_ActiveScreenIndex] != screen, "The same screen wants to be activated");
 
 		m_ScreensHistory[m_ActiveScreenIndex] = screen;
 

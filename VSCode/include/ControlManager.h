@@ -13,14 +13,14 @@ public:
 		: m_Factory(HAL),
 		  m_Display(HAL, GPIOPins::Pin8, GPIOPins::Pin10, GPIOPins::Pin7, GPIOPins::Pin6, GPIOPins::Pin9, I_LCD_HAL::Orientations::ToRight),
 		  m_BootButton(nullptr),
-		  m_SaveButon(nullptr),
-		  m_BackButon(nullptr),
+		  m_SaveButton(nullptr),
+		  m_BackButton(nullptr),
 		  m_ValueControl(nullptr),
 		  m_VolumePotentiometer(nullptr),
 		  m_UpButton(nullptr),
-		  m_DownButon(nullptr),
+		  m_DownButton(nullptr),
 		  m_LooperLED(nullptr),
-		  m_LooperButon(nullptr)
+		  m_LooperButton(nullptr)
 	{
 	}
 
@@ -31,19 +31,19 @@ public:
 
 		m_BootButton = CreateButton("Boot Mode", GPIOPins::Pin3);
 
-		m_SaveButon = CreateButton("Save", GPIOPins::Pin4);
+		m_SaveButton = CreateButton("Save", GPIOPins::Pin4);
 
-		m_BackButon = CreateButton("Back", GPIOPins::Pin5);
+		m_BackButton = CreateButton("Back", GPIOPins::Pin5);
 
 		m_ValueControl = CreateRotaryButton("Value", GPIOPins::Pin1, GPIOPins::Pin2, GPIOPins::Pin0);
 
 		m_VolumePotentiometer = CreatePotentiometer("Master Volume", AnalogPins ::Pin2);
 
 		m_UpButton = CreateButton("Up", GPIOPins::Pin26);
-		m_DownButon = CreateButton("Down", GPIOPins::Pin27);
+		m_DownButton = CreateButton("Down", GPIOPins::Pin27);
 
 		m_LooperLED = CreateDualLED("Looper", GPIOPins::Pin24, GPIOPins::Pin25);
-		m_LooperButon = CreateButton("Looper", GPIOPins::Pin30);
+		m_LooperButton = CreateButton("Looper", GPIOPins::Pin30);
 	}
 
 	void SetDisplayCallback(ILI9341_HAL_320_240::RenderEventHandler Listener)
@@ -56,14 +56,14 @@ public:
 		m_BootButton->SetOnTurnedOffListener(Listener);
 	}
 
-	void SetSaveButonCallback(Button::TurnedOffEventHandler Listener)
+	void SetSaveButtonCallback(Button::TurnedOffEventHandler Listener)
 	{
-		m_SaveButon->SetOnTurnedOffListener(Listener);
+		m_SaveButton->SetOnTurnedOffListener(Listener);
 	}
 
 	void SetBackButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
-		m_BackButon->SetOnTurnedOffListener(Listener);
+		m_BackButton->SetOnTurnedOffListener(Listener);
 	}
 
 	void SetValueRotatedCallback(RotaryButton::RotatedEventHandler Listener)
@@ -93,7 +93,7 @@ public:
 
 	void SetDownButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
-		m_DownButon->SetOnTurnedOffListener(Listener);
+		m_DownButton->SetOnTurnedOffListener(Listener);
 	}
 
 	void SetLooperLEDConstantBrightness(Color Color)
@@ -102,9 +102,14 @@ public:
 		m_LooperLED->SetColor(Color);
 	}
 
+	void SetLooperButtonHoldCallback(Button::HoldEventHandler Listener)
+	{
+		m_LooperButton->SetOnHoldListener(Listener);
+	}
+
 	void SetLooperButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
-		m_LooperButon->SetOnTurnedOffListener(Listener);
+		m_LooperButton->SetOnTurnedOffListener(Listener);
 	}
 
 	void Update(void)
@@ -161,14 +166,14 @@ private:
 	ILI9341_HAL_320_240 m_Display;
 
 	Button *m_BootButton;
-	Button *m_SaveButon;
-	Button *m_BackButon;
+	Button *m_SaveButton;
+	Button *m_BackButton;
 	RotaryButton *m_ValueControl;
 	Potentiometer *m_VolumePotentiometer;
 	Button *m_UpButton;
-	Button *m_DownButon;
+	Button *m_DownButton;
 	DualLED *m_LooperLED;
-	Button *m_LooperButon;
+	Button *m_LooperButton;
 };
 
 #endif
