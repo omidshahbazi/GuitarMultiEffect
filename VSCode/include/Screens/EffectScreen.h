@@ -142,7 +142,7 @@ protected:
 #ifdef ADD_REV_EFFECT
 		else if (effectData->Index == presetData.RevData.Index)
 		{
-			ADD_VALUE_DATA(Rev, DelayTime, 0, RevEffect::Data::MAX_DELAY_TIME, 1, false, "LENGTH");
+			ADD_VALUE_DATA_SPEED(Rev, DelayTime, 0, RevEffect::Data::MAX_DELAY_TIME, 1, false, 0.1, "LENGTH");
 			ADD_VALUE_DATA(Rev, Feedback, 0, 1, 100, true, "FEEDBACK");
 			ADD_VALUE_DATA(Rev, WetRate, 0, 1, 100, true, "WET");
 		}

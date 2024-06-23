@@ -8,12 +8,20 @@
 class Rhythm
 {
 private:
-	typedef DrumsMachine<SampleType, SAMPLE_RATE>::Notes Notes;
+	typedef DrumsMachine<SampleType, SAMPLE_RATE> Drums;
+	typedef Drums::Parts Parts;
 
 public:
 	enum class Presets
 	{
-		QuarterNote1 = 0
+		HalfNote1 = 0,
+		HalfNote2,
+		HalfNote3,
+		HalfNote4,
+		QuarterNote1,
+		QuarterNote2,
+		QuarterNote3,
+		QuarterNote4
 	};
 
 public:
@@ -21,10 +29,10 @@ public:
 	{
 	public:
 		Data(void)
-			: IsEnabled(true),
-			  Preset(Presets::QuarterNote1),
+			: IsEnabled(false),
+			  Preset(Presets::HalfNote1),
 			  BeatsPerMinute(60),
-			  Volume(1)
+			  Volume(0.1)
 		{
 		}
 
@@ -41,6 +49,7 @@ public:
 		: m_Data{},
 		  m_DrumsMachine(HAL)
 	{
+		m_DrumsMachine.SetEnabledParts(Parts::Kick | Parts::Snare | Parts::CymbalHiHat);
 	}
 
 	void Update(void)
@@ -54,29 +63,93 @@ public:
 	void Process(SampleType *Buffer, uint8 Count)
 	{
 		for (uint8 i = 0; i < Count; ++i)
-			Buffer[i] = Math::Lerp(Buffer[i], m_DrumsMachine.Process(), m_Data.Volume);
+			Buffer[i] = Math::Lerp(Buffer[i], m_DrumsMachine.Process(), m_Data.Volume * 0.5);
 	}
 
 	void SetData(const Data &Data)
 	{
 		m_Data = Data;
 
-		// static Notes QuarterNote1[4];
-		// QuarterNote1[0] = Notes::Kick | Notes::Snare;
-		// QuarterNote1[1] = Notes::Snare;
-		// QuarterNote1[2] = Notes::Kick | Notes::Snare;
-		// QuarterNote1[3] = Notes::Snare;
+		static Parts Pattern1[8];
+		Pattern1[0] = Parts::Kick | Parts::CymbalHiHat;
+		Pattern1[1] = Parts::Kick;
+		Pattern1[2] = Parts::Kick | Parts::Snare;
+		Pattern1[3] = Parts::Kick;
+		Pattern1[4] = Parts::Kick | Parts::CymbalHiHat;
+		Pattern1[5] = Parts::Kick;
+		Pattern1[6] = Parts::Kick | Parts::Snare;
+		Pattern1[7] = Parts::Kick;
 
-		static Notes QuarterNote1[4];
-		QuarterNote1[0] = Notes::Kick;
-		QuarterNote1[1] = Notes::Kick;
-		QuarterNote1[2] = Notes::Kick;
-		QuarterNote1[3] = Notes::Kick;
+		static Parts Pattern2[8];
+		Pattern2[0] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern2[1] = Parts::CymbalHiHat;
+		Pattern2[2] = Parts::CymbalHiHat | Parts::Snare;
+		Pattern2[3] = Parts::CymbalHiHat;
+		Pattern2[4] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern2[5] = Parts::CymbalHiHat;
+		Pattern2[6] = Parts::CymbalHiHat | Parts::Snare;
+		Pattern2[7] = Parts::CymbalHiHat;
+
+		static Parts Pattern3[8];
+		Pattern3[0] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern3[1] = Parts::CymbalHiHat;
+		Pattern3[2] = Parts::CymbalHiHat | Parts::Snare;
+		Pattern3[3] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern3[4] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern3[5] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern3[6] = Parts::CymbalHiHat | Parts::Snare;
+		Pattern3[7] = Parts::CymbalHiHat;
+
+		static Parts Pattern4[8];
+		Pattern4[0] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern4[1] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern4[2] = Parts::CymbalHiHat | Parts::Snare;
+		Pattern4[3] = Parts::CymbalHiHat | Parts::Kick;
+		Pattern4[4] = Parts::CymbalHiHat;
+		Pattern4[5] = Parts::CymbalHiHat;
+		Pattern4[6] = Parts::CymbalHiHat | Parts::Snare;
+		Pattern4[7] = Parts::CymbalHiHat | Parts::Kick;
 
 		switch (m_Data.Preset)
 		{
+		case Presets::HalfNote1:
+			m_DrumsMachine.SetNotes(Pattern1, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
+			break;
+
+		case Presets::HalfNote2:
+			m_DrumsMachine.SetNotes(Pattern2, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
+			break;
+
+		case Presets::HalfNote3:
+			m_DrumsMachine.SetNotes(Pattern3, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
+			break;
+
+		case Presets::HalfNote4:
+			m_DrumsMachine.SetNotes(Pattern4, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
+			break;
+
 		case Presets::QuarterNote1:
-			m_DrumsMachine.SetNotes(QuarterNote1, 4);
+			m_DrumsMachine.SetNotes(Pattern1, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
+			break;
+
+		case Presets::QuarterNote2:
+			m_DrumsMachine.SetNotes(Pattern2, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
+			break;
+
+		case Presets::QuarterNote3:
+			m_DrumsMachine.SetNotes(Pattern3, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
+			break;
+
+		case Presets::QuarterNote4:
+			m_DrumsMachine.SetNotes(Pattern4, 8);
+			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
 			break;
 
 		default:

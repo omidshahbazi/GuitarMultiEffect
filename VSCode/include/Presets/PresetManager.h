@@ -31,14 +31,18 @@ private:
 
 public:
 	PresetManager(IHAL *HAL)
-		: m_PersistentData(0),
-		  m_Rhythm(HAL)
+		: m_HAL(HAL),
+		  m_PersistentData(0),
+		  m_Rhythm(nullptr)
 	{
 	}
 
 	void Initialize(void)
 	{
 		PersistentBlobBase::EreasAll();
+
+		m_Rhythm = Memory::Allocate<Rhythm>();
+		new (m_Rhythm) Rhythm(m_HAL);
 
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
 			new (&m_Presets[i]) Preset();
@@ -50,7 +54,7 @@ public:
 
 	void Update(void)
 	{
-		m_Rhythm.Update();
+		m_Rhythm->Update();
 	}
 
 	void Process(SampleType *Buffer, uint8 Count)
@@ -59,7 +63,7 @@ public:
 
 		m_Presets[data.SelectedPresetIndex].Process(Buffer, Count);
 
-		m_Rhythm.Process(Buffer, Count);
+		m_Rhythm->Process(Buffer, Count);
 	}
 
 	Preset *GetSelectedPreset(void)
@@ -83,7 +87,7 @@ public:
 
 	Rhythm *GetRhythm(void)
 	{
-		return &m_Rhythm;
+		return m_Rhythm;
 	}
 
 	void Save(void)
@@ -182,15 +186,14 @@ private:
 		for (uint8 i = 0; i < PRESET_COUNT; ++i)
 			m_Presets[i].SetData(data.PresetData[i]);
 
-		m_Rhythm.SetData(data.RhythmData);
+		m_Rhythm->SetData(data.RhythmData);
 	}
 
 private:
+	IHAL *m_HAL;
 	Preset m_Presets[PRESET_COUNT];
-
 	PersistentBlob<Data> m_PersistentData;
-
-	Rhythm m_Rhythm;
+	Rhythm *m_Rhythm;
 };
 
 #endif

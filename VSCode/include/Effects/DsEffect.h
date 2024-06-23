@@ -29,7 +29,7 @@ public:
 			  OverdriveDrive(1),
 			  OverdriveGain(0),
 
-			  DistortionLevel(0),
+			  DistortionLevel(0.5),
 			  DistortionGain(0),
 
 			  FuzzTone(0.5),

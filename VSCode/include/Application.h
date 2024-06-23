@@ -37,7 +37,7 @@ public:
 		Log::Initialize(this);
 		Memory::Initialize(this);
 
-		m_Hardware.Init();
+		m_Hardware.Init(false);
 		m_Hardware.SetAudioBlockSize(FRAME_LENGTH);
 
 #ifdef DEBUG

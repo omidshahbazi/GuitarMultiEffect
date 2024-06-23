@@ -34,7 +34,6 @@ int main()
 	return 0;
 }
 
-// Drum Machine (Daisy has an example)
 // Add Reset function for effects that uses delay?
 // Level visualizer in a screen for setting input-gain, output-gain, preset volume
 // Tuner

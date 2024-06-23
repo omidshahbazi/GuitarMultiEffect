@@ -141,12 +141,12 @@ protected:
 															 auto &data = thisPtr->m_ValueData[thisPtr->m_SelectedDataIndex - thisPtr->m_ChoiceDataCount];
 
 															 auto &value = *data.Value;
-															 Direction *= data.Speed;
+															 float direction = Direction * data.Speed;
 
 															 if (data.AsInteger)
-																 value += Direction / data.DisplayMultiplier;
+																 value += direction / data.DisplayMultiplier;
 															 else
-																 value += Direction;
+																 value += direction;
 
 															 value = Math::Clamp(value, data.MinValue, data.MaxValue);
 
@@ -180,7 +180,7 @@ protected:
 		controlManager->SetValueButtonTunedOffCallback(nullptr);
 	}
 
-	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2 = nullptr, cstr Item3 = nullptr, cstr Item4 = nullptr)
+	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2 = nullptr, cstr Item3 = nullptr, cstr Item4 = nullptr, cstr Item5 = nullptr, cstr Item6 = nullptr, cstr Item7 = nullptr, cstr Item8 = nullptr)
 	{
 		ASSERT(m_ChoiceDataCount < MAX_VALUE_DATA_COUNT, "Out of ChoiceData slots");
 		ASSERT(Item1 != nullptr, "Item1 cannot be null");
@@ -196,6 +196,14 @@ protected:
 			data.Items[data.ItemCount++] = Item3;
 		if (Item4 != nullptr)
 			data.Items[data.ItemCount++] = Item4;
+		if (Item5 != nullptr)
+			data.Items[data.ItemCount++] = Item5;
+		if (Item6 != nullptr)
+			data.Items[data.ItemCount++] = Item6;
+		if (Item7 != nullptr)
+			data.Items[data.ItemCount++] = Item7;
+		if (Item8 != nullptr)
+			data.Items[data.ItemCount++] = Item8;
 	}
 
 	void AddValueData(float *Data, cstr Title, float MinValue, float MaxValue, float DisplayMultiplier, bool AsInteger, float Speed = 1)

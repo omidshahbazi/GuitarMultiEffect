@@ -17,7 +17,7 @@ public:
 
 	public:
 		Data(void)
-			: DelayTime(0.5),
+			: DelayTime(0.3),
 			  Feedback(0.6),
 			  WetRate(0.5)
 		{
