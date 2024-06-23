@@ -134,6 +134,13 @@ public:
 		m_TremoloDSP.SetDepth(Data.TremoloDepth);
 		m_TremoloDSP.SetRate(Data.TremoloRate);
 		m_TremoloDSP.SetWetRate(Data.TremoloWetRate);
+
+		if (Data.Enabled)
+		{
+			m_ChorusDSP.Reset();
+			m_FlangerDSP.Reset();
+			m_PhaserDSP.Reset();
+		}
 	}
 
 	cstr GetName(void) const override

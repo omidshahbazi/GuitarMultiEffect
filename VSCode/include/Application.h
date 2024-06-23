@@ -30,7 +30,6 @@ public:
 #ifdef USE_DISPLAY
 		  m_ScreenManager(&m_PresetManager, &m_ControlManager),
 #endif
-		  m_ProcessBufferL(nullptr),
 		  m_LowPassFilter(nullptr),
 		  m_MasterVolume(0)
 	{
@@ -79,12 +78,6 @@ public:
 		m_Hardware.SetAudioSampleRate(daisySampleRate);
 
 		g_Application = this;
-	}
-
-	~Application(void)
-	{
-		if (m_ProcessBufferL != nullptr)
-			Memory::Deallocate(m_ProcessBufferL);
 	}
 
 	void Initialize(void)
@@ -136,8 +129,6 @@ public:
 		m_ScreenManager.Initialize();
 #endif
 
-		m_ProcessBufferL = Memory::Allocate<SampleType>(FRAME_LENGTH);
-
 		m_LowPassFilter = Memory::Allocate<LowPassFilter<SampleType, SAMPLE_RATE>>();
 		new (m_LowPassFilter) LowPassFilter<SampleType, SAMPLE_RATE>;
 		m_LowPassFilter->SetCutoffFrequency(1 * KHz);
@@ -157,19 +148,27 @@ public:
 private:
 	static void AudioPassthrough(const float *const *In, float **Out, uint32 Size)
 	{
-		const uint8 INPUT_INDEX = 1;
-
-		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
-			g_Application->m_ProcessBufferL[i] = g_Application->m_LowPassFilter->Process(In[INPUT_INDEX][i]);
-
-		g_Application->m_PresetManager.Process(g_Application->m_ProcessBufferL, FRAME_LENGTH);
+		static SampleType inputBuffer[FRAME_LENGTH];
+		static SampleType processedBuffer[FRAME_LENGTH];
 
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 		{
-			SampleType value = g_Application->m_ProcessBufferL[i] * g_Application->m_MasterVolume;
+			inputBuffer[i] = g_Application->m_LowPassFilter->Process(In[1][i]);
+			processedBuffer[i] = inputBuffer[i];
+		}
+
+		g_Application->m_PresetManager.Process(processedBuffer, FRAME_LENGTH);
+
+#ifdef USE_DISPLAY
+		g_Application->m_ScreenManager.ProcessAudioBuffer(inputBuffer, processedBuffer, FRAME_LENGTH);
+#endif
+
+		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
+		{
+			SampleType value = processedBuffer[i] * g_Application->m_MasterVolume;
 
 			Out[0][i] = value;
-			Out[1][i] = In[INPUT_INDEX][i] * g_Application->m_MasterVolume;
+			Out[1][i] = inputBuffer[i] * g_Application->m_MasterVolume;
 		}
 	}
 
@@ -183,8 +182,6 @@ private:
 
 	LCDCanvas m_LCDCanvas;
 #endif
-
-	SampleType *m_ProcessBufferL;
 
 	LowPassFilter<SampleType, SAMPLE_RATE> *m_LowPassFilter;
 

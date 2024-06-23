@@ -17,7 +17,9 @@ public:
 	{
 	public:
 		Data(void)
-			: Volume(1),
+			: InputGain(0),
+			  OutputGain(0),
+			  OutputVolume(1),
 			  EffectsData{}
 		{
 			Preset::SetName(*this, "EMPTY");
@@ -48,7 +50,13 @@ public:
 		}
 
 		char Name[MAX_NAME_LENGTH + 1];
-		float Volume;
+
+		//[-20dB, 40dB]
+		float InputGain;
+		//[-20dB, 40dB]
+		float OutputGain;
+		//[0, 1]
+		float OutputVolume;
 
 #ifdef ADD_FX_EFFECT
 		FXEffect::Data FXData;
@@ -84,11 +92,25 @@ public:
 
 	void Process(SampleType *Buffer, uint8 Count)
 	{
+		for (uint8 i = 0; i < Count; ++i)
+		{
+			SampleType sample = Buffer[i];
+			sample *= Math::dbToMultiplier(m_Data.InputGain);
+			sample = Math::Clamp(sample, -1, 1);
+			Buffer[i] = sample;
+		}
+
 		for (uint8 i = 0; i < EFFECT_COUNT; ++i)
 			m_Effects[i]->Apply(Buffer, Count);
 
 		for (uint8 i = 0; i < Count; ++i)
-			Buffer[i] *= m_Data.Volume;
+		{
+			SampleType sample = Buffer[i];
+			sample *= Math::dbToMultiplier(m_Data.OutputGain);
+			sample = Math::Clamp(sample, -1, 1);
+			sample *= m_Data.OutputVolume;
+			Buffer[i] = sample;
+		}
 	}
 
 	void SetData(const Data &Data)
@@ -170,18 +192,6 @@ public:
 	void UpdateData(void)
 	{
 		SetData(GetData());
-	}
-
-	void SetName(cstr Value)
-	{
-		SetName(m_Data, Value);
-	}
-
-	void SetVolume(float Value)
-	{
-		ASSERT(0 <= Value && Value <= 1, "Invalid Value");
-
-		m_Data.Volume = Value;
 	}
 
 	Effect **GetEffects(void)

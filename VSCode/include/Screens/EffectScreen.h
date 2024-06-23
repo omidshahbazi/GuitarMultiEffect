@@ -123,7 +123,7 @@ protected:
 			}
 			else if (presetData.ModData.Type == ModEffect::Data::Types::Tremolo)
 			{
-				ADD_VALUE_DATA(Mod, TremoloDepth, 0, 100, 1, true, "DEPTH");
+				ADD_VALUE_DATA(Mod, TremoloDepth, 0, 1, 100, true, "DEPTH");
 				ADD_VALUE_DATA(Mod, TremoloRate, 1, 25, 1, true, "RATE");
 				ADD_VALUE_DATA(Mod, TremoloWetRate, 0, 1, 100, true, "WET");
 			}

@@ -5,6 +5,7 @@
 #include "Screen.h"
 #include "PlayScreen.h"
 #include "PresetScreen.h"
+#include "LevelScreen.h"
 #include "RenameScreen.h"
 #include "EffectScreen.h"
 #include "RhythmScreen.h"
@@ -30,6 +31,7 @@ public:
 	{
 		Create<PlayScreen>(Screens::Play);
 		Create<PresetScreen>(Screens::Preset);
+		Create<LevelScreen>(Screens::Level);
 		Create<RenameScreen>(Screens::Rename);
 		Create<EffectScreen>(Screens::Effect);
 		Create<RhythmScreen>(Screens::Rhythm);
@@ -62,6 +64,11 @@ public:
 	void Render(LCDCanvas &Canvas)
 	{
 		m_ScreensHistory[m_ActiveScreenIndex]->Render(Canvas);
+	}
+
+	void ProcessAudioBuffer(const SampleType *const InputBuffer, const SampleType *const OutputBuffer, uint8 Count)
+	{
+		m_ScreensHistory[m_ActiveScreenIndex]->ProcessAudioBuffer(InputBuffer, OutputBuffer, Count);
 	}
 
 private:

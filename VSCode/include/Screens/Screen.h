@@ -75,6 +75,10 @@ public:
 		m_IsDirty = false;
 	}
 
+	virtual void ProcessAudioBuffer(const SampleType *const InputBuffer, const SampleType *const OutputBuffer, uint8 Count)
+	{
+	}
+
 protected:
 	virtual void Draw(LCDCanvas &Canvas)
 	{
@@ -102,7 +106,7 @@ protected:
 
 	std::string GetPresetVolume(void) const
 	{
-		return ("VOL" + std::to_string((uint8)(GetPresetManager()->GetSelectedPreset()->GetData().Volume * 100)));
+		return ("VOL" + std::to_string((uint8)(GetPresetManager()->GetSelectedPreset()->GetData().OutputVolume * 100)));
 	}
 
 	PresetManager *GetPresetManager(void) const

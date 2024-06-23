@@ -45,6 +45,9 @@ public:
 		m_ReverbDSP.SetDelayTime(Data.DelayTime);
 		m_ReverbDSP.SetFeedback(Data.Feedback);
 		m_ReverbDSP.SetWetRate(Data.WetRate);
+
+		if (Data.Enabled)
+			m_ReverbDSP.Reset();
 	}
 
 	cstr GetName(void) const override

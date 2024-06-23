@@ -31,8 +31,7 @@ protected:
 
 		const Color &PRESET_VOLUME_BOX_COLOR = HEADER_DEFAULT_RIGHT_BOX_COLOR;
 		const Font &PRESET_VOLUME_TEXT_FONT = HEADER_DEFAULT_RIGHT_TEXT_FONT;
-		const Color &PRESET_NORMAL_VOLUME_TEXT_COLOR = HEADER_DEFAULT_RIGHT_TEXT_COLOR;
-		const Color &PRESET_SELECTED_VOLUME_TEXT_COLOR = COLOR_YELLOW;
+		const Color &PRESET_VOLUME_TEXT_COLOR = HEADER_DEFAULT_RIGHT_TEXT_COLOR;
 
 		auto &canvasDimensions = Canvas.GetDimension();
 
@@ -56,15 +55,11 @@ protected:
 
 		Preset *preset = GetPresetManager()->GetSelectedPreset();
 
-		Color volumeColor = PRESET_NORMAL_VOLUME_TEXT_COLOR;
-		if (m_IsVolumeChanging)
-			volumeColor = PRESET_SELECTED_VOLUME_TEXT_COLOR;
-
 		auto &presetData = preset->GetData();
 		DrawHeader(Canvas, DEFAULT_HEADER_HEIGHT,
 				   PRESET_INDEX_BOX_COLOR, GetPresetNumber().c_str(), PRESET_INDEX_TEXT_FONT, PRESET_INDEX_TEXT_COLOR,
 				   PRESET_NAME_BOX_COLOR, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR,
-				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, volumeColor);
+				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, PRESET_VOLUME_TEXT_COLOR);
 
 		if (m_PointerItemIndex == Preset::EFFECT_COUNT)
 		{
@@ -170,13 +165,6 @@ protected:
 
 														 UPDATE_PRESET();
 													 }
-													 else if (thisPtr->m_IsVolumeChanging)
-													 {
-														 auto &preset = GET_PRESET_DATA();
-														 preset.Volume = Math::Clamp01(preset.Volume + (Direction * 0.01));
-
-														 thisPtr->MarkAsDirty();
-													 }
 													 else
 													 {
 														 thisPtr->m_PointerItemIndex = Math::Wrap(thisPtr->m_PointerItemIndex + Direction, 0, (int32)thisPtr->m_SelectableItemCount - 1);
@@ -233,7 +221,7 @@ protected:
 															}
 															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT + 1)
 															{
-																thisPtr->m_IsVolumeChanging = !thisPtr->m_IsVolumeChanging;
+																thisPtr->SwitchScreen(Screens::Level);
 															}
 
 															thisPtr->MarkAsDirty();
@@ -293,7 +281,6 @@ private:
 	uint8 m_PointerItemIndex;
 	bool m_IsEffectReordering;
 	bool m_ReorderingJustStarted;
-	bool m_IsVolumeChanging;
 };
 
 #endif
