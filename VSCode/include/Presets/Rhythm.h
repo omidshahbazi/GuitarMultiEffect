@@ -29,14 +29,19 @@ public:
 	{
 	public:
 		Data(void)
-			: IsEnabled(false),
+			: IsEnabledInteger(0),
 			  Preset(Presets::HalfNote1),
 			  BeatsPerMinute(60),
 			  Volume(0.1)
 		{
 		}
 
-		bool IsEnabled;
+		union
+		{
+			bool IsEnabled;
+			int32 IsEnabledInteger;
+		};
+
 		Presets Preset;
 		//[20, 400]
 		float BeatsPerMinute;

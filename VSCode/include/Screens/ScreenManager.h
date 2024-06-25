@@ -2,7 +2,6 @@
 #ifndef SCREEN_MANAGER_H
 #define SCREEN_MANAGER_H
 
-#include "Screen.h"
 #include "PlayScreen.h"
 #include "PresetScreen.h"
 #include "LevelScreen.h"
@@ -68,6 +67,9 @@ public:
 
 	void ProcessAudioBuffer(const SampleType *const InputBuffer, const SampleType *const OutputBuffer, uint8 Count)
 	{
+		if (m_ActiveScreenIndex == -1)
+			return;
+
 		m_ScreensHistory[m_ActiveScreenIndex]->ProcessAudioBuffer(InputBuffer, OutputBuffer, Count);
 	}
 

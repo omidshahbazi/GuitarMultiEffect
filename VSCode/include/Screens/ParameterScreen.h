@@ -3,7 +3,6 @@
 #define PARAMETER_SCREEN_H
 
 #include "Screen.h"
-#include "PresetScreen.h"
 
 class ParameterScreen : public Screen
 {
@@ -11,10 +10,10 @@ protected:
 	struct ChoiceData
 	{
 	public:
-		static constexpr uint8 MAX_TYPE_COUNT = 6;
+		static constexpr uint8 MAX_ITEM_COUNT = 8;
 
 		int32 *SelectedItem;
-		cstr Items[MAX_TYPE_COUNT];
+		cstr Items[MAX_ITEM_COUNT];
 		uint8 ItemCount;
 	};
 
@@ -182,7 +181,8 @@ protected:
 
 	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2 = nullptr, cstr Item3 = nullptr, cstr Item4 = nullptr, cstr Item5 = nullptr, cstr Item6 = nullptr, cstr Item7 = nullptr, cstr Item8 = nullptr)
 	{
-		ASSERT(m_ChoiceDataCount < MAX_VALUE_DATA_COUNT, "Out of ChoiceData slots");
+		ASSERT(m_ChoiceDataCount < MAX_CHOICE_DATA_COUNT, "Out of ChoiceData slots");
+		ASSERT(Data != nullptr, "Data cannot be null");
 		ASSERT(Item1 != nullptr, "Item1 cannot be null");
 
 		auto &data = m_ChoiceData[m_ChoiceDataCount++];
@@ -209,6 +209,9 @@ protected:
 	void AddValueData(float *Data, cstr Title, float MinValue, float MaxValue, float DisplayMultiplier, bool AsInteger, float Speed = 1)
 	{
 		ASSERT(m_ValueDataCount < MAX_VALUE_DATA_COUNT, "Out of ValueData slots");
+		ASSERT(Data != nullptr, "Data cannot be null");
+		ASSERT(Title != nullptr, "Title cannot be null");
+
 		auto &data = m_ValueData[m_ValueDataCount++];
 		data.Value = Data;
 		data.MinValue = MinValue;

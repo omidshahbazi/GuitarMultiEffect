@@ -34,11 +34,12 @@ int main()
 	return 0;
 }
 
-// Tuner
-// Delay
-// Looper
-// Add more Effects like what is listed in the Mooer GE200 manual
-// Preset Variation like P1A P1B P1C
+// fonts
+//  Tuner
+//  Delay
+//  Looper
+//  Add more Effects like what is listed in the Mooer GE200 manual
+//  Preset Variation like P1A P1B P1C
 
 // #include "../include/framework/DSP/Filters./WaveShaperFilter.h"
 
