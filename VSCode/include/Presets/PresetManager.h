@@ -136,6 +136,9 @@ private:
 		{
 			Preset::Data &data = defaultData.PresetData[presetIndex++];
 			Preset::SetName(data, "OVERDRIVE");
+			data.InputGain = 30;
+			data.OutputGain = -20;
+			data.OutputVolume = 0.2;
 
 #ifdef ADD_DS_EFFECT
 			data.DsData.Enabled = true;
@@ -151,6 +154,9 @@ private:
 		{
 			Preset::Data &data = defaultData.PresetData[presetIndex++];
 			Preset::SetName(data, "DISTORTION");
+			data.InputGain = 40;
+			data.OutputGain = -20;
+			data.OutputVolume = 0.2;
 
 #ifdef ADD_DS_EFFECT
 			data.DsData.Enabled = true;
@@ -166,6 +172,8 @@ private:
 		{
 			Preset::Data &data = defaultData.PresetData[presetIndex++];
 			Preset::SetName(data, "FUZZ");
+			data.InputGain = 10;
+			data.OutputGain = -10;
 
 #ifdef ADD_DS_EFFECT
 			data.DsData.Enabled = true;

@@ -77,13 +77,13 @@ public:
 
 		static Parts Pattern1[8];
 		Pattern1[0] = Parts::Kick | Parts::CymbalHiHat;
-		Pattern1[1] = Parts::Kick;
+		Pattern1[1] = Parts::None;
 		Pattern1[2] = Parts::Kick | Parts::Snare;
-		Pattern1[3] = Parts::Kick;
+		Pattern1[3] = Parts::None;
 		Pattern1[4] = Parts::Kick | Parts::CymbalHiHat;
-		Pattern1[5] = Parts::Kick;
+		Pattern1[5] = Parts::None;
 		Pattern1[6] = Parts::Kick | Parts::Snare;
-		Pattern1[7] = Parts::Kick;
+		Pattern1[7] = Parts::None;
 
 		static Parts Pattern2[8];
 		Pattern2[0] = Parts::CymbalHiHat | Parts::Kick;
