@@ -9,12 +9,13 @@
 #include "EffectScreen.h"
 #include "RhythmScreen.h"
 #include "SaveScreen.h"
+// #include "TunerScreen.h"
 #include "../framework/LCDCanvas.h"
 
 class ScreenManager
 {
 private:
-	static constexpr uint8 MAX_ACTIVE_SCREEN_COUNT = 4;
+	static constexpr uint8 MAX_ACTIVE_SCREEN_COUNT = 10;
 
 public:
 	ScreenManager(PresetManager *PresetManager, ControlManager *ControlManager)
@@ -35,6 +36,7 @@ public:
 		Create<EffectScreen>(Screens::Effect);
 		Create<RhythmScreen>(Screens::Rhythm);
 		Create<SaveScreen>(Screens::Save);
+		// Create<TunerScreen>(Screens::Tuner);
 
 		SwitchTo(Screens::Play);
 
@@ -60,8 +62,19 @@ public:
 													   }});
 	}
 
+	void Update(void)
+	{
+		if (m_ActiveScreenIndex == -1)
+			return;
+
+		m_ScreensHistory[m_ActiveScreenIndex]->Update();
+	}
+
 	void Render(LCDCanvas &Canvas)
 	{
+		if (m_ActiveScreenIndex == -1)
+			return;
+
 		m_ScreensHistory[m_ActiveScreenIndex]->Render(Canvas);
 	}
 
@@ -76,14 +89,17 @@ public:
 private:
 	void SwitchTo(Screens Screen)
 	{
-		ASSERT(m_ActiveScreenIndex < MAX_ACTIVE_SCREEN_COUNT, "Out active screen array size");
+		ASSERT(m_ActiveScreenIndex < MAX_ACTIVE_SCREEN_COUNT, "Out of active screen array size");
 
 		::Screen *screen = m_Screens[(uint8)Screen];
-		if (m_ScreensHistory[m_ActiveScreenIndex] == screen)
-			return;
 
 		if (m_ActiveScreenIndex != -1)
+		{
+			if (m_ScreensHistory[m_ActiveScreenIndex] == screen)
+				return;
+
 			m_ScreensHistory[m_ActiveScreenIndex]->Deactivate();
+		}
 
 		++m_ActiveScreenIndex;
 

@@ -4,15 +4,12 @@
 
 #include "Screen.h"
 
-uint8 g_SelectedEffectIndex;
-
 class PresetScreen : public Screen
 {
 public:
 	PresetScreen(PresetManager *PresetManager, ControlManager *ControlManager)
 		: Screen(PresetManager, ControlManager),
 		  m_SelectableItemCount(Preset::EFFECT_COUNT + 2),
-		  m_PointerItemIndex(0),
 		  m_IsEffectReordering(false),
 		  m_ReorderingJustStarted(false)
 	{
@@ -54,6 +51,7 @@ protected:
 		Screen::Draw(Canvas);
 
 		Preset *preset = GetPresetManager()->GetSelectedPreset();
+		uint8 selectedPointerIndex = preset->GetData().SelectedPointerIndex;
 
 		auto &presetData = preset->GetData();
 		DrawHeader(Canvas, DEFAULT_HEADER_HEIGHT,
@@ -61,11 +59,11 @@ protected:
 				   PRESET_NAME_BOX_COLOR, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR,
 				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, PRESET_VOLUME_TEXT_COLOR);
 
-		if (m_PointerItemIndex == Preset::EFFECT_COUNT)
+		if (selectedPointerIndex == Preset::EFFECT_COUNT)
 		{
 			DrawSelectionSign(Canvas, {HEADER_LEFT_PART_WIDTH + (uint16)(HEADER_MIDDLE_PART_WIDTH * 0.5), DEFAULT_HEADER_HEIGHT + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
 		}
-		else if (m_PointerItemIndex == Preset::EFFECT_COUNT + 1)
+		else if (selectedPointerIndex == Preset::EFFECT_COUNT + 1)
 		{
 			uint16 leftAndRightWidth = HEADER_LEFT_PART_WIDTH + HEADER_MIDDLE_PART_WIDTH;
 			DrawSelectionSign(Canvas, {leftAndRightWidth + (uint16)((canvasDimensions.X - leftAndRightWidth) * 0.5), DEFAULT_HEADER_HEIGHT + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
@@ -100,13 +98,13 @@ protected:
 		{
 			Effect *effect = effects[i];
 
-			if (i == m_PointerItemIndex)
+			if (i == selectedPointerIndex)
 				DrawSelectionSign(Canvas, {effectPoint.X + HALF_EFFECT_DIMENSIONS.X, effectPoint.Y - SELECTION_SIGN_OFFSET}, -1, COLOR_WHITE);
 
 			// Pedal Shape
 			{
 				Color color = ENABLED_EFFECT_COLOR;
-				if (m_IsEffectReordering && i == m_PointerItemIndex)
+				if (m_IsEffectReordering && i == selectedPointerIndex)
 					color = SELECTED_EFFECT_COLOR;
 				else if (!effect->GetIsEnabled())
 					color = DISABLED_EFFECT_COLOR;
@@ -143,7 +141,6 @@ protected:
 
 		auto *controlManager = GetControlManager();
 
-		m_PointerItemIndex = m_SelectableItemCount - 1;
 		m_IsEffectReordering = false;
 		m_ReorderingJustStarted = false;
 
@@ -156,23 +153,23 @@ protected:
 
 													 if (thisPtr->m_IsEffectReordering)
 													 {
-														 uint8 oldIndex = thisPtr->m_PointerItemIndex;
+														 uint8 oldIndex = GET_PRESET_DATA().SelectedPointerIndex;
 
-														 thisPtr->m_PointerItemIndex = Math::Clamp(thisPtr->m_PointerItemIndex + Direction, 0, Preset::EFFECT_COUNT - 1);
+														 GET_PRESET_DATA().SelectedPointerIndex = Math::Clamp(GET_PRESET_DATA().SelectedPointerIndex + Direction, 0, Preset::EFFECT_COUNT - 1);
 
-														 GET_EFFECT_DATA(thisPtr->m_PointerItemIndex)->Index = oldIndex;
-														 GET_EFFECT_DATA(oldIndex)->Index = thisPtr->m_PointerItemIndex;
+														 GET_EFFECT_DATA(GET_PRESET_DATA().SelectedPointerIndex)->Index = oldIndex;
+														 GET_EFFECT_DATA(oldIndex)->Index = GET_PRESET_DATA().SelectedPointerIndex;
 
 														 UPDATE_PRESET();
 													 }
 													 else
 													 {
-														 thisPtr->m_PointerItemIndex = Math::Wrap(thisPtr->m_PointerItemIndex + Direction, 0, (int32)thisPtr->m_SelectableItemCount - 1);
+														 GET_PRESET_DATA().SelectedPointerIndex = Math::Wrap(GET_PRESET_DATA().SelectedPointerIndex + Direction, 0, (int32)thisPtr->m_SelectableItemCount - 1);
 
-														 if (thisPtr->m_PointerItemIndex >= Preset::EFFECT_COUNT)
+														 if (GET_PRESET_DATA().SelectedPointerIndex >= Preset::EFFECT_COUNT)
 															 thisPtr->GetControlManager()->SetLooperLEDConstantBrightness(COLOR_BLACK);
 														 else
-															 UPDATE_ENABLED_LED(thisPtr->m_PointerItemIndex);
+															 UPDATE_ENABLED_LED(GET_PRESET_DATA().SelectedPointerIndex);
 													 }
 
 													 thisPtr->MarkAsDirty();
@@ -189,7 +186,7 @@ protected:
 														if (thisPtr->m_IsEffectReordering)
 															return;
 
-														if (thisPtr->m_PointerItemIndex >= Preset::EFFECT_COUNT)
+														if (GET_PRESET_DATA().SelectedPointerIndex >= Preset::EFFECT_COUNT)
 															return;
 
 														thisPtr->m_ReorderingJustStarted = true;
@@ -210,19 +207,12 @@ protected:
 															}
 															else if (thisPtr->m_IsEffectReordering)
 																thisPtr->m_IsEffectReordering = false;
-															else if (thisPtr->m_PointerItemIndex < Preset::EFFECT_COUNT)
-															{
-																g_SelectedEffectIndex = thisPtr->m_PointerItemIndex;
+															else if (GET_PRESET_DATA().SelectedPointerIndex < Preset::EFFECT_COUNT)
 																thisPtr->SwitchScreen(Screens::Effect);
-															}
-															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT)
-															{
+															else if (GET_PRESET_DATA().SelectedPointerIndex == Preset::EFFECT_COUNT)
 																thisPtr->SwitchScreen(Screens::Rename);
-															}
-															else if (thisPtr->m_PointerItemIndex == Preset::EFFECT_COUNT + 1)
-															{
+															else if (GET_PRESET_DATA().SelectedPointerIndex == Preset::EFFECT_COUNT + 1)
 																thisPtr->SwitchScreen(Screens::Level);
-															}
 
 															thisPtr->MarkAsDirty();
 														}});
@@ -232,14 +222,14 @@ protected:
 														 {
 															 auto *thisPtr = static_cast<PresetScreen *>(Context);
 
-															 if (thisPtr->m_PointerItemIndex >= Preset::EFFECT_COUNT)
+															 if (GET_PRESET_DATA().SelectedPointerIndex >= Preset::EFFECT_COUNT)
 																 return;
 
-															 auto *effectData = GET_EFFECT_DATA(thisPtr->m_PointerItemIndex);
+															 auto *effectData = GET_EFFECT_DATA(GET_PRESET_DATA().SelectedPointerIndex);
 
 															 effectData->Enabled = !effectData->Enabled;
 
-															 UPDATE_ENABLED_LED(thisPtr->m_PointerItemIndex);
+															 UPDATE_ENABLED_LED(GET_PRESET_DATA().SelectedPointerIndex);
 
 															 UPDATE_PRESET();
 
@@ -278,7 +268,6 @@ private:
 
 private:
 	uint8 m_SelectableItemCount;
-	uint8 m_PointerItemIndex;
 	bool m_IsEffectReordering;
 	bool m_ReorderingJustStarted;
 };

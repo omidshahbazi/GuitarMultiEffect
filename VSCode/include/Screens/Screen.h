@@ -65,14 +65,17 @@ public:
 	{
 	}
 
+	virtual void Update(void)
+	{
+	}
+
 	void Render(LCDCanvas &Canvas)
 	{
 		if (!m_IsDirty)
 			return;
+		m_IsDirty = false;
 
 		Draw(Canvas);
-
-		m_IsDirty = false;
 	}
 
 	virtual void ProcessAudioBuffer(const SampleType *const InputBuffer, const SampleType *const OutputBuffer, uint8 Count)

@@ -4,6 +4,8 @@
 
 const uint32 SAMPLE_RATE = SAMPLE_RATE_48000;
 
+const uint8 FRAME_LENGTH = 4;
+
 typedef float SampleType;
 
 enum class Screens
@@ -15,6 +17,7 @@ enum class Screens
 	Effect,
 	Rhythm,
 	Save,
+	Tuner,
 
 	COUNT
 };

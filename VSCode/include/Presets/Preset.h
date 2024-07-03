@@ -20,7 +20,8 @@ public:
 			: InputGain(0),
 			  OutputGain(0),
 			  OutputVolume(1),
-			  EffectsData{}
+			  EffectsData{},
+			  SelectedPointerIndex(0)
 		{
 			Preset::SetName(*this, "EMPTY");
 
@@ -53,7 +54,7 @@ public:
 
 		//[-20dB, 40dB]
 		float InputGain;
-		//[-20dB, 40dB]
+		//[-30dB, 40dB]
 		float OutputGain;
 		//[0, 1]
 		float OutputVolume;
@@ -81,6 +82,7 @@ public:
 #endif
 
 		Effect::Data *EffectsData[EFFECT_COUNT];
+		uint8 SelectedPointerIndex;
 	};
 
 public:

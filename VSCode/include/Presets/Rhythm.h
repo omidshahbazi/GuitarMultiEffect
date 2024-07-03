@@ -67,6 +67,9 @@ public:
 
 	void Process(SampleType *Buffer, uint8 Count)
 	{
+		if (!m_Data.IsEnabled)
+			return;
+
 		for (uint8 i = 0; i < Count; ++i)
 			Buffer[i] = Math::Lerp(Buffer[i], m_DrumsMachine.Process(), m_Data.Volume * 0.5);
 	}

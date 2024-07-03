@@ -14,8 +14,6 @@
 #include "framework/DaisySeedHAL.h"
 #include "framework/DSP/Filters/LowPassFilter.h"
 
-const uint8 FRAME_LENGTH = 4;
-
 class Application;
 
 Application *g_Application;
@@ -30,7 +28,6 @@ public:
 #ifdef USE_DISPLAY
 		  m_ScreenManager(&m_PresetManager, &m_ControlManager),
 #endif
-		  m_LowPassFilter(nullptr),
 		  m_MasterVolume(0)
 	{
 		Log::Initialize(this);
@@ -129,10 +126,6 @@ public:
 		m_ScreenManager.Initialize();
 #endif
 
-		m_LowPassFilter = Memory::Allocate<LowPassFilter<SampleType, SAMPLE_RATE>>();
-		new (m_LowPassFilter) LowPassFilter<SampleType, SAMPLE_RATE>;
-		m_LowPassFilter->SetCutoffFrequency(1 * KHz);
-
 		m_Hardware.StartAudio(AudioPassthrough);
 	}
 
@@ -143,6 +136,10 @@ public:
 		m_ControlManager.Update();
 
 		m_PresetManager.Update();
+
+#ifdef USE_DISPLAY
+		m_ScreenManager.Update();
+#endif
 	}
 
 private:
@@ -153,7 +150,7 @@ private:
 
 		for (uint32 i = 0; i < FRAME_LENGTH; ++i)
 		{
-			inputBuffer[i] = g_Application->m_LowPassFilter->Process(In[1][i]);
+			inputBuffer[i] = In[1][i];
 			processedBuffer[i] = inputBuffer[i];
 		}
 
@@ -182,8 +179,6 @@ private:
 
 	LCDCanvas m_LCDCanvas;
 #endif
-
-	LowPassFilter<SampleType, SAMPLE_RATE> *m_LowPassFilter;
 
 	float m_MasterVolume;
 };

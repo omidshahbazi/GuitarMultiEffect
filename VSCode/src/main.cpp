@@ -1,9 +1,10 @@
-// #define ENABLE_TYPE_CHECK
 #define USE_BREAK_ONLY_ASSERT
 // #define WAIT_FOR_DEBUGGER
 #define USE_DISPLAY
 
-#ifndef USE_SRAM
+#ifdef USE_SRAM
+#define ENABLE_TYPE_CHECK
+#else
 #undef USE_DISPLAY
 #endif
 
@@ -34,11 +35,10 @@ int main()
 	return 0;
 }
 
-// fonts
-//  Tuner
 //  Delay
 //  Looper
-//  Add more Effects like what is listed in the Mooer GE200 manual
+// Add expression
+//  Fonts
 //  Preset Variation like P1A P1B P1C
 
 // #include "../include/framework/DSP/Filters./WaveShaperFilter.h"

@@ -85,7 +85,7 @@ protected:
 		auto &data = GetPresetManager()->GetSelectedPreset()->GetData();
 
 		AddValueData(&data.InputGain, "IN GAIN", -20, 40, 1, true);
-		AddValueData(&data.OutputGain, "OUT GAIN", -20, 40, 1, true);
+		AddValueData(&data.OutputGain, "OUT GAIN", -30, 40, 1, true);
 		AddValueData(&data.OutputVolume, "VOL", 0, 1, 100, true);
 	}
 
@@ -104,6 +104,7 @@ protected:
 	}
 
 private:
+	// Bigger buffers would leads the code to a race condition between Audio thread and Main thread
 	SampleAmountMeter<SampleType, 320> m_InputMeter;
 	SampleAmountMeter<SampleType, 320> m_OutputtMeter;
 

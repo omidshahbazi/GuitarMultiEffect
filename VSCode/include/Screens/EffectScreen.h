@@ -3,7 +3,6 @@
 #define EFFECT_SCREEN_H
 
 #include "ParameterScreen.h"
-#include "PresetScreen.h"
 
 class EffectScreen : public ParameterScreen
 {
@@ -16,7 +15,12 @@ public:
 protected:
 	cstr GetTitle(void) const override
 	{
-		return GetPresetManager()->GetSelectedPreset()->GetEffects()[g_SelectedEffectIndex]->GetName();
+		auto preset = GetPresetManager()->GetSelectedPreset();
+		uint8 index = preset->GetData().SelectedPointerIndex;
+
+		ASSERT(index < Preset::EFFECT_COUNT, "Invalid SelectedPointerIndex");
+
+		return preset->GetEffects()[index]->GetName();
 	}
 
 	void OnChoiceDataChanged(void) override
@@ -34,11 +38,15 @@ protected:
 	void OnRefreshData(void) override
 	{
 		auto &presetData = GetPresetManager()->GetSelectedPreset()->GetData();
-		auto effectData = presetData.EffectsData[g_SelectedEffectIndex];
+
+		ASSERT(presetData.SelectedPointerIndex < Preset::EFFECT_COUNT, "Invalid SelectedPointerIndex");
+
+		auto effectData = presetData.EffectsData[presetData.SelectedPointerIndex];
 
 #define ADD_CHOICE_DATA_2(effectName, parameterName, item1, item2) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2)
 #define ADD_CHOICE_DATA_3(effectName, parameterName, item1, item2, item3) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3)
 #define ADD_CHOICE_DATA_4(effectName, parameterName, item1, item2, item3, item4) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3, item4)
+#define ADD_CHOICE_DATA_5(effectName, parameterName, item1, item2, item3, item4, item5) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3, item4, item5)
 
 #define ADD_VALUE_DATA(effectName, parameterName, minValue, maxValue, displayMultiplier, asInteger, title) AddValueData(&presetData.effectName##Data.parameterName, title, minValue, maxValue, displayMultiplier, asInteger)
 #define ADD_VALUE_DATA_SPEED(effectName, parameterName, minValue, maxValue, displayMultiplier, asInteger, speed, title) AddValueData(&presetData.effectName##Data.parameterName, title, minValue, maxValue, displayMultiplier, asInteger, speed)
@@ -92,9 +100,19 @@ protected:
 #ifdef ADD_EQ_EFFECT
 		else if (effectData->Index == presetData.EqData.Index)
 		{
-			ADD_VALUE_DATA(Eq, LowTone, -20, 20, 1, true, "LOW");
-			ADD_VALUE_DATA(Eq, MidTone, -20, 20, 1, true, "MID");
-			ADD_VALUE_DATA(Eq, HighTone, -20, 20, 1, true, "HIGH");
+			ADD_CHOICE_DATA_5(Eq, Type, "BOOSTING", "BOOSTING ALT.", "CRYING CHICKEN", "CRYING CHICK. VOC.", "CUSTOM");
+
+			if (presetData.EqData.Type == EqEffect::Data::Types::Custom)
+			{
+				ADD_VALUE_DATA(Eq, Gain100, -15, 15, 1, true, "100HZ");
+				ADD_VALUE_DATA(Eq, Gain200, -15, 15, 1, true, "200HZ");
+				ADD_VALUE_DATA(Eq, Gain400, -15, 15, 1, true, "400HZ");
+				ADD_VALUE_DATA(Eq, Gain800, -15, 15, 1, true, "800HZ");
+				ADD_VALUE_DATA(Eq, Gain1_6K, -15, 15, 1, true, "1.6KHZ");
+				ADD_VALUE_DATA(Eq, Gain3_2K, -15, 15, 1, true, "3.2KHZ");
+				ADD_VALUE_DATA(Eq, Gain6_4K, -15, 15, 1, true, "6.4KHZ");
+				ADD_VALUE_DATA(Eq, Gain, -15, 15, 1, true, "Gain");
+			}
 		}
 #endif
 #ifdef ADD_MOD_EFFECT

@@ -31,7 +31,7 @@ protected:
 
 private:
 	static constexpr uint8 MAX_CHOICE_DATA_COUNT = 2;
-	static constexpr uint8 MAX_VALUE_DATA_COUNT = 6;
+	static constexpr uint8 MAX_VALUE_DATA_COUNT = 8;
 
 public:
 	ParameterScreen(PresetManager *PresetManager, ControlManager *ControlManager)
@@ -57,22 +57,21 @@ protected:
 		const Color SELECTED_COLOR = COLOR_YELLOW;
 		const uint8 HEADER_HEIGTH = 30;
 
-		const Point REFERENCE_CHOICE_DIMENSIONS = {120, 50};
+		const Point REFERENCE_CHOICE_DIMENSIONS = {120, 40};
 		const uint16 CHOICE_DIVISION_WIDTH = canvasDimensions.X / m_ChoiceDataCount;
 		const uint16 CHOICE_WIDTH = Math::Min(REFERENCE_CHOICE_DIMENSIONS.X, CHOICE_DIVISION_WIDTH);
 		const uint16 CHOICE_HEIGTH = (CHOICE_WIDTH / REFERENCE_CHOICE_DIMENSIONS.X) * REFERENCE_CHOICE_DIMENSIONS.Y;
 
-		const Point REFERENCE_VALUE_DIMENSIONS = {90, 90};
-		const uint16 VALUE_DIVISION_WIDTH = canvasDimensions.X / m_ValueDataCount;
-		const uint16 VALUE_WIDTH = Math::Min(REFERENCE_VALUE_DIMENSIONS.X, VALUE_DIVISION_WIDTH);
-		const uint16 VALUE_HEIGTH = (VALUE_WIDTH / REFERENCE_VALUE_DIMENSIONS.X) * REFERENCE_VALUE_DIMENSIONS.Y;
+		const Point VALUE_DIMENSIONS = {60, 60};
+		const uint8 MAX_VALUE_PER_LINE = 4;
+		const uint8 VALUE_LINE_COUNT = Math::Ceil(m_ValueDataCount / (float)MAX_VALUE_PER_LINE);
 
 		DrawHeader(Canvas, HEADER_HEIGTH,
 				   HEADER_DEFAULT_LEFT_BOX_COLOR, nullptr, {}, {},
 				   HEADER_DEFAULT_MIDDLE_BOX_COLOR, GetTitle(), HEADER_DEFAULT_MIDDLE_TEXT_FONT, HEADER_DEFAULT_MIDDLE_TEXT_COLOR,
 				   HEADER_DEFAULT_RIGHT_BOX_COLOR, nullptr, {}, {});
 
-		Rect rect = {{0, HEADER_HEIGTH + 20}, {CHOICE_WIDTH, CHOICE_HEIGTH}};
+		Rect rect = {{0, HEADER_HEIGTH + 15}, {CHOICE_WIDTH, CHOICE_HEIGTH}};
 		for (uint8 i = 0; i < m_ChoiceDataCount; ++i)
 		{
 			const auto &data = m_ChoiceData[i];
@@ -89,21 +88,32 @@ protected:
 			DrawChoiceData(Canvas, rect, data, FONT_16, color);
 		}
 
-		rect = {{0, HEADER_HEIGTH + 100}, {VALUE_WIDTH, VALUE_HEIGTH}};
-		for (uint8 i = 0; i < m_ValueDataCount; ++i)
+		const uint16 VALUE_AREA_START_Y = HEADER_HEIGTH + 50;
+		const uint16 VALUE_AREA_HEIGTH = canvasDimensions.Y - VALUE_AREA_START_Y;
+		rect = {{0, VALUE_AREA_START_Y + ((VALUE_AREA_HEIGTH / (VALUE_LINE_COUNT + 1)) - (VALUE_DIMENSIONS.Y * 0.5))}, VALUE_DIMENSIONS};
+		for (uint8 l = 0; l < VALUE_LINE_COUNT; ++l)
 		{
-			const auto &data = m_ValueData[i];
+			const uint8 VALUE_COUNT = Math::Min(m_ValueDataCount - (l * MAX_VALUE_PER_LINE), MAX_VALUE_PER_LINE);
+			const Point VALUE_SLOT_DIMENTIONS = {canvasDimensions.X / VALUE_COUNT, VALUE_DIMENSIONS.Y + 10};
 
-			rect.Position.X = (i * VALUE_DIVISION_WIDTH) + ((VALUE_DIVISION_WIDTH * 0.5) - (VALUE_WIDTH * 0.5));
+			rect.Position.Y += l * VALUE_SLOT_DIMENTIONS.Y;
 
-			Color color = NORMAL_COLOR;
-			if (i + m_ChoiceDataCount == m_SelectedDataIndex)
-				if (m_IsSelected)
-					color = SELECTED_COLOR;
-				else
-					color = HOVERED_COLOR;
+			for (uint8 i = 0; i < VALUE_COUNT; ++i)
+			{
+				uint8 itemIndex = (l * MAX_VALUE_PER_LINE) + i;
+				const auto &data = m_ValueData[itemIndex];
 
-			DrawValueData(Canvas, rect, data, FONT_16, color);
+				rect.Position.X = (i * VALUE_SLOT_DIMENTIONS.X) + ((VALUE_SLOT_DIMENTIONS.X * 0.5) - (VALUE_DIMENSIONS.X * 0.5));
+
+				Color color = NORMAL_COLOR;
+				if (itemIndex + m_ChoiceDataCount == m_SelectedDataIndex)
+					if (m_IsSelected)
+						color = SELECTED_COLOR;
+					else
+						color = HOVERED_COLOR;
+
+				DrawValueData(Canvas, rect, data, FONT_16, color);
+			}
 		}
 	}
 
