@@ -63,7 +63,7 @@ protected:
 													 thisPtr->MarkAsDirty();
 												 }});
 
-		controlManager->SetValueButtonTunedOffCallback({this,
+		controlManager->SetValueButtonTurnedOffCallback({this,
 														[](void *Context, float HeldTime)
 														{
 															auto *thisPtr = static_cast<SaveScreen *>(Context);
@@ -89,7 +89,7 @@ protected:
 		auto *controlManager = GetControlManager();
 
 		controlManager->SetValueRotatedCallback(nullptr);
-		controlManager->SetValueButtonTunedOffCallback(nullptr);
+		controlManager->SetValueButtonTurnedOffCallback(nullptr);
 	}
 
 private:

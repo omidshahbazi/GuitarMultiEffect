@@ -165,7 +165,9 @@ private:
 			SampleType value = processedBuffer[i] * g_Application->m_MasterVolume;
 
 			Out[0][i] = value;
-			Out[1][i] = inputBuffer[i] * g_Application->m_MasterVolume;
+
+			// Otherwise the left line gets the harmony on-line (I guess it's because of the stereo cable that I have)
+			Out[1][i] = 0; // inputBuffer[i] * g_Application->m_MasterVolume;
 		}
 	}
 

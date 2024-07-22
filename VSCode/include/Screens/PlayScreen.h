@@ -53,31 +53,31 @@ protected:
 
 		auto *controlManager = GetControlManager();
 
-		controlManager->SetUpButtonTunedOffCallback({this,
-													 [](void *Context, float HeldTime)
-													 {
-														 auto *thisPtr = static_cast<PlayScreen *>(Context);
+		controlManager->SetUpButtonTurnedOffCallback({this,
+													  [](void *Context, float HeldTime)
+													  {
+														  auto *thisPtr = static_cast<PlayScreen *>(Context);
 
-														 thisPtr->GetPresetManager()->ChangeSelectedPreset(1);
+														  thisPtr->GetPresetManager()->ChangeSelectedPreset(1);
 
-														 thisPtr->MarkAsDirty();
-													 }});
+														  thisPtr->MarkAsDirty();
+													  }});
 
-		controlManager->SetDownButtonTunedOffCallback({this,
-													   [](void *Context, float HeldTime)
-													   {
-														   auto *thisPtr = static_cast<PlayScreen *>(Context);
-
-														   thisPtr->GetPresetManager()->ChangeSelectedPreset(-1);
-
-														   thisPtr->MarkAsDirty();
-													   }});
-
-		controlManager->SetValueButtonTunedOffCallback({this,
+		controlManager->SetDownButtonTurnedOffCallback({this,
 														[](void *Context, float HeldTime)
 														{
-															static_cast<PlayScreen *>(Context)->SwitchScreen(Screens::Preset);
+															auto *thisPtr = static_cast<PlayScreen *>(Context);
+
+															thisPtr->GetPresetManager()->ChangeSelectedPreset(-1);
+
+															thisPtr->MarkAsDirty();
 														}});
+
+		controlManager->SetValueButtonTurnedOffCallback({this,
+														 [](void *Context, float HeldTime)
+														 {
+															 static_cast<PlayScreen *>(Context)->SwitchScreen(Screens::Preset);
+														 }});
 	}
 
 	void Deactivate(void) override
@@ -86,9 +86,9 @@ protected:
 
 		auto *controlManager = GetControlManager();
 
-		controlManager->SetUpButtonTunedOffCallback(nullptr);
-		controlManager->SetDownButtonTunedOffCallback(nullptr);
-		controlManager->SetValueButtonTunedOffCallback(nullptr);
+		controlManager->SetUpButtonTurnedOffCallback(nullptr);
+		controlManager->SetDownButtonTurnedOffCallback(nullptr);
+		controlManager->SetValueButtonTurnedOffCallback(nullptr);
 	}
 };
 

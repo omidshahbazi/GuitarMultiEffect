@@ -33,7 +33,7 @@ protected:
 
 		Screen::Draw(Canvas);
 
-		DrawHeader(Canvas, DEFAULT_HEADER_HEIGHT,
+		DrawHeader(Canvas, DEFAULT_HEADER_HEIGTH,
 				   HEADER_DEFAULT_LEFT_BOX_COLOR, GetPresetNumber().c_str(), HEADER_DEFAULT_LEFT_TEXT_FONT, HEADER_DEFAULT_LEFT_TEXT_COLOR,
 				   HEADER_DEFAULT_MIDDLE_BOX_COLOR, "RENAME", HEADER_DEFAULT_MIDDLE_TEXT_FONT, HEADER_DEFAULT_MIDDLE_TEXT_COLOR,
 				   HEADER_DEFAULT_RIGHT_BOX_COLOR, nullptr, {}, {});
@@ -43,7 +43,7 @@ protected:
 		Rect rect;
 		for (uint8 i = 0; i < CHARACTERS_LINE_COUNT; ++i)
 		{
-			rect = {{0, DEFAULT_HEADER_HEIGHT + 50 + (i * CHARACTER_FONT_CHARACTER_HEIGHT)}, {canvasDimensions.X, CHARACTER_FONT_CHARACTER_HEIGHT}};
+			rect = {{0, DEFAULT_HEADER_HEIGTH + 50 + (i * CHARACTER_FONT_CHARACTER_HEIGHT)}, {canvasDimensions.X, CHARACTER_FONT_CHARACTER_HEIGHT}};
 
 			Rect nameRect = rect;
 			nameRect.Position.X = (canvasDimensions.X * 0.5) - (PER_LINE_CHARACTERS_DIMENSIONS.X * 0.5);
@@ -98,34 +98,34 @@ protected:
 													 thisPtr->MarkAsDirty();
 												 }});
 
-		controlManager->SetValueButtonTunedOffCallback({this,
-														[](void *Context, float HeldTime)
-														{
-															auto *thisPtr = static_cast<RenameScreen *>(Context);
+		controlManager->SetValueButtonTurnedOffCallback({this,
+														 [](void *Context, float HeldTime)
+														 {
+															 auto *thisPtr = static_cast<RenameScreen *>(Context);
 
-															thisPtr->m_NameCharacterIsSelected = !thisPtr->m_NameCharacterIsSelected;
+															 thisPtr->m_NameCharacterIsSelected = !thisPtr->m_NameCharacterIsSelected;
 
-															if (thisPtr->m_NameCharacterIsSelected)
-															{
-																auto &presetData = thisPtr->GetPresetManager()->GetSelectedPreset()->GetData();
-																char ch = presetData.Name[thisPtr->m_NameCharacterIndex];
+															 if (thisPtr->m_NameCharacterIsSelected)
+															 {
+																 auto &presetData = thisPtr->GetPresetManager()->GetSelectedPreset()->GetData();
+																 char ch = presetData.Name[thisPtr->m_NameCharacterIndex];
 
-																if ('A' <= ch && ch <= 'Z')
-																	thisPtr->m_CharacterIndex = ch - 'A';
-																else if ('0' <= ch && ch <= '9')
-																	thisPtr->m_CharacterIndex = (ch - '0') + ('Z' - 'A');
-																else if (ch == '-')
-																	thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0');
-																else if (ch == '_')
-																	thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0') + 1;
-																else if (ch == '/')
-																	thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0') + 2;
-																else if (ch == ' ')
-																	thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0') + 3;
-															}
+																 if ('A' <= ch && ch <= 'Z')
+																	 thisPtr->m_CharacterIndex = ch - 'A';
+																 else if ('0' <= ch && ch <= '9')
+																	 thisPtr->m_CharacterIndex = (ch - '0') + ('Z' - 'A');
+																 else if (ch == '-')
+																	 thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0');
+																 else if (ch == '_')
+																	 thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0') + 1;
+																 else if (ch == '/')
+																	 thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0') + 2;
+																 else if (ch == ' ')
+																	 thisPtr->m_CharacterIndex = ('Z' - 'A') + ('9' - '0') + 3;
+															 }
 
-															thisPtr->MarkAsDirty();
-														}});
+															 thisPtr->MarkAsDirty();
+														 }});
 	}
 
 	void Deactivate(void) override
@@ -135,7 +135,7 @@ protected:
 		auto *controlManager = GetControlManager();
 
 		controlManager->SetValueRotatedCallback(nullptr);
-		controlManager->SetValueButtonTunedOffCallback(nullptr);
+		controlManager->SetValueButtonTurnedOffCallback(nullptr);
 	}
 
 private:

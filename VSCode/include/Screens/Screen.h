@@ -28,7 +28,7 @@ const Font &FONT_64 = {Font_DUBAI_BOLD_16.Width, Font_DUBAI_BOLD_16.Height, Font
 
 const Color BACKGROUND_FILL_COLOR = COLOR_BLACK;
 
-const uint16 DEFAULT_HEADER_HEIGHT = 50;
+const uint16 DEFAULT_HEADER_HEIGTH = 50;
 const uint8 SPLITTER_THICKNESS = 2;
 
 const Color &HEADER_DEFAULT_LEFT_BOX_COLOR = COLOR_DARK_BLUE;
@@ -206,6 +206,23 @@ protected:
 			if (RightPartText != nullptr)
 				DrawStringJustified(Canvas, rect, RightPartText, RightPartTextFont, RightPartTextColor);
 		}
+	}
+
+	static void DrawProgressBar(LCDCanvas &Canvas, Rect Rect, Color BorderColor, cstr Title, Color TitleColor, float Level, Color LevelColor, bool DrawMaxLevel, float MaxLevel, Color MaxLevelColor)
+	{
+		::Rect valueRect = Rect;
+		valueRect.Dimension.X *= Level;
+		Canvas.DrawFilledRectangle(valueRect, LevelColor);
+
+		DrawStringJustified(Canvas, Rect, Title, FONT_20, TitleColor);
+
+		if (DrawMaxLevel)
+		{
+			uint16 x = Rect.Position.X + (Rect.Dimension.X * MaxLevel);
+			Canvas.DrawLine({x, Rect.Position.Y}, {x, Rect.Position.Y + Rect.Dimension.Y}, MaxLevelColor);
+		}
+
+		Canvas.DrawRectangle(Rect, BorderColor);
 	}
 
 private:

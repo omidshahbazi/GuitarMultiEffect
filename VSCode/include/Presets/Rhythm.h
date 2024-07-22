@@ -17,11 +17,9 @@ public:
 		HalfNote1 = 0,
 		HalfNote2,
 		HalfNote3,
-		HalfNote4,
 		QuarterNote1,
 		QuarterNote2,
-		QuarterNote3,
-		QuarterNote4
+		QuarterNote3
 	};
 
 public:
@@ -79,44 +77,22 @@ public:
 		m_Data = Data;
 
 		static Parts Pattern1[8];
-		Pattern1[0] = Parts::Kick | Parts::CymbalHiHat;
-		Pattern1[1] = Parts::None;
-		Pattern1[2] = Parts::Kick | Parts::Snare;
-		Pattern1[3] = Parts::None;
-		Pattern1[4] = Parts::Kick | Parts::CymbalHiHat;
-		Pattern1[5] = Parts::None;
-		Pattern1[6] = Parts::Kick | Parts::Snare;
-		Pattern1[7] = Parts::None;
+		Pattern1[0] = Parts::Snare | Parts::Kick;
+		Pattern1[1] = Parts::Snare;
+		Pattern1[2] = Parts::Snare | Parts::CymbalHiHat;
+		Pattern1[3] = Parts::Snare;
+		Pattern1[4] = Parts::Snare | Parts::Kick;
+		Pattern1[5] = Parts::Snare;
+		Pattern1[6] = Parts::Snare | Parts::CymbalHiHat;
+		Pattern1[7] = Parts::Snare;
 
-		static Parts Pattern2[8];
-		Pattern2[0] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern2[1] = Parts::CymbalHiHat;
-		Pattern2[2] = Parts::CymbalHiHat | Parts::Snare;
-		Pattern2[3] = Parts::CymbalHiHat;
-		Pattern2[4] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern2[5] = Parts::CymbalHiHat;
-		Pattern2[6] = Parts::CymbalHiHat | Parts::Snare;
-		Pattern2[7] = Parts::CymbalHiHat;
-
-		static Parts Pattern3[8];
-		Pattern3[0] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern3[1] = Parts::CymbalHiHat;
-		Pattern3[2] = Parts::CymbalHiHat | Parts::Snare;
-		Pattern3[3] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern3[4] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern3[5] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern3[6] = Parts::CymbalHiHat | Parts::Snare;
-		Pattern3[7] = Parts::CymbalHiHat;
-
-		static Parts Pattern4[8];
-		Pattern4[0] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern4[1] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern4[2] = Parts::CymbalHiHat | Parts::Snare;
-		Pattern4[3] = Parts::CymbalHiHat | Parts::Kick;
-		Pattern4[4] = Parts::CymbalHiHat;
-		Pattern4[5] = Parts::CymbalHiHat;
-		Pattern4[6] = Parts::CymbalHiHat | Parts::Snare;
-		Pattern4[7] = Parts::CymbalHiHat | Parts::Kick;
+		static Parts Pattern2[6];
+		Pattern2[0] = Parts::Snare | Parts::Kick;
+		Pattern2[1] = Parts::Snare;
+		Pattern2[2] = Parts::Snare;
+		Pattern2[3] = Parts::Snare | Parts::CymbalHiHat;
+		Pattern2[4] = Parts::Snare;
+		Pattern2[5] = Parts::Snare;
 
 		switch (m_Data.Preset)
 		{
@@ -126,17 +102,7 @@ public:
 			break;
 
 		case Presets::HalfNote2:
-			m_DrumsMachine.SetNotes(Pattern2, 8);
-			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
-			break;
-
-		case Presets::HalfNote3:
-			m_DrumsMachine.SetNotes(Pattern3, 8);
-			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
-			break;
-
-		case Presets::HalfNote4:
-			m_DrumsMachine.SetNotes(Pattern4, 8);
+			m_DrumsMachine.SetNotes(Pattern2, 6);
 			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Half);
 			break;
 
@@ -146,17 +112,7 @@ public:
 			break;
 
 		case Presets::QuarterNote2:
-			m_DrumsMachine.SetNotes(Pattern2, 8);
-			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
-			break;
-
-		case Presets::QuarterNote3:
-			m_DrumsMachine.SetNotes(Pattern3, 8);
-			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
-			break;
-
-		case Presets::QuarterNote4:
-			m_DrumsMachine.SetNotes(Pattern4, 8);
+			m_DrumsMachine.SetNotes(Pattern2, 6);
 			m_DrumsMachine.SetNoteDuration(Drums::NoteDurations::Quarter);
 			break;
 

@@ -35,8 +35,7 @@ int main()
 	return 0;
 }
 
-//  Delay
-//  Looper
+//  Looper (It needs to have a normalize method and an option to disable auto nomalizations (* 0.5))
 // Add expression
 //  Fonts
 //  Preset Variation like P1A P1B P1C

@@ -17,6 +17,7 @@ enum class Screens
 	Effect,
 	Rhythm,
 	Save,
+	Looper,
 	Tuner,
 
 	COUNT

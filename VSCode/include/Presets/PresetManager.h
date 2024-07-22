@@ -6,11 +6,18 @@
 #include "Rhythm.h"
 #include "../framework/DSP/IHAL.h"
 #include "../framework/DSP/PersistentBlob.h"
+#include "../framework/DSP/DSPs/Looper.h"
 
 class PresetManager
 {
+private:
+	// static constexpr uint16 MAX_LOOPER_TIME = 2 * 60;
+	static constexpr uint16 MAX_LOOPER_TIME = 10;
+
 public:
 	static constexpr uint8 PRESET_COUNT = 4;
+
+	typedef Looper<SampleType, SAMPLE_RATE, MAX_LOOPER_TIME> LooperType;
 
 private:
 	struct Data
@@ -33,6 +40,7 @@ public:
 	PresetManager(IHAL *HAL)
 		: m_HAL(HAL),
 		  m_PersistentData(0),
+		  m_Looper(nullptr),
 		  m_Rhythm(nullptr)
 	{
 	}
@@ -40,6 +48,9 @@ public:
 	void Initialize(void)
 	{
 		PersistentBlobBase::EreasAll();
+
+		m_Looper = Memory::Allocate<LooperType>();
+		new (m_Looper) LooperType();
 
 		m_Rhythm = Memory::Allocate<Rhythm>();
 		new (m_Rhythm) Rhythm(m_HAL);
@@ -63,6 +74,8 @@ public:
 
 		m_Presets[data.SelectedPresetIndex].Process(Buffer, Count);
 
+		m_Looper->ProcessBuffer(Buffer, Count);
+
 		m_Rhythm->Process(Buffer, Count);
 	}
 
@@ -85,11 +98,6 @@ public:
 		UpdatePresetData();
 	}
 
-	Rhythm *GetRhythm(void)
-	{
-		return m_Rhythm;
-	}
-
 	void Save(void)
 	{
 		Data data;
@@ -108,6 +116,21 @@ public:
 		PersistentBlobBase::EreasAll();
 
 		SetDataOnPresets();
+	}
+
+	IHAL *GetHAL(void) const
+	{
+		return m_HAL;
+	}
+
+	Rhythm *GetRhythm(void)
+	{
+		return m_Rhythm;
+	}
+
+	LooperType *GetLooper(void)
+	{
+		return m_Looper;
 	}
 
 private:
@@ -201,6 +224,7 @@ private:
 	IHAL *m_HAL;
 	Preset m_Presets[PRESET_COUNT];
 	PersistentBlob<Data> m_PersistentData;
+	LooperType *m_Looper;
 	Rhythm *m_Rhythm;
 };
 

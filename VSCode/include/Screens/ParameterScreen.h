@@ -10,7 +10,7 @@ protected:
 	struct ChoiceData
 	{
 	public:
-		static constexpr uint8 MAX_ITEM_COUNT = 8;
+		static constexpr uint8 MAX_ITEM_COUNT = 10;
 
 		int32 *SelectedItem;
 		cstr Items[MAX_ITEM_COUNT];
@@ -168,15 +168,15 @@ protected:
 													 thisPtr->MarkAsDirty();
 												 }});
 
-		controlManager->SetValueButtonTunedOffCallback({this,
-														[](void *Context, float HeldTime)
-														{
-															auto *thisPtr = static_cast<ParameterScreen *>(Context);
+		controlManager->SetValueButtonTurnedOffCallback({this,
+														 [](void *Context, float HeldTime)
+														 {
+															 auto *thisPtr = static_cast<ParameterScreen *>(Context);
 
-															thisPtr->m_IsSelected = !thisPtr->m_IsSelected;
+															 thisPtr->m_IsSelected = !thisPtr->m_IsSelected;
 
-															thisPtr->MarkAsDirty();
-														}});
+															 thisPtr->MarkAsDirty();
+														 }});
 	}
 
 	void Deactivate(void) override
@@ -186,14 +186,15 @@ protected:
 		auto *controlManager = GetControlManager();
 
 		controlManager->SetValueRotatedCallback(nullptr);
-		controlManager->SetValueButtonTunedOffCallback(nullptr);
+		controlManager->SetValueButtonTurnedOffCallback(nullptr);
 	}
 
-	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2 = nullptr, cstr Item3 = nullptr, cstr Item4 = nullptr, cstr Item5 = nullptr, cstr Item6 = nullptr, cstr Item7 = nullptr, cstr Item8 = nullptr)
+	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2, cstr Item3 = nullptr, cstr Item4 = nullptr, cstr Item5 = nullptr, cstr Item6 = nullptr, cstr Item7 = nullptr, cstr Item8 = nullptr, cstr Item9 = nullptr, cstr Item10 = nullptr)
 	{
 		ASSERT(m_ChoiceDataCount < MAX_CHOICE_DATA_COUNT, "Out of ChoiceData slots");
 		ASSERT(Data != nullptr, "Data cannot be null");
 		ASSERT(Item1 != nullptr, "Item1 cannot be null");
+		ASSERT(Item2 != nullptr, "Item2 cannot be null");
 
 		auto &data = m_ChoiceData[m_ChoiceDataCount++];
 		data.SelectedItem = Data;
@@ -214,6 +215,10 @@ protected:
 			data.Items[data.ItemCount++] = Item7;
 		if (Item8 != nullptr)
 			data.Items[data.ItemCount++] = Item8;
+		if (Item9 != nullptr)
+			data.Items[data.ItemCount++] = Item9;
+		if (Item10 != nullptr)
+			data.Items[data.ItemCount++] = Item10;
 	}
 
 	void AddValueData(float *Data, cstr Title, float MinValue, float MaxValue, float DisplayMultiplier, bool AsInteger, float Speed = 1)

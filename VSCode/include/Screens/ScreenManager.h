@@ -9,6 +9,7 @@
 #include "EffectScreen.h"
 #include "RhythmScreen.h"
 #include "SaveScreen.h"
+#include "LooperScreen.h"
 // #include "TunerScreen.h"
 #include "../framework/LCDCanvas.h"
 
@@ -36,9 +37,21 @@ public:
 		Create<EffectScreen>(Screens::Effect);
 		Create<RhythmScreen>(Screens::Rhythm);
 		Create<SaveScreen>(Screens::Save);
+		Create<LooperScreen>(Screens::Looper);
 		// Create<TunerScreen>(Screens::Tuner);
 
 		SwitchTo(Screens::Play);
+
+		static auto checkAnSwitchToLooperScreen = [this]()
+		{
+			if (!(m_IsVariation2On && m_IsVariation3On))
+				return;
+
+			SwitchTo(Screens::Looper);
+
+			m_IsVariation2On = false;
+			m_IsVariation3On = false;
+		};
 
 		m_ControlManager->SetSaveButtonCallback({this,
 												 [](void *Context, float HeldTime)
@@ -46,20 +59,48 @@ public:
 													 static_cast<ScreenManager *>(Context)->SwitchTo(Screens::Save);
 												 }});
 
-		m_ControlManager->SetBackButtonTunedOffCallback({this,
-														 [](void *Context, float HeldTime)
-														 {
-															 static_cast<ScreenManager *>(Context)->GoBack();
-														 }});
+		m_ControlManager->SetBackButtonTurnedOffCallback({this,
+														  [](void *Context, float HeldTime)
+														  {
+															  static_cast<ScreenManager *>(Context)->GoBack();
+														  }});
 
-		m_ControlManager->SetLooperButtonHoldCallback({this,
-													   [](void *Context, float HeldTime)
-													   {
-														   if (HeldTime < 2)
-															   return;
+		m_ControlManager->SetVariation2ButtonTurnedOnCallback({this,
+															   [](void *Context)
+															   {
+																   static_cast<ScreenManager *>(Context)->m_IsVariation2On = true;
 
-														   static_cast<ScreenManager *>(Context)->SwitchTo(Screens::Rhythm);
-													   }});
+																   checkAnSwitchToLooperScreen();
+															   }});
+
+		m_ControlManager->SetVariation2ButtonTurnedOffCallback({this,
+																[](void *Context, float HeldTime)
+																{
+																	static_cast<ScreenManager *>(Context)->m_IsVariation2On = false;
+																}});
+
+		m_ControlManager->SetVariation3ButtonTurnedOnCallback({this,
+															   [](void *Context)
+															   {
+																   static_cast<ScreenManager *>(Context)->m_IsVariation3On = true;
+
+																   checkAnSwitchToLooperScreen();
+															   }});
+
+		m_ControlManager->SetVariation2ButtonTurnedOffCallback({this,
+																[](void *Context, float HeldTime)
+																{
+																	static_cast<ScreenManager *>(Context)->m_IsVariation3On = false;
+																}});
+
+		m_ControlManager->SetVariation3ButtonHoldCallback({this,
+														   [](void *Context, float HeldTime)
+														   {
+															   if (HeldTime < 2)
+																   return;
+
+															   static_cast<ScreenManager *>(Context)->SwitchTo(Screens::Rhythm);
+														   }});
 	}
 
 	void Update(void)
@@ -157,6 +198,9 @@ private:
 	Screen *m_Screens[(uint8)Screens::COUNT];
 	Screen *m_ScreensHistory[MAX_ACTIVE_SCREEN_COUNT];
 	int8 m_ActiveScreenIndex;
+
+	bool m_IsVariation2On;
+	bool m_IsVariation3On;
 };
 
 #endif

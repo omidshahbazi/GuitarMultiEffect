@@ -150,11 +150,10 @@ protected:
 #ifdef ADD_DEL_EFFECT
 		else if (effectData->Index == presetData.DelData.Index)
 		{
-			ADD_CHOICE_DATA_3(Del, Type, "NORMAL", "REVERSE", "PING PONG");
+			ADD_CHOICE_DATA_2(Del, Type, "NORMAL", "REVERSE");
 
-			if (presetData.DelData.Type == DelEffect::Data::Types::Normal)
-			{
-			}
+			ADD_VALUE_DATA_SPEED(Del, DelayTime, 0, DelEffect::Data::MAX_DELAY_TIME, 1, false, 0.1, "LENGTH");
+			ADD_VALUE_DATA(Del, Feedback, 0, 1, 100, true, "FEEDBACK");
 		}
 #endif
 #ifdef ADD_REV_EFFECT

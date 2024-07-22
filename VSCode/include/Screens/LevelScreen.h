@@ -48,7 +48,7 @@ protected:
 
 		const uint16 LEVEL_BAR_WIDTH = canvasDimension.X - 50;
 
-		Rect rect = {{(canvasDimension.X * 0.5) - (LEVEL_BAR_WIDTH * 0.5), DEFAULT_HEADER_HEIGHT + 10}, {LEVEL_BAR_WIDTH, 20}};
+		Rect rect = {{(canvasDimension.X * 0.5) - (LEVEL_BAR_WIDTH * 0.5), DEFAULT_HEADER_HEIGTH + 10}, {LEVEL_BAR_WIDTH, 20}};
 
 		DrawLevel(Canvas, rect, "IN", m_InputLevel, m_InputMaxLevel);
 
@@ -91,16 +91,7 @@ protected:
 
 	static void DrawLevel(LCDCanvas &Canvas, Rect Rect, cstr Title, SampleType Level, SampleType MaxLevel)
 	{
-		::Rect valueRect = Rect;
-		valueRect.Dimension.X *= Level;
-		Canvas.DrawFilledRectangle(valueRect, COLOR_GREEN);
-
-		DrawStringJustified(Canvas, Rect, Title, FONT_20, COLOR_WHITE);
-
-		uint16 x = Rect.Position.X + (Rect.Dimension.X * MaxLevel);
-		Canvas.DrawLine({x, Rect.Position.Y}, {x, Rect.Position.Y + Rect.Dimension.Y}, COLOR_RED);
-
-		Canvas.DrawRectangle(Rect, COLOR_WHITE);
+		DrawProgressBar(Canvas, Rect, COLOR_WHITE, Title, COLOR_WHITE, Level, COLOR_GREEN, true, MaxLevel, COLOR_RED);
 	}
 
 private:

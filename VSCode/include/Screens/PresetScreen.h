@@ -38,7 +38,7 @@ protected:
 		const Color SELECTED_EFFECT_COLOR = COLOR_RED;
 		const Font &EFFECT_NAME_FONT = FONT_20;
 		const Color EFFECT_NAME_COLOR = COLOR_LIGHT_BLUE;
-		const uint16 START_HEIGHT = DEFAULT_HEADER_HEIGHT + 50;
+		const uint16 START_HEIGHT = DEFAULT_HEADER_HEIGTH + 50;
 		const uint16 LINES_OFFSET = 70;
 		const Point EFFECT_DIMENSIONS = {20, 30};
 		const Point HALF_EFFECT_DIMENSIONS = {EFFECT_DIMENSIONS.X * 0.5, EFFECT_DIMENSIONS.Y * 0.5};
@@ -54,19 +54,19 @@ protected:
 		uint8 selectedPointerIndex = preset->GetData().SelectedPointerIndex;
 
 		auto &presetData = preset->GetData();
-		DrawHeader(Canvas, DEFAULT_HEADER_HEIGHT,
+		DrawHeader(Canvas, DEFAULT_HEADER_HEIGTH,
 				   PRESET_INDEX_BOX_COLOR, GetPresetNumber().c_str(), PRESET_INDEX_TEXT_FONT, PRESET_INDEX_TEXT_COLOR,
 				   PRESET_NAME_BOX_COLOR, presetData.Name, PRESET_NAME_TEXT_FONT, PRESET_NAME_TEXT_COLOR,
 				   PRESET_VOLUME_BOX_COLOR, GetPresetVolume().c_str(), PRESET_VOLUME_TEXT_FONT, PRESET_VOLUME_TEXT_COLOR);
 
 		if (selectedPointerIndex == Preset::EFFECT_COUNT)
 		{
-			DrawSelectionSign(Canvas, {HEADER_LEFT_PART_WIDTH + (uint16)(HEADER_MIDDLE_PART_WIDTH * 0.5), DEFAULT_HEADER_HEIGHT + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
+			DrawSelectionSign(Canvas, {HEADER_LEFT_PART_WIDTH + (uint16)(HEADER_MIDDLE_PART_WIDTH * 0.5), DEFAULT_HEADER_HEIGTH + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
 		}
 		else if (selectedPointerIndex == Preset::EFFECT_COUNT + 1)
 		{
 			uint16 leftAndRightWidth = HEADER_LEFT_PART_WIDTH + HEADER_MIDDLE_PART_WIDTH;
-			DrawSelectionSign(Canvas, {leftAndRightWidth + (uint16)((canvasDimensions.X - leftAndRightWidth) * 0.5), DEFAULT_HEADER_HEIGHT + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
+			DrawSelectionSign(Canvas, {leftAndRightWidth + (uint16)((canvasDimensions.X - leftAndRightWidth) * 0.5), DEFAULT_HEADER_HEIGTH + SELECTION_SIGN_OFFSET}, 1, COLOR_WHITE);
 		}
 
 		Point effectAreaPoint = {0, START_HEIGHT};
@@ -135,7 +135,7 @@ protected:
 #define GET_PRESET_DATA() thisPtr->GetPresetManager()->GetSelectedPreset()->GetData()
 #define UPDATE_PRESET() thisPtr->GetPresetManager()->GetSelectedPreset()->UpdateData()
 #define GET_EFFECT_DATA(Index) GET_PRESET_DATA().EffectsData[Index]
-#define UPDATE_ENABLED_LED(Index) thisPtr->GetControlManager()->SetLooperLEDConstantBrightness(GET_EFFECT_DATA(Index)->Enabled ? COLOR_GREEN : COLOR_BLACK)
+#define UPDATE_ENABLED_LED(Index) thisPtr->GetControlManager()->SetVariation3LEDConstantBrightness(GET_EFFECT_DATA(Index)->Enabled ? COLOR_GREEN : COLOR_BLACK)
 
 		Screen::Activate();
 
@@ -144,7 +144,7 @@ protected:
 		m_IsEffectReordering = false;
 		m_ReorderingJustStarted = false;
 
-		controlManager->SetLooperLEDConstantBrightness(COLOR_BLACK);
+		controlManager->SetVariation3LEDConstantBrightness(COLOR_BLACK);
 
 		controlManager->SetValueRotatedCallback({this,
 												 [](void *Context, int8 Direction)
@@ -167,7 +167,7 @@ protected:
 														 GET_PRESET_DATA().SelectedPointerIndex = Math::Wrap(GET_PRESET_DATA().SelectedPointerIndex + Direction, 0, (int32)thisPtr->m_SelectableItemCount - 1);
 
 														 if (GET_PRESET_DATA().SelectedPointerIndex >= Preset::EFFECT_COUNT)
-															 thisPtr->GetControlManager()->SetLooperLEDConstantBrightness(COLOR_BLACK);
+															 thisPtr->GetControlManager()->SetVariation3LEDConstantBrightness(COLOR_BLACK);
 														 else
 															 UPDATE_ENABLED_LED(GET_PRESET_DATA().SelectedPointerIndex);
 													 }
@@ -195,46 +195,46 @@ protected:
 														thisPtr->MarkAsDirty();
 													}});
 
-		controlManager->SetValueButtonTunedOffCallback({this,
-														[](void *Context, float HeldTime)
-														{
-															auto *thisPtr = static_cast<PresetScreen *>(Context);
-
-															if (thisPtr->m_ReorderingJustStarted)
-															{
-																thisPtr->m_ReorderingJustStarted = false;
-																return;
-															}
-															else if (thisPtr->m_IsEffectReordering)
-																thisPtr->m_IsEffectReordering = false;
-															else if (GET_PRESET_DATA().SelectedPointerIndex < Preset::EFFECT_COUNT)
-																thisPtr->SwitchScreen(Screens::Effect);
-															else if (GET_PRESET_DATA().SelectedPointerIndex == Preset::EFFECT_COUNT)
-																thisPtr->SwitchScreen(Screens::Rename);
-															else if (GET_PRESET_DATA().SelectedPointerIndex == Preset::EFFECT_COUNT + 1)
-																thisPtr->SwitchScreen(Screens::Level);
-
-															thisPtr->MarkAsDirty();
-														}});
-
-		controlManager->SetLooperButtonTunedOffCallback({this,
+		controlManager->SetValueButtonTurnedOffCallback({this,
 														 [](void *Context, float HeldTime)
 														 {
 															 auto *thisPtr = static_cast<PresetScreen *>(Context);
 
-															 if (GET_PRESET_DATA().SelectedPointerIndex >= Preset::EFFECT_COUNT)
+															 if (thisPtr->m_ReorderingJustStarted)
+															 {
+																 thisPtr->m_ReorderingJustStarted = false;
 																 return;
-
-															 auto *effectData = GET_EFFECT_DATA(GET_PRESET_DATA().SelectedPointerIndex);
-
-															 effectData->Enabled = !effectData->Enabled;
-
-															 UPDATE_ENABLED_LED(GET_PRESET_DATA().SelectedPointerIndex);
-
-															 UPDATE_PRESET();
+															 }
+															 else if (thisPtr->m_IsEffectReordering)
+																 thisPtr->m_IsEffectReordering = false;
+															 else if (GET_PRESET_DATA().SelectedPointerIndex < Preset::EFFECT_COUNT)
+																 thisPtr->SwitchScreen(Screens::Effect);
+															 else if (GET_PRESET_DATA().SelectedPointerIndex == Preset::EFFECT_COUNT)
+																 thisPtr->SwitchScreen(Screens::Rename);
+															 else if (GET_PRESET_DATA().SelectedPointerIndex == Preset::EFFECT_COUNT + 1)
+																 thisPtr->SwitchScreen(Screens::Level);
 
 															 thisPtr->MarkAsDirty();
 														 }});
+
+		controlManager->SetVariation3ButtonTurnedOffCallback({this,
+															  [](void *Context, float HeldTime)
+															  {
+																  auto *thisPtr = static_cast<PresetScreen *>(Context);
+
+																  if (GET_PRESET_DATA().SelectedPointerIndex >= Preset::EFFECT_COUNT)
+																	  return;
+
+																  auto *effectData = GET_EFFECT_DATA(GET_PRESET_DATA().SelectedPointerIndex);
+
+																  effectData->Enabled = !effectData->Enabled;
+
+																  UPDATE_ENABLED_LED(GET_PRESET_DATA().SelectedPointerIndex);
+
+																  UPDATE_PRESET();
+
+																  thisPtr->MarkAsDirty();
+															  }});
 
 #undef GET_PRESET_DATA
 #undef UPDATE_PRESET
@@ -249,9 +249,9 @@ protected:
 
 		controlManager->SetValueRotatedCallback(nullptr);
 		controlManager->SetValueButtonHoldCallback(nullptr);
-		controlManager->SetValueButtonTunedOffCallback(nullptr);
-		controlManager->SetLooperLEDConstantBrightness(COLOR_BLACK);
-		controlManager->SetLooperButtonTunedOffCallback(nullptr);
+		controlManager->SetValueButtonTurnedOffCallback(nullptr);
+		controlManager->SetVariation3LEDConstantBrightness(COLOR_BLACK);
+		controlManager->SetVariation3ButtonTurnedOffCallback(nullptr);
 	}
 
 private:

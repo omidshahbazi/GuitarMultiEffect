@@ -19,8 +19,8 @@ public:
 		  m_VolumePotentiometer(nullptr),
 		  m_UpButton(nullptr),
 		  m_DownButton(nullptr),
-		  m_LooperLED(nullptr),
-		  m_LooperButton(nullptr)
+		  m_Variation1LED(nullptr),
+		  m_Variation1Button(nullptr)
 	{
 	}
 
@@ -42,8 +42,14 @@ public:
 		m_UpButton = CreateButton("Up", GPIOPins::Pin26);
 		m_DownButton = CreateButton("Down", GPIOPins::Pin27);
 
-		m_LooperLED = CreateDualLED("Looper", GPIOPins::Pin24, GPIOPins::Pin25);
-		m_LooperButton = CreateButton("Looper", GPIOPins::Pin30);
+		m_Variation1LED = CreateDualLED("Variation 1", GPIOPins::Pin11, GPIOPins::Pin12);
+		m_Variation1Button = CreateButton("Variation 1", GPIOPins::Pin28);
+
+		m_Variation2LED = CreateDualLED("Variation 2", GPIOPins::Pin13, GPIOPins::Pin14);
+		m_Variation2Button = CreateButton("Variation 2", GPIOPins::Pin29);
+
+		m_Variation3LED = CreateDualLED("Variation 3", GPIOPins::Pin24, GPIOPins::Pin25);
+		m_Variation3Button = CreateButton("Variation 3", GPIOPins::Pin30);
 	}
 
 	void SetDisplayCallback(ILI9341_HAL_320_240::RenderEventHandler Listener)
@@ -61,7 +67,7 @@ public:
 		m_SaveButton->SetOnTurnedOffListener(Listener);
 	}
 
-	void SetBackButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	void SetBackButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_BackButton->SetOnTurnedOffListener(Listener);
 	}
@@ -76,7 +82,7 @@ public:
 		m_ValueControl->SetOnHoldListener(Listener);
 	}
 
-	void SetValueButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	void SetValueButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_ValueControl->SetOnTurnedOffListener(Listener);
 	}
@@ -86,30 +92,77 @@ public:
 		m_VolumePotentiometer->SetOnChangedListener(Listener);
 	}
 
-	void SetUpButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	void SetUpButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_UpButton->SetOnTurnedOffListener(Listener);
 	}
 
-	void SetDownButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	void SetDownButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
 	{
 		m_DownButton->SetOnTurnedOffListener(Listener);
 	}
 
-	void SetLooperLEDConstantBrightness(Color Color)
+	void SetVariation1LEDConstantBrightness(Color Color)
 	{
-		m_LooperLED->SetConstantBrighness(1);
-		m_LooperLED->SetColor(Color);
+		m_Variation1LED->SetConstantBrighness(1);
+		m_Variation1LED->SetColor(Color);
 	}
 
-	void SetLooperButtonHoldCallback(Button::HoldEventHandler Listener)
+	void SetVariation1ButtonTurnedOnCallback(Button::TurnedOnEventHandler Listener)
 	{
-		m_LooperButton->SetOnHoldListener(Listener);
+		m_Variation1Button->SetOnTurnedOnListener(Listener);
 	}
 
-	void SetLooperButtonTunedOffCallback(Button::TurnedOffEventHandler Listener)
+	void SetVariation1ButtonHoldCallback(Button::HoldEventHandler Listener)
 	{
-		m_LooperButton->SetOnTurnedOffListener(Listener);
+		m_Variation1Button->SetOnHoldListener(Listener);
+	}
+
+	void SetVariation1ButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_Variation1Button->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetVariation2LEDConstantBrightness(Color Color)
+	{
+		m_Variation2LED->SetConstantBrighness(1);
+		m_Variation2LED->SetColor(Color);
+	}
+
+	void SetVariation2ButtonTurnedOnCallback(Button::TurnedOnEventHandler Listener)
+	{
+		m_Variation2Button->SetOnTurnedOnListener(Listener);
+	}
+
+	void SetVariation2ButtonHoldCallback(Button::HoldEventHandler Listener)
+	{
+		m_Variation2Button->SetOnHoldListener(Listener);
+	}
+
+	void SetVariation2ButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_Variation2Button->SetOnTurnedOffListener(Listener);
+	}
+
+	void SetVariation3LEDConstantBrightness(Color Color)
+	{
+		m_Variation3LED->SetConstantBrighness(1);
+		m_Variation3LED->SetColor(Color);
+	}
+
+	void SetVariation3ButtonTurnedOnCallback(Button::TurnedOnEventHandler Listener)
+	{
+		m_Variation3Button->SetOnTurnedOnListener(Listener);
+	}
+
+	void SetVariation3ButtonHoldCallback(Button::HoldEventHandler Listener)
+	{
+		m_Variation3Button->SetOnHoldListener(Listener);
+	}
+
+	void SetVariation3ButtonTurnedOffCallback(Button::TurnedOffEventHandler Listener)
+	{
+		m_Variation3Button->SetOnTurnedOffListener(Listener);
 	}
 
 	void Update(void)
@@ -172,8 +225,15 @@ private:
 	Potentiometer *m_VolumePotentiometer;
 	Button *m_UpButton;
 	Button *m_DownButton;
-	DualLED *m_LooperLED;
-	Button *m_LooperButton;
+
+	DualLED *m_Variation1LED;
+	Button *m_Variation1Button;
+
+	DualLED *m_Variation2LED;
+	Button *m_Variation2Button;
+
+	DualLED *m_Variation3LED;
+	Button *m_Variation3Button;
 };
 
 #endif
