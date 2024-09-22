@@ -20,6 +20,13 @@ public:
 			BoostingAlternative,
 			CryingChicken,
 			CryingChickenVocal,
+			Bathory,
+			Behemoth,
+			DarkThrone,
+			Mayhem,
+			DimmuBorgir,
+			Burzum,
+			Emperor,
 			Custom
 		};
 
@@ -158,6 +165,97 @@ public:
 			m_Multiplier3_2K = Math::dbToMultiplier(-15.0);
 			m_Multiplier6_4K = Math::dbToMultiplier(-15.0);
 			m_Multiplier = Math::dbToMultiplier(3.0);
+		}
+		break;
+
+		case Data::Types::Bathory:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(-5.0);
+			m_Multiplier200 = Math::dbToMultiplier(-14.0);
+			m_Multiplier400 = Math::dbToMultiplier(-7.0);
+			m_Multiplier800 = Math::dbToMultiplier(-5.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(10.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(5.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(0.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
+		}
+		break;
+
+		case Data::Types::Behemoth:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(2.0);
+			m_Multiplier200 = Math::dbToMultiplier(-3.0);
+			m_Multiplier400 = Math::dbToMultiplier(-4.0);
+			m_Multiplier800 = Math::dbToMultiplier(5.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(7.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(-2.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(7.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
+		}
+		break;
+
+		case Data::Types::DarkThrone:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(-10.0);
+			m_Multiplier200 = Math::dbToMultiplier(-5.0);
+			m_Multiplier400 = Math::dbToMultiplier(-3.0);
+			m_Multiplier800 = Math::dbToMultiplier(10.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(-4.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(6.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(-5.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
+		}
+		break;
+
+		case Data::Types::Mayhem:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(2.0);
+			m_Multiplier200 = Math::dbToMultiplier(-5.0);
+			m_Multiplier400 = Math::dbToMultiplier(-4.0);
+			m_Multiplier800 = Math::dbToMultiplier(3.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(-10.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(10.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(-5.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
+		}
+		break;
+
+		case Data::Types::DimmuBorgir:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(-2.0);
+			m_Multiplier200 = Math::dbToMultiplier(-5.0);
+			m_Multiplier400 = Math::dbToMultiplier(-4.0);
+			m_Multiplier800 = Math::dbToMultiplier(1.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(4.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(1.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(1.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
+		}
+		break;
+
+		case Data::Types::Burzum:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(2.0);
+			m_Multiplier200 = Math::dbToMultiplier(2.0);
+			m_Multiplier400 = Math::dbToMultiplier(-7.0);
+			m_Multiplier800 = Math::dbToMultiplier(7.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(10.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(1.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(11.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
+		}
+		break;
+
+		case Data::Types::Emperor:
+		{
+			m_Multiplier100 = Math::dbToMultiplier(2.0);
+			m_Multiplier200 = Math::dbToMultiplier(5.0);
+			m_Multiplier400 = Math::dbToMultiplier(-7.0);
+			m_Multiplier800 = Math::dbToMultiplier(-6.0);
+			m_Multiplier1_6K = Math::dbToMultiplier(4.0);
+			m_Multiplier3_2K = Math::dbToMultiplier(6.0);
+			m_Multiplier6_4K = Math::dbToMultiplier(-4.0);
+			m_Multiplier = Math::dbToMultiplier(0.0);
 		}
 		break;
 

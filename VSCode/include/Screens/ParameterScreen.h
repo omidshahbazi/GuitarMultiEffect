@@ -10,7 +10,7 @@ protected:
 	struct ChoiceData
 	{
 	public:
-		static constexpr uint8 MAX_ITEM_COUNT = 10;
+		static constexpr uint8 MAX_ITEM_COUNT = 12;
 
 		int32 *SelectedItem;
 		cstr Items[MAX_ITEM_COUNT];
@@ -189,7 +189,7 @@ protected:
 		controlManager->SetValueButtonTurnedOffCallback(nullptr);
 	}
 
-	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2, cstr Item3 = nullptr, cstr Item4 = nullptr, cstr Item5 = nullptr, cstr Item6 = nullptr, cstr Item7 = nullptr, cstr Item8 = nullptr, cstr Item9 = nullptr, cstr Item10 = nullptr)
+	void AddChoiceData(int32 *Data, cstr Item1, cstr Item2, cstr Item3 = nullptr, cstr Item4 = nullptr, cstr Item5 = nullptr, cstr Item6 = nullptr, cstr Item7 = nullptr, cstr Item8 = nullptr, cstr Item9 = nullptr, cstr Item10 = nullptr, cstr Item11 = nullptr, cstr Item12 = nullptr)
 	{
 		ASSERT(m_ChoiceDataCount < MAX_CHOICE_DATA_COUNT, "Out of ChoiceData slots");
 		ASSERT(Data != nullptr, "Data cannot be null");
@@ -219,6 +219,10 @@ protected:
 			data.Items[data.ItemCount++] = Item9;
 		if (Item10 != nullptr)
 			data.Items[data.ItemCount++] = Item10;
+		if (Item11 != nullptr)
+			data.Items[data.ItemCount++] = Item11;
+		if (Item12 != nullptr)
+			data.Items[data.ItemCount++] = Item12;
 	}
 
 	void AddValueData(float *Data, cstr Title, float MinValue, float MaxValue, float DisplayMultiplier, bool AsInteger, float Speed = 1)

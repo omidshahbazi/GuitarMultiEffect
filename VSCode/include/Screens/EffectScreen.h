@@ -47,6 +47,7 @@ protected:
 #define ADD_CHOICE_DATA_3(effectName, parameterName, item1, item2, item3) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3)
 #define ADD_CHOICE_DATA_4(effectName, parameterName, item1, item2, item3, item4) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3, item4)
 #define ADD_CHOICE_DATA_5(effectName, parameterName, item1, item2, item3, item4, item5) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3, item4, item5)
+#define ADD_CHOICE_DATA_12(effectName, parameterName, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12) AddChoiceData(reinterpret_cast<int32 *>(&presetData.effectName##Data.parameterName), item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12)
 
 #define ADD_VALUE_DATA(effectName, parameterName, minValue, maxValue, displayMultiplier, asInteger, title) AddValueData(&presetData.effectName##Data.parameterName, title, minValue, maxValue, displayMultiplier, asInteger)
 #define ADD_VALUE_DATA_SPEED(effectName, parameterName, minValue, maxValue, displayMultiplier, asInteger, speed, title) AddValueData(&presetData.effectName##Data.parameterName, title, minValue, maxValue, displayMultiplier, asInteger, speed)
@@ -100,9 +101,9 @@ protected:
 #ifdef ADD_EQ_EFFECT
 		else if (effectData->Index == presetData.EqData.Index)
 		{
-			ADD_CHOICE_DATA_5(Eq, Type, "BOOSTING", "BOOSTING ALT.", "CRYING CHICKEN", "CRYING CHICK. VOC.", "CUSTOM");
+			ADD_CHOICE_DATA_12(Eq, Type, "BOOSTING", "BOOSTING ALT.", "CRYING CHICKEN", "CRYING CHICK. VOC.", "Bathory", "Behemoth", "DarkThrone", "Mayhem", "DimmuBorgir", "Burzum", "Emperor", "CUSTOM");
 
-			if (presetData.EqData.Type == EqEffect::Data::Types::Custom)
+			// if (presetData.EqData.Type == EqEffect::Data::Types::Custom)
 			{
 				ADD_VALUE_DATA(Eq, Gain100, -15, 15, 1, true, "100HZ");
 				ADD_VALUE_DATA(Eq, Gain200, -15, 15, 1, true, "200HZ");

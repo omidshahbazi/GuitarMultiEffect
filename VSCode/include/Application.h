@@ -83,16 +83,16 @@ public:
 
 		m_ControlManager.Initialize();
 
-		m_ControlManager.SetBootButtonCallback({[](void *Context, float HeldTime)
-												{
-													daisy::System::ResetToBootloader(
-#ifdef USE_SRAM
-														daisy::System::BootloaderMode::DAISY_INFINITE_TIMEOUT
-#else
-														daisy::System::BootloaderMode::STM
-#endif
-													);
-												}});
+		// 		m_ControlManager.SetBootButtonCallback({[](void *Context, float HeldTime)
+		// 												{
+		// 													daisy::System::ResetToBootloader(
+		// #ifdef USE_SRAM
+		// 														daisy::System::BootloaderMode::DAISY_INFINITE_TIMEOUT
+		// #else
+		// 														daisy::System::BootloaderMode::STM
+		// #endif
+		// 													);
+		// 												}});
 
 		m_MasterVolume = 1;
 		m_ControlManager.SetVolumeCallback({this, [](void *Context, float Value)
@@ -165,9 +165,10 @@ private:
 			SampleType value = processedBuffer[i] * g_Application->m_MasterVolume;
 
 			Out[0][i] = value;
+			Out[1][i] = value;
 
 			// Otherwise the left line gets the harmony on-line (I guess it's because of the stereo cable that I have)
-			Out[1][i] = 0; // inputBuffer[i] * g_Application->m_MasterVolume;
+			// Out[1][i] = value; // inputBuffer[i] * g_Application->m_MasterVolume;
 		}
 	}
 
