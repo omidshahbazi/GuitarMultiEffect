@@ -19,9 +19,9 @@ with the DaisySeed hardware.
 • Created PCB designs and embedded programming for controlling DaisySeed’s au-
 dio processing capabilities.
 
-[![alt text](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/2.png)]
-[![alt text](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/1.png)]
-[![alt text](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/3.png)]
-[![alt text](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/4.png)]
-[![alt text](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/5.png)]
-[![alt text](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/6.png)]
+[![alt text](https://github.com/omidshahbazi/omidshahbazi.github.io/blob/master/Materials/GuitarMultiEffect/2.png)]
+[![alt text](https://github.com/omidshahbazi/omidshahbazi.github.io/blob/master/Materials/GuitarMultiEffect/1.png)]
+[![alt text](https://github.com/omidshahbazi/omidshahbazi.github.io/blob/master/Materials/GuitarMultiEffect/3.png)]
+[![alt text](https://github.com/omidshahbazi/omidshahbazi.github.io/blob/master/Materials/GuitarMultiEffect/4.png)]
+[![alt text](https://github.com/omidshahbazi/omidshahbazi.github.io/blob/master/Materials/GuitarMultiEffect/5.png)]
+[![alt text](https://github.com/omidshahbazi/omidshahbazi.github.io/blob/master/Materials/GuitarMultiEffect/6.png)]
