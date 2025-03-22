@@ -19,4 +19,4 @@ with the DaisySeed hardware.
 • Created PCB designs and embedded programming for controlling DaisySeed’s au-
 dio processing capabilities.
 
-![alt text](http://url/to/img.png)
+[![alt text](http://url/to/img.png)](https://github.com/omidshahbazi/GuitarMultiEffect/blob/master/2.png)
