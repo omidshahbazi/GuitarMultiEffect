@@ -245,6 +245,19 @@
         "categorayKey": "Track",
         "redStar": false
       },
+      "AC": {
+        "editName": "AC",
+        "unit": "mm",
+        "isSetDefault": false,
+        "form": {
+          "strokeWidthMin": 1.00000054,
+          "strokeWidthDefault": 1.00000054,
+          "strokeWidthMax": 1.00000054
+        },
+        "isRule": true,
+        "categorayKey": "Track",
+        "redStar": false
+      },
       "Analog": {
         "editName": "Analog",
         "unit": "mm",
